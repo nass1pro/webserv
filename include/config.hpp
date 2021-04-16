@@ -1,5 +1,6 @@
 
-
+#include <string>
+#include <list>
 
 typedef struct s_config
 {
@@ -11,7 +12,6 @@ typedef struct s_config
     std::list<std::string> location;
 
 }              t_config;
-
 
 typedef struct s_header
 {
@@ -35,7 +35,6 @@ typedef struct s_header
     std::list<std::string> WWW_Authenticate;
 
 }
-
 
 typedef struc s_req
 {
