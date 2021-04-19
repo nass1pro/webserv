@@ -4,8 +4,8 @@
 
 typedef struct s_config
 {
-    std::string host;
-    std::list <std::string> port;
+    std::list<std::string> host;
+    std::list<std::string> port;
     std::string name_server;
     std::string index;
     std::string error_page;
