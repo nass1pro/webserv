@@ -2,35 +2,37 @@
 #include <string>
 #include <vector>
 #include <sys/socket.h>
+#include "include/config.hpp"
 
-// #define PORT 8080
-// void setup_server()
-// {
-//     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-//     {
-//         std::cout << "(cannot create socket)";
-//         exit(1);
-//     }
-//     address.sin_family = AF_INET;
-//     address.sin_addr.s_addr = INADDR_ANY;
-//     address.sin_port = htons( PORT );
-//     exit(1);
-// }
 
+
+
+void            lauche_server(std::list<t_config> &conf)
+{
+    std::list<t_config>::iterator server = conf.begin();
+    /*
+        boucle infinie qui va attendre des connection
+        erreur a relever...
+    */
+}
 
 int main(int ac, char **av)
 {
+    std::list<t_config> conf;
+
     if (ac < 2)
     {
         std::cout << "ERROR : file config needed"<< std::endl;
         exit(1);
     }
 
-    // parsing de la config
-    // setupe server
-    // lancement du server
-        // attente de connection
+    //parsing de la config  !!!!! parsing_conf(av[1], conf);
 
+    // setupe server boucle pour la conf qui aura plusieur server
+    // setup_server(conf) OK;
+
+    // lancement du server
+    // attente de connection
 
     setup_server();
     return 0;
