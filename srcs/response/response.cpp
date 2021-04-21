@@ -6,13 +6,11 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/04/21 13:53:12 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/04/21 15:40:13 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/config.hpp"
-#include "../../include/parse_cli.hpp"
-#include "../../include/server.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
 
