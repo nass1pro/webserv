@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string.h>
 #include <dirent.h>
-
+#include <fstream>
 
 typedef struct s_config
 {
@@ -26,7 +26,7 @@ typedef struct s_header
     std::string Allow;
     std::list<std::string> Authorization;
     std::string Content_Language;
-	unsigned int Content_Length;
+	std::string Content_Length;
     std::string Content_Location;
     std::string Content_Type;
     std::string Date;
@@ -52,12 +52,13 @@ typedef struct s_req
 	std::list<std::string>  location;
 	std::string             version;
 	struct s_header         *header;
+	std::string 			body;
 	int						body_index;
 }              t_req;
 
 typedef struct s_res
 {
-    std::string           res_complet;
+    std::string           response_header;
     unsigned int           statusCode;
 	std::string			payload;
 } t_res;

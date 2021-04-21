@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/04/19 20:18:58 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/04/21 13:53:12 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,61 +14,46 @@
 #include "../../include/parse_cli.hpp"
 #include "../../include/server.hpp"
 
-void setAllow(t_config &config, t_header &header, t_req &req)
+//200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
+
+void setAllow(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
 	/*This header must be sent if the server responds with a 405
 	 Method Not Allowed status code to indicate which request methods can be used.*/
-	if (req.method != "GET" || req.method != "HEAD" || req.method != "PUT" || req.method != "POST")
+	if (statusCode == 405)
 	{
-		header.Allow = std::string("Allow: GET, HEAD, PUT, POST\n");
+		header.Allow = std::string("Allow: GET, HEAD, PUT, POST");
 	}
 	else 
 		header.Allow = std::string("\0");
 }
 
-void setContentLanguage(t_config &config, t_header &header, t_req &req)
+void setContentLanguage(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
 	/*If no Content-Language is specified, 
 	the default is that the content is intended for all language audiences.*/
 	header.Content_Language = std::string("\0");
 }
-void setTransferEncoding(t_config &config, t_header &header, t_req &req)
+void setTransferEncoding(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	header.Transfer_Encoding = "\0";
+	header.Transfer_Encoding = std::string("\0");
 }
 
-void setContentLength(t_config &config, t_header &header, t_req &req, t_res &res)
+void setContentLength(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
 	//https://tools.ietf.org/html/rfc7230#section-3.3.2
-
-	/*When a message does not have a Transfer-Encoding header field, a
-   Content-Length header field can provide the anticipated size, as a
-   decimal number of octets, for a potential payload body. */
-	if (header.Transfer_Encoding == "\0")
-		header.Content_Length = header.body_entire.size();
-	else if (req.method == "POST")
-		header.Content_Length = header.body_entire.size();		
-	else if (res.statusCode == 100 || res.statusCode == 101 || res.statusCode == 204)
-		header.Content_Length = NULL;
-	else 
-		header.Content_Length = NULL;	
+	std::ostringstream ss;	
+	ss << "Content-Length: ";
+	ss << res.payload.size();
+	header.Content_Length = ss.str();
 }
 
-//200 201 404 405 413 500
-
-//determine which code must be sent and continue headers...
-
-void setContentLocation(t_config &config, t_header &header, t_req &req)
+void setContentType(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
- 
+	header.Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
 }
 
-void setContentType(t_config &config, t_header &header, t_req &req)
-{
-	header.Content_Type = std::string("Content-Type: text/html; charset=UTF-8\n");
-}
-
-void setDate(t_config &config, t_header &header, t_req &req)
+void setDate(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
 	std::ostringstream ss;	
 	std::time_t t = std::time(0);   // get time now
@@ -120,170 +105,215 @@ void setDate(t_config &config, t_header &header, t_req &req)
 	ss << now->tm_min;
 	ss << ':';
 	ss << now->tm_sec;
-	ss << " GMT \n";	
+	ss << " GMT";	
 	header.Date = ss.str();
-	// std::cout << header.Date << std::endl;
 }
 
-void setLastModified(t_config &config, t_header &header, t_req &req)
+void setLastModified(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	header.Last_modified = std::string(header.Date);
+	if (statusCode == 200 || statusCode ==  201)
+		header.Last_modified = std::string(header.Date);
+	else 
+		header.Last_modified = std::string("\0");	
 }
 
-void setLocation(t_config &config, t_header &header, t_req &req)
+void setLocation(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	if (statusCode == 200 || statusCode == 201)
 	{
-		if (*it == "hello") //find condition to find path
+		for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
 		{
-			header.Content_Location = std::string(*it);
-			header.Content_Location += "\n";
-			break ;
+			if (*it == "hello") //find condition to find path
+			{
+				header.Content_Location = std::string(*it);
+				break ;
+			}
 		}
 	}
+	else
+		header.Content_Location = std::string("\0");
 }
 
-void setRetryAfter(t_config &config, t_header &header, t_req &req)
+void setRetryAfter(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	unsigned int statusCode = 200;
-	
-	if (statusCode == 503 || statusCode == 429 || statusCode == 301)
-		header.retry_after = std::string("Retry-After: 120\n"); 
+	if (statusCode == 413)
+		header.retry_after = std::string("Retry-After: 120"); 
+	else 
+		header.retry_after = std::string("\0");
 }
 
-void setServer(t_config &config, t_header &header, t_req &req)
+void setServer(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	// header.Server = std::string("Server: Webserv/1.0\n");
 	header.Server = std::string("Server: ");
 	header.Server += config.name_server;
-	header.Server += ("/1.0\n");	
+	header.Server += ("/1.0");	
 }
 
-void setWWWAuthenticate(t_config &config, t_header &header, t_req &req)
+void setWWWAuthenticate(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {	
-	//handle it when testing the cgi
-	unsigned int statusCode = 200;
-
 	if (statusCode == 401)
-		header.WWW_Authenticate = std::string("WWW-Authenticate: something\n"); 
+		header.WWW_Authenticate = std::string("WWW-Authenticate: something"); 
+	else 
+		header.WWW_Authenticate = std::string("\0"); 
 }
 
-void set_statusCode(t_config &config, t_header &header, t_req &req, t_res &res)
+void setPayload(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	/*   If an Accept-Charset header field is present in a request and none of
-   the available representations for the response has a charset that is
-   listed as acceptable, the origin server can either honor the header
-   field, by sending a 406 (Not Acceptable) response, or disregard the
-   header field by treating the resource as if it is not subject to
-   content negotiation. */ 
 
-   /* If the header field accept-language
-   is present in a request and none of the available representations for
-   the response have a matching language tag, the origin server can
-   either disregard the header field by treating the response as if it
-   is not subject to content negotiation or honor the header field by
-   sending a 406 (Not Acceptable) response.*/
+}
 
-	// see how nginx behave
-
-	if (req.method != "GET" || req.method != "HEAD" || req.method != "PUT" || req.method != "POST")
+void setContentLocation(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
+{
+	if (statusCode == 200 || statusCode == 201)
 	{
-		res.statusCode == 405; // Method not allowed
-	}
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
-	{
-		if (*it == req.url) //find condition to find path
+		for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
 		{
-			res.statusCode = 200;	
-			break ;
+			if (*it == "hello") //find condition to find path
+			{
+				header.Content_Location = std::string(*it);
+				break ;
+			}
 		}
 	}
-		
-		
+	else
+		header.Content_Location = std::string("\0");
 }
 
-void method_not_allowed(t_config &config, t_header &header, t_req &req, t_res &res)
+void set_response_data(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	res.statusCode = 405;
-	setAllow(config, header, req);
-	res.payload = "path of err pages directory";
-	res.payload += "/page 405 name"; //at the end payload is the path to the specific error page 
-	setDate(config, header, req);
-	setServer(config, header, req);
-	header.Content_Length = res.payload.size();	
-	setContentType(config, header, req);
+	setAllow(config, header, req, res, statusCode);
+	setContentLanguage(config, header, req, res, statusCode);
+	setContentLength(config, header, req, res, statusCode);
+	setContentLocation(config, header, req, res, statusCode);
+	setContentType(config, header, req, res, statusCode);
+	setDate(config, header, req, res, statusCode);
+	setLastModified(config, header, req, res, statusCode);
+	setLocation(config, header, req, res, statusCode);
+	setRetryAfter(config, header, req, res, statusCode);
+	setServer(config, header, req, res, statusCode);
+	setTransferEncoding(config, header, req, res, statusCode);
+	setWWWAuthenticate(config, header, req, res, statusCode);
 }
 
 void head_request(t_config &config, t_header &header, t_req &req, t_res &res)
 {
-	if (req.version != "1.1")
-	{
-		method_not_allowed(config, header, req, res);
-		return ;
-	}	
-	
 	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
 		if (*it == req.url) // means the url exist and the request is valid
 		{
-			res.statusCode = 200;
-			header.Content_Location = std::string(*it);
-			header.Content_Location += "\n";
-			setServer(config, header, req);
-			header.Content_Length = req.url.size();	
-			setContentType(config, header, req);
-			setDate(config, header, req);
-			setLastModified(config, header, req);
+			res.payload = std::string(" req.url page ");
+			set_response_data(config, header, req, res, 200);	
 			return ;
 		}
 	}	
-	// if we reach this part of the function means we have a 404 not found
-	// it is a template to finish
-	res.statusCode = 404;
-	header.Content_Location = "path of err pages directory//page 405 name";
-	header.Content_Location += "\n";
-	setServer(config, header, req);
-	header.Content_Length = req.url.size();	
-	setContentType(config, header, req);
-	setDate(config, header, req);
-	setLastModified(config, header, req);	
-
-
+	// if we reach this part of the function means we have a 404 not found, work in progress
+	res.payload = std::string(" 404 page ");
+	set_response_data(config, header, req, res, 404);	
 }
 
-void payload(t_config &config, t_header &header, t_req &req, t_res &res)
+void file_create_or_replace(t_config &config, t_header &header, t_req &req, t_res &res)
 {
-
+	std::ofstream replace(req.url);
+	std::string buffer;
+	replace << buffer << "\n";
+	replace.close();
 }
 
-// here I receive all the data parsed by Jules
-t_res &function_where_i_receive_request_data(t_config &config, t_header &header, t_req &req)
+void put_request(t_config &config, t_header &header, t_req &req, t_res &res)
+{
+	//response for put method no payload and header very minimalist
+	// check if resource exist
+	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	{
+		std::string potential_file_path = std::string(*it);
+		potential_file_path += req.url;  
+		std::ifstream potential_file(potential_file_path);
+		if (potential_file.is_open() == false) //find condition to find path
+		{
+			// if do not exist 201
+			res.statusCode = 201;
+			res.payload = std::string("\0");
+			set_response_data(config, header, req, res, 201);	
+			file_create_or_replace(config, header, req, res);				
+			return ;
+		}
+	}
+	// if exist 200
+	res.statusCode = 200;	
+	res.payload = std::string("\0");
+	set_response_data(config, header, req, res, 201);	
+	file_create_or_replace(config, header, req, res);		
+}
+
+void concatenate_header(t_config &config, t_header &header, t_req &req, t_res &res)
+{
+	if (req.method == "GET" || req.method == "HEAD")
+	{
+		if (header.Content_Length != "\0")
+		{
+			res.response_header = header.Content_Length;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{		
+			res.response_header += header.Content_Location;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Content_Type;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Date;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Last_modified;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Server;
+			res.response_header += "\n";
+		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Content_Length;
+			res.response_header += "\n";
+		}
+	}
+	else if (req.method == "PUT" || req.method == "POST") 
+	{
+		res.response_header += header.Content_Location;
+		res.response_header += "\n";
+	}
+}
+
+t_res &function_where_i_receive_request_data_and_return_response(t_config &config, t_header &header, t_req &req)
 {
 	// bodysize limit si body plus grand, renvoyer erreur
 	t_res res;
-	//200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
-
-	// set_statusCode(config, header, req, res);
-	if (req.method == "GET")
+	if (req.version != "1.1")
+	{
+		res.payload = std::string(" 405 page ");
+		set_response_data(config, header, req, res, 405);
+	}
+	else if (req.method == "GET") //read content
+		head_request(config, header, req, res);
+	else if (req.method == "HEAD") //read header content
 	{
 		head_request(config, header, req, res);
-		payload(config, header, req, res);
+		res.payload = std::string("\0");
 	}
-	else if (req.method == "HEAD")	
-		head_request(config, header, req, res);		
-	else if (req.method == "PUT")	
-		//
-	else if (req.method == "POST")
-		//	
+	else if (req.method == "PUT") //update content	
+		put_request(config, header, req, res);
+	else if (req.method == "POST") //create content
+		put_request(config, header, req, res);
 	else 
-		method_not_allowed(config, header, req, res);
-	
-	// if (req.method != "HEAD")
-	// {
-	// 	setContentLanguage(config, header, req);
-	// 	setContentLength(config, header, req);
-	// 	setContentType(config, header, req);
-	// 	setTransferEncoding(config, header, req);	
-	// }
+		set_response_data(config, header, req, res, 405);
+	concatenate_header(config, header, req, res);
 	return (res);
 }
