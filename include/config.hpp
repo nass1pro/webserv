@@ -66,6 +66,8 @@ typedef struct s_res
 	std::string			payload;
 } t_res;
 
+t_res &function_where_i_receive_request_data_and_return_response(t_config &config, t_header &header, t_req &req);
+
 //previous req
 
 // typedef struct s_req
