@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/04/21 11:31:18 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/04 17:03:50 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,86 @@ void	print_list(Container l)
 	typename Container::iterator it = l.begin();
 	int i = 0;
 
-	P("-- print container --");
+	P("* print container *");
 	while (it != l.end())
 	{
 		std::cout << "Elem " << i++ << " : |" << *it << "|" << std::endl;
 		++it;
 	}
 };
+
+void	print_member_str(std::string str, std::string label)
+{
+	//P(label);
+	std::cout << label;
+	if (!str.empty())
+	{
+		PP(str);
+	}
+	else
+		P("empty");
+}
+
+template <class Container>
+void	print_member_list(std::list<Container> list, std::string label)
+{
+	P(label);
+	if (!list.empty())
+	{
+		print_list(list);
+	}
+	else
+	{
+		P("Empty");
+	}
+}
+
+void	print_location(t_loc *loc)
+{
+	P("     ## print location ##");
+	print_member_str(loc->location_match, "-- Location match : ");
+	print_member_str(loc->optional_modifier, "-- Optional modifier : ");
+	print_member_str(loc->http_methods, "-- http methods : ");
+	
+	//P("-- body_size : ");
+	std::cout << "-- body_size : ";
+	PP(loc->body_size);
+
+	print_member_str(loc->directory_files_search, "-- directory files search : ");
+	print_member_str(loc->directory_listing, "-- directory listing : ");
+	print_member_str(loc->default_file_directory_request, "-- default file directory request : ");
+	print_member_str(loc->upload_files_location, "-- upload files location : ");
+
+}
+/*
+** Print all elements in config struct
+*/
+void	print_config(t_config *c)
+{
+	P("################### START CONFIG ###################");
+
+	print_member_str(c->host, "-- Host : ");
+	print_member_list(c->port, "-- Port : ");
+	print_member_str(c->name_server, "-- Server_name : ");
+	print_member_list(c->index, "-- Index : ");
+	std::cout << "-- Default server : " << c->default_server << std::endl;
+	std::cout << "-- Body size : " << c->body_size << std::endl;
+	print_member_str(c->error_page, "- Error page : "); //surement modif list
+
+	P("-- Locations : ");
+	if (!c->locations.empty())
+	{
+		std::list<t_loc>::iterator it = c->locations.begin();
+		while (it != c->locations.end())
+		{
+			print_location(&(*it));
+			++it;
+		}
+	}
+	else
+		P("Empty");
+	
+}
 
 /*
 ** Print all elements in header struct
@@ -79,12 +152,7 @@ void	print_header(t_header *h)
 		P("Empty");
 
 	P("-- Content_Length : ");
-	if (!h->Content_Length.empty())
-	{
-		print_list(h->Content_Length);
-	}
-	else
-		P("Empty");
+	P(h->Content_Length);
 
 	P("-- Content_Location : ");
 	if (!h->Content_Location.empty())
