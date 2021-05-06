@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/04/21 13:53:12 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/06 19:02:09 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,16 +119,18 @@ void setLastModified(t_config &config, t_header &header, t_req &req, t_res &res,
 
 void setLocation(t_config &config, t_header &header, t_req &req, t_res &res, int statusCode)
 {
-	if (statusCode == 200 || statusCode == 201)
+	// used when there is a redirection, "location" is the correct address to return to the client, so he can be redirected.
+	if (statusCode == 201)
 	{
-		for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
-		{
-			if (*it == "hello") //find condition to find path
-			{
-				header.Content_Location = std::string(*it);
-				break ;
-			}
-		}
+		// for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+		// {
+		// 	if (*it == "hello") //find condition to find path
+		// 	{
+		// 		header.Content_Location = std::string(*it);
+		// 		break ;
+		// 	}
+		// }
+		header.Content_Location = std::string(req.url);
 	}
 	else
 		header.Content_Location = std::string("\0");
@@ -166,14 +168,15 @@ void setContentLocation(t_config &config, t_header &header, t_req &req, t_res &r
 {
 	if (statusCode == 200 || statusCode == 201)
 	{
-		for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
-		{
-			if (*it == "hello") //find condition to find path
-			{
-				header.Content_Location = std::string(*it);
-				break ;
-			}
-		}
+		// for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+		// {
+		// 	if (*it == "hello") //find condition to find path
+		// 	{
+		// 		header.Content_Location = std::string(*it);
+		// 		break ;
+		// 	}
+		// }
+		header.Location = std::string(req.url);
 	}
 	else
 		header.Content_Location = std::string("\0");
@@ -197,17 +200,20 @@ void set_response_data(t_config &config, t_header &header, t_req &req, t_res &re
 
 void head_request(t_config &config, t_header &header, t_req &req, t_res &res)
 {
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
-		if (*it == req.url) // means the url exist and the request is valid
+		std::string path = config.host + it->location_match;  
+		if( path == req.url) // means the url exist and the request is valid
 		{
-			res.payload = std::string(" req.url page ");
+			std::ifstream ifs(req.url); //get the input file stream with the requested url 
+			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(config, header, req, res, 200);	
 			return ;
 		}
 	}	
 	// if we reach this part of the function means we have a 404 not found, work in progress
-	res.payload = std::string(" 404 page ");
+	std::ifstream ifs("error_pages/404.html"); 
+	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	set_response_data(config, header, req, res, 404);	
 }
 
@@ -223,12 +229,12 @@ void put_request(t_config &config, t_header &header, t_req &req, t_res &res)
 {
 	//response for put method no payload and header very minimalist
 	// check if resource exist
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
-		std::string potential_file_path = std::string(*it);
+		std::string potential_file_path = std::string(it->location_match);
 		potential_file_path += req.url;  
 		std::ifstream potential_file(potential_file_path);
-		if (potential_file.is_open() == false) //find condition to find path
+		if (potential_file.is_open() == false) 
 		{
 			// if do not exist 201
 			res.statusCode = 201;
@@ -284,6 +290,11 @@ void concatenate_header(t_config &config, t_header &header, t_req &req, t_res &r
 			res.response_header += header.Content_Length;
 			res.response_header += "\n";
 		}
+		if (header.Content_Length != "\0")
+		{
+			res.response_header += header.Location;
+			res.response_header += "\n";
+		}
 	}
 	else if (req.method == "PUT" || req.method == "POST") 
 	{
@@ -296,9 +307,12 @@ t_res &function_where_i_receive_request_data_and_return_response(t_config &confi
 {
 	// bodysize limit si body plus grand, renvoyer erreur
 	t_res res;
-	if (req.version != "1.1")
+	if (req.error == 413)
+		set_response_data(config, header, req, res, 413);	
+	else if (req.version != "1.1")
 	{
-		res.payload = std::string(" 405 page ");
+		std::ifstream ifs("error_pages/405.html"); 
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(config, header, req, res, 405);
 	}
 	else if (req.method == "GET") //read content
