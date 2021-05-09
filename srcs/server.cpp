@@ -6,12 +6,15 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/01 21:34:06 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/09 06:06:37 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/config.hpp"
 #include <sys/socket.h>
+#include <sys/select.h>
+
+
 
 void setup_server(t_conf &conf)
 {
@@ -55,5 +58,39 @@ void setup_server(t_conf &conf)
     {
         std::cout<< "ERROR in listen"<< std::endl;
         exit(1);
+    }
+}
+
+void get_request(t_server s, t_active &active)
+{
+    int message_len = -1;
+    int buff[1000001];
+
+    for(unsigned int i = 0; i < s.fd_max; i++)
+    {
+        if(FD_ISSET(s.client[i], &active.read))
+        {
+            if((message_len = recv(s.clien[i], buff, 1000000, 0)) == -1)
+            {
+                std::cout<<"error"<< std::endl;
+                // relancer le client
+            }
+            // if(message_len == 0)
+            // {
+            //     //fin de l'envoi
+            //     // deconnecter le client
+            // }
+
+            else
+            {
+                buff[message_len] = '\0';
+                if (s.req[s.client[i]].full_req.size() == 0)
+                {
+                    s.req[s.client[i]].full_req.reserve(1000000100);
+                }
+                s.req[s.client[i]].full_req += buff;
+
+            }
+        }
     }
 }

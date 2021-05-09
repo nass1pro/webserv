@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/04/21 11:30:38 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/09 06:46:54 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool	find_field_name(std::string &line, std::string const &name)
 		return (true);
 	else
 		return (false);
-	
+
 }
 
 /*
@@ -140,7 +140,7 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 }
 
 /*
-** Take the first line of the request split her in a list, 
+** Take the first line of the request split her in a list,
 ** add values in the struct t_req and delete used content to the lines list
 ** return negative value in case of error
 */
