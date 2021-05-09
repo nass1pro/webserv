@@ -1,15 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
+/*   Updated: 2021/05/01 21:34:06 by nahaddac         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "include/config.hpp"
 #include <sys/socket.h>
-
-/*
-    convertit les valeurs entre l'hôte et
-    l'ordre des octets du réseau --> sin.port
-*/
-
-uint16_t ft_htons(uint16_t port)
-{
-    return ((__uint16_t) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)));
-}
 
 void setup_server(t_conf &conf)
 {
@@ -37,14 +39,14 @@ void setup_server(t_conf &conf)
     conf.serv.address.sin_addr.s_addr = inet_addr(c.host.c_str());
     try
     {
-        conf.serv.address.sin_port = ft_htons(std::stoi(conf.port.front()));
+        conf.serv.address.sin_port = htons(std::stoi(conf.port.front()));
     }
     catch(std::exception &e)
     {
         std::cout<< "ERROR port is not a number in .conf";
         exit(1);
     }
-    if (blind(conf.serv.socket_server, (struct sockaddr *)&conf.serv.address,conf.serv.len_address) == -1)
+    if (blind(conf.serv.socket_server, (struct sockaddr *)&conf.serv.address, conf.serv.len_address) == -1)
     {
         std::cout<< "ERROR in blind"<< std::endl;
         exit(1);

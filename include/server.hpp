@@ -6,13 +6,15 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/socket.h>
+#include <pthread.h>
 
 # define CLIENT_MAX 200
 
 typedef struct s_active
 {
-
-}
+    fd_set read;
+    fd_set write;
+}               t_active;
 
 typedef struct s_server
 {
@@ -28,7 +30,7 @@ typedef struct s_server
 
 typedef struct  s_config
 {
-    std::string             host;
+    std::list<std::string>  host;
     std::string             name_server;
     std::string             error_page;
     std::list<std::string>  location;

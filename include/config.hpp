@@ -11,17 +11,6 @@
 <<<<<<< HEAD
 #include <fstream>
 
-
-typedef struct	s_config
-{
-	std::string				host;
-	std::list <std::string>	port;
-	std::string				name_server;
-	std::string				index;
-	std::string				error_page;
-	std::list<std::string>	location;
-
-}				t_config;
 =======
 #include <sys/socket.h>
 >>>>>>> 0fbfea61e6eea8ce13a515ca8ddfe4ad7ab52bb2
@@ -56,7 +45,7 @@ typedef struct s_header
     std::string            WWW_Authenticate;
     std::list<std::string> header_entire;
 <<<<<<< HEAD
-    std::string body_entire;		
+    std::string body_entire;
 =======
     std::string            body_entire;
 >>>>>>> 0fbfea61e6eea8ce13a515ca8ddfe4ad7ab52bb2

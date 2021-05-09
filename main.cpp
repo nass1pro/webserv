@@ -1,25 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
+/*   Updated: 2021/05/02 01:43:33 by nahaddac         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sys/socket.h>
 #include "include/config.hpp"
 
-
-
-/* void         routine_thread(std::list<t_config> conf, t_active socket_client)
-*/ 
+void            detecte_connection(std::list<t_config> &conf, t_active &active)
+{
+    
+}
 
 void            lauche_server(std::list<t_config> &conf)
 {
 
     std::list<t_config>::iterator server = conf.begin();
+    t_active active;
     try
     {
         while(true)
         {
-            create_thread(conf, ) /* attente de connection pour chaque
-                                     thread ->  
-                                  */
+            detecte_connection(conf, active);
+            while(server != conf.end())
+            {
+
+                server++;
+            }
         }
     }
 }
@@ -39,6 +55,6 @@ int main(int ac, char **av)
     // setup_server(conf) OK;
     // lancement du server // fork chaque server
     // attente de connection
-    
+
     return 0;
 }
