@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/09 06:53:09 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/16 05:27:33 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,12 @@ int main(int ac, char **av)
         std::cout << "ERROR : file config needed"<< std::endl;
         exit(1);
     }
-
-    // parsing de la config  !!!!! parsing_conf(av[1], conf);
-    // setupe server boucle pour la conf qui aura plusieur server
-    // setup_server(conf) OK;
-    // lancement du server // fork chaque server
-    // attente de connection
-
+    if (parse_conf(av[1], conf) == -1)
+        return 1;
+    for(std::list<t_conf>::iterator l = conf.begin(); l != conf.end)
+    {
+        setup_server(*l);
+    }
+    lauche_server(conf);
     return 0;
 }
