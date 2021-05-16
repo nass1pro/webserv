@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/16 06:00:12 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/16 06:23:53 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,31 @@ void customer_disconnection(t_server &server, t_active &active)
     {
         if(server.client[i] > 0)
         {
-            clien_disconnection(server, i);
+            clien_disconnection(server, i, true);
         }
     }
 }
 
-void clien_disconnection(t_server &server, unsigned int i)
+void customer_restart(t_server &server)
+{
+    for (int i = 0; i < server.fd_max; i++)
+    {
+        if(server.client[i] > 0)
+        {
+            clien_disconnection(server, i, false);
+        }
+    }
+
+}
+void clien_disconnection(t_server &server, unsigned int i, bool disc)
 {
     server.respons.erase(server.client[i]);
     server.req.erase(server.client[i]);
-    close(server.client[i]);
-    server.client[i] = 0;
+    if (disc == true)
+    {
+        close(server.client[i]);
+        server.client[i] = 0;
+    }
 }
 
 void get_request(t_server s, t_active &active)
@@ -95,13 +109,12 @@ void get_request(t_server s, t_active &active)
             if((message_len = recv(s.clien[i], buff, 1000000, 0)) == -1)
             {
                 std::cout<<"error"<< std::endl;
-                // relancer le client
+                clien_disconnection(server, i, false);
             }
-            // if(message_len == 0)
-            // {
-            //     //fin de l'envoi
-            //     // deconnecter le client
-            // }
+            if(message_len == 0)
+            {
+                clien_disconnection(server, i, true);
+            }
 
             else
             {
