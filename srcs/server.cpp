@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/09 06:06:37 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/16 06:00:12 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,28 @@ void setup_server(t_conf &conf)
         std::cout<< "ERROR in listen"<< std::endl;
         exit(1);
     }
+}
+
+void customer_disconnection(t_server &server, t_active &active)
+{
+    FD_ZERO(&active.write);
+    FD_ZERO(&active.read);
+
+    for (int i = 0; i < server.fd_max; i++)
+    {
+        if(server.client[i] > 0)
+        {
+            clien_disconnection(server, i);
+        }
+    }
+}
+
+void clien_disconnection(t_server &server, unsigned int i)
+{
+    server.respons.erase(server.client[i]);
+    server.req.erase(server.client[i]);
+    close(server.client[i]);
+    server.client[i] = 0;
 }
 
 void get_request(t_server s, t_active &active)
