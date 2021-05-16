@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/16 06:23:53 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/16 11:59:02 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 
-
-
 void setup_server(t_conf &conf)
 {
     int opt = 1;
 
-    for(int i = 0; i <= WORKER_MAX + 1; i++)
+    for(int i = 0; i <= CLIENT_MAX + 1; i++)
     {
-        conf.serv.worker[i] = 0;
+        conf.serv.client[i] = 0;
     }
 
     if ((conf.serv.socket_server = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -54,7 +52,7 @@ void setup_server(t_conf &conf)
         std::cout<< "ERROR in blind"<< std::endl;
         exit(1);
     }
-    if (listen(conf.serv.socket_server, WORKER_MAX) == -1)
+    if (listen(conf.serv.socket_server, CLIENT_MAX) == -1)
     {
         std::cout<< "ERROR in listen"<< std::endl;
         exit(1);
@@ -70,7 +68,7 @@ void customer_disconnection(t_server &server, t_active &active)
     {
         if(server.client[i] > 0)
         {
-            clien_disconnection(server, i, true);
+            clien_disconnection(server, i);
         }
     }
 }
@@ -81,19 +79,49 @@ void customer_restart(t_server &server)
     {
         if(server.client[i] > 0)
         {
-            clien_disconnection(server, i, false);
+            clien_restart(server, i);
         }
     }
-
 }
-void clien_disconnection(t_server &server, unsigned int i, bool disc)
+
+void client_restart(t_server &server,t_active &active)
 {
     server.respons.erase(server.client[i]);
     server.req.erase(server.client[i]);
-    if (disc == true)
+}
+
+
+void clien_disconnection(t_server &server, unsigned int i)
+{
+    server.respons.erase(server.client[i]);
+    server.req.erase(server.client[i]);
+    close(server.client[i]);
+    server.client[i] = 0;
+}
+
+void set_socket(t_server &server, t_active &active)
+{
+    FD_SET(server.socket_server, &active.read);
+    FD_SET(server.socket_server, &active.write);
+
+    for(unsigned int i = 0; i < server.fd_max; i++)
     {
-        close(server.client[i]);
-        server.client[i] = 0;
+        FD_SET(server.client[i], &active.read);
+        if(server.find(server.clien[i]) != server.respons.end())
+        {
+            FD_SET(server.client[i], &active.write);
+        }
+    }
+}
+
+void server_init_socket(std::list<t_config> &conf, t_active &active)
+{
+    FD_ZERO(&active.read);
+    FD_ZERO(&active.write);
+
+    for(std::list<t_config>::iterator i = conf.begin(); i != conf.end(); i++)
+    {
+        set_socket((*i).serv, active);
     }
 }
 
@@ -109,11 +137,11 @@ void get_request(t_server s, t_active &active)
             if((message_len = recv(s.clien[i], buff, 1000000, 0)) == -1)
             {
                 std::cout<<"error"<< std::endl;
-                clien_disconnection(server, i, false);
+                clien_disconnection(server, i, false);// false = restart client
             }
             if(message_len == 0)
             {
-                clien_disconnection(server, i, true);
+                clien_disconnection(server, i, true); // true = close connection
             }
 
             else
@@ -128,4 +156,40 @@ void get_request(t_server s, t_active &active)
             }
         }
     }
+}
+
+void accept_connection(t_server &server)
+{
+    if((server.socket_connection = accept(server.socket_server, (struct sockaddr *)&server.address, (socklen_t *)&server.leen_address)) == -1)
+    {
+        ;
+        //error
+    }
+    if ((unsigned int) server.socket_connection > server.fd_max)
+    {
+        server.fd_max = server.socket_connection;
+    }
+    fcntl(server.socket_connection, F_SELFL, O_NONBLOCK);
+    for (unsigned int i = 0; i < s.fd_max; i++)
+    {
+        if (server.client[i] == 0)
+        {
+            server.client[i] = server.socket_connection;
+            break;
+        }
+    }
+}
+
+void new_connection(t_server &server, t_actve &active)
+{
+    if(FD_ISSET(server.socket_server, &active.read))
+    {
+        accept_connection(server);
+    }
+}
+
+void ft_server(std::list<t_config> &conf, t_active &active, void (*f)(t_server &, t_active &))
+{
+    for (std::list<t_config>::iterator i = c.begin(); i != c.end(); i++)
+		f((*i).s, active_socket);
 }
