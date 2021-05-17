@@ -95,6 +95,7 @@ typedef struct	s_req
 	struct s_header			*header;
 	int						body_index;
 	std::string				body_content;
+	bool					done = false;
 }				t_req;
 
 typedef struct	s_res
