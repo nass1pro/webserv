@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/17 13:47:23 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/17 14:18:12 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,6 +304,14 @@ void concatenate_header(t_config &config, t_req &req)
 }
 
 // function for 500 error()
+void error_500_handling(t_config &config, t_req &req)
+{
+    config.serv.res.statusCode = 500;
+    std::ifstream ifs("error_pages/500.html"); 
+	config.serv.res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    set_response_data(config, req, 500);
+    concatenate_header(config, req);
+}
 
 t_res &function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config )
 {
