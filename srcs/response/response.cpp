@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/17 13:34:34 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/17 13:47:23 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void setContentLength(t_config &config, t_req &req, int statusCode)
 	//https://tools.ietf.org/html/rfc7230#section-3.3.2
 	std::ostringstream ss;	
 	ss << "Content-Length: ";
-	ss << res.payload.size();
+	ss << 	config.serv.res.payload.size();
 	req.header->Content_Length = ss.str();
 }
 
@@ -319,7 +319,7 @@ t_res &function_where_i_receive_request_data_and_return_response( std::map<int, 
 	else if (req.version != "1.1")
 	{
 		std::ifstream ifs("error_pages/405.html"); 
-		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		config.serv.res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(config, req, 405);
 	}
 	else if (req.method == "GET") //read content
@@ -327,7 +327,7 @@ t_res &function_where_i_receive_request_data_and_return_response( std::map<int, 
 	else if (req.method == "HEAD") //read header content
 	{
 		head_request(config, req);
-		res.payload = std::string("\0");
+		config.serv.res.payload = std::string("\0");
 	}
 	else if (req.method == "PUT") //update content	
 		put_request(config, req);
