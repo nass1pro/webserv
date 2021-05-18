@@ -3,68 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 06:34:03 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/18 09:04:33 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 11:36:10 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <list>
-#include <sstream>
-#include <string.h>
-#include <dirent.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/time.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <string>
-#include <vector>
-#include <map>
-#include "include/config.hpp"
+#ifndef __SERVER_HPP__
+# define __SERVER_HPP__
 
-# define CLIENT_MAX 200
-
-typedef struct s_active
-{
-    fd_set read;
-    fd_set write;
-}               t_active;
-
-typedef struct s_server
-{
-    struct sockaddr_in          address; //structur pour socket
-    int                         socket_server; // socket d'entrer pour le client
-    int                         len_address;
-    int                         client[CLIENT_MAX + 1];
-    int                         socket_connection;
-    unsigned int                fd_max;
-    std::map<int, t_req>        req;
-    std::map<int, std::string>  respons;
+#include "config.hpp"
 
 
-
-}               t_server;
-
-
-typedef struct  s_config
-{
-    std::list<std::string>  host;
-    std::string             name_server;
-    std::string             error_page;
-    std::list<std::string>  location;
-    std::list<std::string>  port;
-    std::list<std::string>  index;
-    size_t                  body_size_limit;
-    t_server                serv;
-
-}                           t_config;
 
 void                        detecte_connection(std::list<t_config> &conf, t_active &active);
 void                        write_socket(t_server &server, t_active &active);
@@ -82,5 +33,7 @@ void                        server_init_socket(std::list<t_config> &conf, t_acti
 
 void                        get_request(t_server s, t_active &active);
 void                        accept_connection(t_server &server);
-void                        new_connection(t_server &server, t_actve &active);
+void                        new_connection(t_server &server, t_active &active);
 void ft_server(std::list<t_config> &conf, t_active &active, void (*f)(t_server &, t_active &));
+
+# endif

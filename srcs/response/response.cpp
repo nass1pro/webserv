@@ -5,18 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/18 09:45:15 by nahaddac         ###   ########.fr       */
+/*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
+/*   Updated: 2021/05/18 12:08:22 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config.hpp"
-#include "../../include/parse_cli.hpp"
 #include "../../include/server.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
 
-void setAllow(t_config &config, t_req &req, int statusCode)
+void setAllow(t_req &req, int statusCode)
 {
 	/*This header must be sent if the server responds with a 405
 	 Method Not Allowed status code to indicate which request methods can be used.*/
@@ -28,19 +26,19 @@ void setAllow(t_config &config, t_req &req, int statusCode)
 		req.header->Allow = std::string("\0");
 }
 
-void setContentLanguage(t_config &config, t_req &req, int statusCode)
+void setContentLanguage(t_req &req)
 {
 	/*If no Content-Language is specified,
 	the default is that the content is intended for all language audiences.*/
 	req.header->Content_Language = std::string("\0");
 }
 
-void setTransferEncoding(t_config &config, t_req &req, int statusCode)
+void setTransferEncoding(t_req &req)
 {
 	req.header->Transfer_Encoding = std::string("\0");
 }
 
-void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode)
+void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
 {
 	//https://tools.ietf.org/html/rfc7230#section-3.3.2
 	std::ostringstream ss;
@@ -49,12 +47,12 @@ void setContentLength( std::map<int, t_req>::iterator &client, t_config &config,
 	req.header->Content_Length = ss.str();
 }
 
-void setContentType(t_config &config, t_req &req, int statusCode)
+void setContentType(t_req &req)
 {
 	req.header->Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
 }
 
-void setDate( t_config &config, t_req &req, int statusCode)
+void setDate(t_req &req)
 {
 	std::ostringstream ss;
 	std::time_t t = std::time(0);   // get time now
@@ -110,7 +108,7 @@ void setDate( t_config &config, t_req &req, int statusCode)
 	req.header->Date = ss.str();
 }
 
-void setLastModified(t_config &config, t_req &req, int statusCode)
+void setLastModified(t_req &req, int statusCode)
 {
 	if (statusCode == 200 || statusCode ==  201)
 		req.header->Last_modified = std::string(req.header->Date);
@@ -118,7 +116,7 @@ void setLastModified(t_config &config, t_req &req, int statusCode)
 		req.header->Last_modified = std::string("\0");
 }
 
-void setLocation(t_config &config, t_req &req, int statusCode)
+void setLocation(t_req &req, int statusCode)
 {
 	// used when there is a redirection, "location" is the correct address to return to the client, so he can be redirected.
 	if (statusCode == 201)
@@ -137,7 +135,7 @@ void setLocation(t_config &config, t_req &req, int statusCode)
 		req.header->Content_Location = std::string("\0");
 }
 
-void setRetryAfter(t_config &config, t_req &req, int statusCode)
+void setRetryAfter(t_req &req, int statusCode)
 {
 	if (statusCode == 413)
 		req.header->retry_after = std::string("Retry-After: 120");
@@ -145,14 +143,14 @@ void setRetryAfter(t_config &config, t_req &req, int statusCode)
 		req.header->retry_after = std::string("\0");
 }
 
-void setServer(t_config &config, t_req &req, int statusCode)
+void setServer(t_config &config, t_req &req)
 {
 	req.header->Server = std::string("Server: ");
 	req.header->Server += config.name_server;
 	req.header->Server += ("/1.0");
 }
 
-void setWWWAuthenticate(t_config &config, t_req &req, int statusCode)
+void setWWWAuthenticate(t_req &req, int statusCode)
 {
 	if (statusCode == 401)
 		req.header->WWW_Authenticate = std::string("WWW-Authenticate: something");
@@ -160,12 +158,12 @@ void setWWWAuthenticate(t_config &config, t_req &req, int statusCode)
 		req.header->WWW_Authenticate = std::string("\0");
 }
 
-void setPayload(t_config &config, t_req &req, int statusCode)
-{
+// void setPayload(t_config &config, t_req &req, int statusCode)
+// {
 
-}
+// }
 
-void setContentLocation(t_config &config, t_req &req, int statusCode)
+void setContentLocation(t_req &req, int statusCode)
 {
 	if (statusCode == 200 || statusCode == 201)
 	{
@@ -201,10 +199,10 @@ void set_response_data( std::map<int, t_req>::iterator &client, t_config &config
 
 void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
 {
-	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
+	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
-		std::string path = it->location_match;
-		if( path == req.url) // means the url exist and the request is valid
+		std::string path = *it;
+		if(path == req.url) // means the url exist and the request is valid
 		{
 			std::ifstream ifs(req.url); //get the input file stream with the requested url
 			config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
@@ -218,7 +216,7 @@ void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_r
 	set_response_data(client, config, req, 404);
 }
 
-void file_create_or_replace( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
+void file_create_or_replace(t_req &req)
 {
 	std::ofstream replace(req.url);
 	std::string buffer;
@@ -230,9 +228,9 @@ void put_request( std::map<int, t_req>::iterator &client, t_config &config, t_re
 {
 	//response for put method no payload and header very minimalist
 	// check if resource exist
-	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
+	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
-		std::string potential_file_path = std::string(it->location_match);
+		std::string potential_file_path = std::string(*it);
 		potential_file_path += req.url;
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
@@ -258,43 +256,43 @@ void concatenate_header( std::map<int, t_req>::iterator &client, t_config &confi
 	{
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header = req.header->Content_Length;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Content_Length);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Content_Location;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Content_Location);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Content_Type;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Content_Type);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Date;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Date);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Last_modified;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Last_modified);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Server;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Server);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Content_Length;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Content_Length);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 		if (req.header->Content_Length != "\0")
 		{
-			config.serv.res[client->first].response_header += req.header->Location;
-			config.serv.res[client->first].response_header += "\n";
+			config.serv.res[client->first].response_header.append(req.header->Location);
+			config.serv.res[client->first].response_header.append("\n");
 		}
 	}
 	else if (req.method == "PUT" || req.method == "POST")
@@ -314,7 +312,7 @@ void error_500_handling( std::map<int, t_req>::iterator &client, t_config &confi
     concatenate_header(client, config, req);
 }
 
-t_res &function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
+void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
 	// t_header dns ma t_request
     // bodysize limit si body plus grand, renvoyer erreur
