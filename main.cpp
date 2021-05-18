@@ -6,15 +6,13 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/18 10:23:56 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 13:41:09 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/select.h>
 #include "include/config.hpp"
 #include "include/utils.hpp"
 #include "include/server.hpp"
-#include <cstring>
 
 
 void            detecte_connection(std::list<t_config> &conf, t_active &active)
@@ -23,7 +21,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     struct timeval timeout = {1, 0};
 
     server_init_socket(conf, active);
-    if ((error = select(FD_SETSIZE, &active.read, &active.write, &timeout)) == -1)
+    if ((error = select(FD_SETSIZE, &active.read, &active.write, NULL,&timeout)) == -1)
     {
         std::cout << "Error: select failed" << std::endl;
         detecte_connection( conf, active);
@@ -31,7 +29,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     if (error == 0)
     {
         ft_server(conf, active, customer_disconnection);
-        detect_connection(conf, active);
+        detecte_connection(conf, active);
     }
     else
     {
@@ -43,22 +41,22 @@ void write_socket(t_server &server, t_active &active)
 {
     int message_len;
 
-    for (unsigned int  i = 0; i < server.ft_max; i++)
+    for (unsigned int  i = 0; i < server.fd_max; i++)
     {
-        if(FD_ISSET(server.client[i], active.write))
+        if(FD_ISSET(server.client[i], &active.write))
         {
-            if(message_len = send(server.client[i], server.respons[server.client[i].c_str()], server.respons[server.client[i].size()], MSG_NOSIGNAL) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL)) == -1)
             {
                 P("ERROR : send failed");
-                clien_disconnection(server, i, false);
+                clien_disconnection(server, i);
             }
-            else if((size_t)message_len < server.respons[server.client[i].size()])
+            else if((size_t)message_len < server.res[server.client[i]].size())
             {
-                server.respons[server.client[i]] = server.respons[server.client[i].substr(message_len, server.respons[server.client[i].size()]);
+                server.res[server.client[i]] = server.res[server.client[i]].substr(message_len, server.res[server.client[i]].size());
             }
             else
             {
-                server.respons.erase(server.client[i]);
+                server.res.erase(server.client[i]);
             }
         }
     }
@@ -74,10 +72,10 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            parse_request(request->segond.full_reqconf);
-            if (request->segond.done == true)
+            // parse_request(request->second.full_req);
+            if (request->second.done == true)
             {
-                function_where_i_receive_request_data_and_return_response(request, request->segond, conf);
+                function_where_i_receive_request_data_and_return_response(request, request->second, conf);
             }
            request++;
         }
@@ -93,31 +91,34 @@ void            launche_server(std::list<t_config> &conf)
     {
         while(true)
         {
-            detecte_connection(conf, active);
-            while(server != conf.end())
+            try
             {
-                read_socket(*server, active);
-                write_socket(*server, active);
-                server++;
+                detecte_connection(conf, active);
+                while(server != conf.end())
+                {
+                    read_socket(*server, active);
+                    write_socket((*server).serv, active);
+                    server++;
+                }
+                server = conf.begin();
             }
-            server.begin();
-        }
-        catch (const std::out_of_range &e)
-        {
-            P(e.what());
-            customer_restart((*server).serv);
-        }
-        catch (const std::exception &e)
-        {
-            P(e.what());
-            //erreur 500
+            catch (const std::out_of_range &e)
+            {
+                P(e.what());
+                customer_restart((*server).serv);
+            }
+            catch (const std::exception &e)
+            {
+                P(e.what());
+                //erreur 500
+            }
         }
     }
     catch (std::exception &e)
     {
         P("error server start");
         ft_server(conf, active, customer_disconnection);
-        launche_server(int &conf);
+        launche_server(conf);
     }
 }
 
@@ -132,7 +133,7 @@ int main(int ac, char **av)
     }
     if (parse_conf(av[1], conf) == -1)
         return 1;
-    for(std::list<t_conf>::iterator l = conf.begin(); l != conf.end)
+    for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
         setup_server(*l);
     }
