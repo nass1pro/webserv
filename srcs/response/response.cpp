@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/09 04:43:07 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 09:41:57 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,19 +202,34 @@ void head_request(t_config &config, t_header &header, t_req &req, t_res &res)
 {
 	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
+<<<<<<< HEAD
 		std::string path = config.host + it->location_match;
 		if( path == req.url) // means the url exist and the request is valid
 		{
 			std::ifstream ifs(req.url); //get the input file stream with the requested url
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(config, header, req, res, 200);
+=======
+		std::string path = config.host + it->location_match;
+		if( path == req.url) // means the url exist and the request is valid
+		{
+			std::ifstream ifs(req.url); //get the input file stream with the requested url
+			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+			set_response_data(config, header, req, res, 200);
+>>>>>>> elias_work
 			return ;
 		}
 	}
 	// if we reach this part of the function means we have a 404 not found, work in progress
+<<<<<<< HEAD
 	std::ifstream ifs("error_pages/404.html");
 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	set_response_data(config, header, req, res, 404);
+=======
+	std::ifstream ifs("error_pages/404.html");
+	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+	set_response_data(config, header, req, res, 404);
+>>>>>>> elias_work
 }
 
 void file_create_or_replace(t_config &config, t_header &header, t_req &req, t_res &res)
@@ -232,9 +247,15 @@ void put_request(t_config &config, t_header &header, t_req &req, t_res &res)
 	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
 		std::string potential_file_path = std::string(it->location_match);
+<<<<<<< HEAD
 		potential_file_path += req.url;
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
+=======
+		potential_file_path += req.url;
+		std::ifstream potential_file(potential_file_path);
+		if (potential_file.is_open() == false)
+>>>>>>> elias_work
 		{
 			// if do not exist 201
 			res.statusCode = 201;
@@ -308,10 +329,17 @@ t_res &function_where_i_receive_request_data_and_return_response(t_config &confi
 	// bodysize limit si body plus grand, renvoyer erreur
 	t_res res;
 	if (req.error == 413)
+<<<<<<< HEAD
 		set_response_data(config, header, req, res, 413);
 	else if (req.version != "1.1")
 	{
 		std::ifstream ifs("error_pages/405.html");
+=======
+		set_response_data(config, header, req, res, 413);
+	else if (req.version != "1.1")
+	{
+		std::ifstream ifs("error_pages/405.html");
+>>>>>>> elias_work
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(config, header, req, res, 405);
 	}
