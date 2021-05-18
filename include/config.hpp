@@ -22,6 +22,30 @@
 
 # define CLIENT_MAX 200
 
+/*
+** CGI meta-variables
+*/
+typedef struct	s_cgi
+{
+	std::string	AUTH_TYPE;
+	std::string	CONTENT_LENGTH;
+	std::string	CONTENT_TYPE;
+	std::string	GATEWAY_INTERFACE;
+	std::string	PATH_INFO;
+	std::string	PATH_TRANSLATED;
+	std::string	QUERY_STRING;
+	std::string	REMOTE_ADDR;
+	std::string	REMOTE_IDENT;
+	std::string	REMOTE_USER;
+	std::string	REQUEST_METHOD;
+	std::string	REQUEST_URI;
+	std::string	SCRIPT_NAME;
+	std::string	SERVER_NAME;
+	std::string	SERVER_PORT;
+	std::string	SERVER_PROTOCOL;
+	std::string	SERVER_SOFTWARE;
+}				t_cgi;
+
 typedef struct s_header
 {
 	std::string				Accept_Charsets;
@@ -112,7 +136,7 @@ typedef struct	s_loc
 	std::string		directory_listing;
 	std::string		default_file_directory_request;
 	std::string		upload_files_location;
-
+	t_cgi			cgi;
 }				t_loc;
 
 
