@@ -7,14 +7,20 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:21:32 by ehafidi           #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2021/05/17 17:49:15 by ehafidi          ###   ########.fr       */
 =======
 /*   Updated: 2021/04/21 15:40:13 by ehafidi          ###   ########.fr       */
 >>>>>>> main
+=======
+/*   Updated: 2021/05/18 10:30:22 by nahaddac         ###   ########.fr       */
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/config.hpp"
+#include "../../include/parse_cli.hpp"
+#include "../../include/server.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
 
@@ -26,13 +32,13 @@ void setAllow(t_config &config, t_req &req, int statusCode)
 	{
 		req.header->Allow = std::string("Allow: GET, HEAD, PUT, POST");
 	}
-	else 
+	else
 		req.header->Allow = std::string("\0");
 }
 
 void setContentLanguage(t_config &config, t_req &req, int statusCode)
 {
-	/*If no Content-Language is specified, 
+	/*If no Content-Language is specified,
 	the default is that the content is intended for all language audiences.*/
 	req.header->Content_Language = std::string("\0");
 }
@@ -45,7 +51,7 @@ void setTransferEncoding(t_config &config, t_req &req, int statusCode)
 void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode)
 {
 	//https://tools.ietf.org/html/rfc7230#section-3.3.2
-	std::ostringstream ss;	
+	std::ostringstream ss;
 	ss << "Content-Length: ";
 	ss << 	config.serv.res[client->first].payload.size();
 	req.header->Content_Length = ss.str();
@@ -58,49 +64,49 @@ void setContentType(t_config &config, t_req &req, int statusCode)
 
 void setDate( t_config &config, t_req &req, int statusCode)
 {
-	std::ostringstream ss;	
+	std::ostringstream ss;
 	std::time_t t = std::time(0);   // get time now
     std::tm* now = std::localtime(&t);
    	ss << "Date: ";
 	if (now->tm_wday == 0)
-   		ss << "Sun, "; 
+   		ss << "Sun, ";
    	else if (now->tm_wday == 1)
-   		ss << "Mon, "; 
+   		ss << "Mon, ";
    	else if (now->tm_wday == 2)
-   		ss << "Tue, "; 
+   		ss << "Tue, ";
    	else if (now->tm_wday == 3)
-   		ss << "Wed, "; 
+   		ss << "Wed, ";
    	else if (now->tm_wday == 4)
-   		ss << "Thu, "; 
+   		ss << "Thu, ";
    	else if (now->tm_wday == 5)
-   		ss << "Fri, "; 
+   		ss << "Fri, ";
    	else if (now->tm_wday == 6)
-   		ss << "Sat, "; 
+   		ss << "Sat, ";
 	ss << now->tm_mday;
    	if (now->tm_mon == 0)
-   		ss << " Jan "; 
+   		ss << " Jan ";
    	else if (now->tm_mon == 1)
-   		ss << " Feb "; 
+   		ss << " Feb ";
    	else if (now->tm_mon == 2)
-   		ss << " Mar "; 
+   		ss << " Mar ";
    	else if (now->tm_mon == 3)
-   		ss << " Apr "; 
+   		ss << " Apr ";
    	else if (now->tm_mon == 4)
-   		ss << " May "; 
+   		ss << " May ";
    	else if (now->tm_mon == 5)
-   		ss << " Jun "; 
+   		ss << " Jun ";
    	else if (now->tm_mon == 6)
-   		ss << " Jul "; 
+   		ss << " Jul ";
 	else if (now->tm_mon == 7)
-   		ss << " Aug "; 
+   		ss << " Aug ";
    	else if (now->tm_mon == 8)
-   		ss << " Sep "; 
+   		ss << " Sep ";
    	else if (now->tm_mon == 9)
-   		ss << " Oct "; 
+   		ss << " Oct ";
    	else if (now->tm_mon == 10)
-   		ss << " Nov "; 
+   		ss << " Nov ";
    	else if (now->tm_mon == 11)
-   		ss << " Dec "; 
+   		ss << " Dec ";
 	ss << (now->tm_year + 1900);
 	ss << ' ';
 	ss << now->tm_hour;
@@ -108,7 +114,7 @@ void setDate( t_config &config, t_req &req, int statusCode)
 	ss << now->tm_min;
 	ss << ':';
 	ss << now->tm_sec;
-	ss << " GMT";	
+	ss << " GMT";
 	req.header->Date = ss.str();
 }
 
@@ -116,8 +122,8 @@ void setLastModified(t_config &config, t_req &req, int statusCode)
 {
 	if (statusCode == 200 || statusCode ==  201)
 		req.header->Last_modified = std::string(req.header->Date);
-	else 
-		req.header->Last_modified = std::string("\0");	
+	else
+		req.header->Last_modified = std::string("\0");
 }
 
 void setLocation(t_config &config, t_req &req, int statusCode)
@@ -142,8 +148,8 @@ void setLocation(t_config &config, t_req &req, int statusCode)
 void setRetryAfter(t_config &config, t_req &req, int statusCode)
 {
 	if (statusCode == 413)
-		req.header->retry_after = std::string("Retry-After: 120"); 
-	else 
+		req.header->retry_after = std::string("Retry-After: 120");
+	else
 		req.header->retry_after = std::string("\0");
 }
 
@@ -151,15 +157,15 @@ void setServer(t_config &config, t_req &req, int statusCode)
 {
 	req.header->Server = std::string("Server: ");
 	req.header->Server += config.name_server;
-	req.header->Server += ("/1.0");	
+	req.header->Server += ("/1.0");
 }
 
 void setWWWAuthenticate(t_config &config, t_req &req, int statusCode)
-{	
+{
 	if (statusCode == 401)
-		req.header->WWW_Authenticate = std::string("WWW-Authenticate: something"); 
-	else 
-		req.header->WWW_Authenticate = std::string("\0"); 
+		req.header->WWW_Authenticate = std::string("WWW-Authenticate: something");
+	else
+		req.header->WWW_Authenticate = std::string("\0");
 }
 
 void setPayload(t_config &config, t_req &req, int statusCode)
@@ -205,19 +211,19 @@ void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_r
 {
 	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
-		std::string path = it->location_match;  
+		std::string path = it->location_match;
 		if( path == req.url) // means the url exist and the request is valid
 		{
-			std::ifstream ifs(req.url); //get the input file stream with the requested url 
+			std::ifstream ifs(req.url); //get the input file stream with the requested url
 			config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			set_response_data(client, config, req, 200);	
+			set_response_data(client, config, req, 200);
 			return ;
 		}
-	}	
+	}
 	// if we reach this part of the function means we have a 404 not found, work in progress
-	std::ifstream ifs("error_pages/404.html"); 
+	std::ifstream ifs("error_pages/404.html");
 	config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-	set_response_data(client, config, req, 404);	
+	set_response_data(client, config, req, 404);
 }
 
 void file_create_or_replace( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
@@ -235,23 +241,23 @@ void put_request( std::map<int, t_req>::iterator &client, t_config &config, t_re
 	for (std::list<t_loc>::iterator it = config.locations.begin(); it != config.locations.end(); it++)
 	{
 		std::string potential_file_path = std::string(it->location_match);
-		potential_file_path += req.url;  
+		potential_file_path += req.url;
 		std::ifstream potential_file(potential_file_path);
-		if (potential_file.is_open() == false) 
+		if (potential_file.is_open() == false)
 		{
 			// if do not exist 201
 			config.serv.res[client->first].statusCode = 201;
 			config.serv.res[client->first].payload = std::string("\0");
-			set_response_data(client, config, req, 201);	
-			file_create_or_replace(client, config, req);				
+			set_response_data(client, config, req, 201);
+			file_create_or_replace(client, config, req);
 			return ;
 		}
 	}
 	// if exist 200
-	config.serv.res[client->first].statusCode = 200;	
+	config.serv.res[client->first].statusCode = 200;
 	config.serv.res[client->first].payload = std::string("\0");
-	set_response_data(client, config, req, 201);	
-	file_create_or_replace(client, config, req);		
+	set_response_data(client, config, req, 201);
+	file_create_or_replace(client, config, req);
 }
 
 void concatenate_header( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
@@ -264,7 +270,7 @@ void concatenate_header( std::map<int, t_req>::iterator &client, t_config &confi
 			config.serv.res[client->first].response_header += "\n";
 		}
 		if (req.header->Content_Length != "\0")
-		{		
+		{
 			config.serv.res[client->first].response_header += req.header->Content_Location;
 			config.serv.res[client->first].response_header += "\n";
 		}
@@ -299,7 +305,7 @@ void concatenate_header( std::map<int, t_req>::iterator &client, t_config &confi
 			config.serv.res[client->first].response_header += "\n";
 		}
 	}
-	else if (req.method == "PUT" || req.method == "POST") 
+	else if (req.method == "PUT" || req.method == "POST")
 	{
 		config.serv.res[client->first].response_header += req.header->Content_Location;
 		config.serv.res[client->first].response_header += "\n";
@@ -310,7 +316,7 @@ void concatenate_header( std::map<int, t_req>::iterator &client, t_config &confi
 void error_500_handling( std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
 {
     config.serv.res[client->first].statusCode = 500;
-    std::ifstream ifs("error_pages/500.html"); 
+    std::ifstream ifs("error_pages/500.html");
 	config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     set_response_data(client, config, req, 500);
     concatenate_header(client, config, req);
@@ -324,12 +330,12 @@ t_res &function_where_i_receive_request_data_and_return_response( std::map<int, 
 	// je recois structure de requete dans &client
     // t_response sur lequel je travaille se trouve dans t_server qui se trouve dans t_config
     // t_header dans t_request
-    
+
     if (req.error == 413)
-		set_response_data(client, config, req, 413);	
+		set_response_data(client, config, req, 413);
 	else if (req.version != "1.1")
 	{
-		std::ifstream ifs("error_pages/405.html"); 
+		std::ifstream ifs("error_pages/405.html");
 		config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(client, config, req, 405);
 	}
@@ -340,11 +346,11 @@ t_res &function_where_i_receive_request_data_and_return_response( std::map<int, 
 		head_request(client, config, req);
 		config.serv.res[client->first].payload = std::string("\0");
 	}
-	else if (req.method == "PUT") //update content	
+	else if (req.method == "PUT") //update content
 		put_request(client, config, req);
 	else if (req.method == "POST") //create content
 		put_request(client, config, req);
-	else 
+	else
 		set_response_data(client, config, req, 405);
     concatenate_header(client, config, req);
 	// return (res);

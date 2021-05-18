@@ -13,11 +13,14 @@
 #include <sys/socket.h> /////////////////// to_delete because multiple inclusion
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 typedef struct	s_loc
 {
 	std::string		location_match;
 	std::string		optional_modifier;
-	std::list<std::string>		http_methods; // 1 or more ? 
+	std::list<std::string>		http_methods; // 1 or more ?
 	size_t			body_size = 1; //MB !!
 	std::string		directory_files_search;
 	std::string		directory_listing;
@@ -25,6 +28,7 @@ typedef struct	s_loc
 	std::string		upload_files_location;
 
 }				t_loc;
+<<<<<<< HEAD
 =======
 
 typedef struct	s_config
@@ -38,6 +42,8 @@ typedef struct	s_config
 
 }				t_config;
 >>>>>>> main
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 
 typedef struct	s_req
 {
@@ -52,7 +58,7 @@ typedef struct	s_req
 	std::string				body_content;
 }				t_req;
 
-typedef struct s_res
+typedef struct	s_res
 {
     std::string           response_header;
     unsigned int           statusCode;
@@ -60,6 +66,9 @@ typedef struct s_res
 } t_res;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 typedef struct s_server
 {
     struct sockaddr_in          address; //structur pour socket
@@ -70,11 +79,14 @@ typedef struct s_server
     unsigned int                fd_max;
     std::map<int, t_req>        req;
     std::map<int, t_res>        res;
+<<<<<<< HEAD
 =======
 t_res &function_where_i_receive_request_data_and_return_response(t_config &config, t_header &header, t_req &req);
 
 //previous req
 >>>>>>> main
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 
 
 
@@ -144,6 +156,9 @@ typedef struct s_header
 //     std::list<std::string> location;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2
 // }              t_config;
 
 // typedef struct s_header
@@ -167,7 +182,7 @@ typedef struct s_header
 //     std::list<std::string> User_Agent;
 //     std::string WWW_Authenticate;
 //     std::list<std::string> header_entire;
-//     std::string body_entire;		
+//     std::string body_entire;
 
 // } t_header;
 
@@ -182,6 +197,7 @@ typedef struct s_header
 // 	std::string 			body;
 // 	int						body_index;
 // }              t_req;
+<<<<<<< HEAD
 
 
 
@@ -190,3 +206,5 @@ typedef struct s_header
 
 #endif
 >>>>>>> main
+=======
+>>>>>>> 60a4dc053d35e8246e736db4d552c81a503e98c2

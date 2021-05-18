@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/04/21 11:30:38 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/18 09:48:23 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool	find_field_name(std::string &line, std::string const &name)
 		return (true);
 	else
 		return (false);
-	
+
 }
 
 /*
@@ -99,39 +99,39 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 	while (!lines.empty())
 	{
 		if (find_field_name(lines.front(), "accept-charsets:"))
-			split_fields(req->header->Accept_Charsets, lines.front(), "accept-charsets:");
+			split_fields_str(req->header->Accept_Charsets, lines.front(), "accept-charsets:");
 		else if (find_field_name(lines.front(), "accept-languages:"))
 			split_fields(req->header->Accept_Language, lines.front(), "accept-languages:");
 		else if (find_field_name(lines.front(), "allow:"))
-			split_fields(req->header->Allow, lines.front(), "allow:");
+			split_fields_str(req->header->Allow, lines.front(), "allow:");
 		else if (find_field_name(lines.front(), "authorization:"))
 			split_fields(req->header->Authorization, lines.front(), "authorization:");
 		else if (find_field_name(lines.front(), "content_language:"))
-			split_fields(req->header->Content_Language, lines.front(), "content_language:");
+			split_fields_str(req->header->Content_Language, lines.front(), "content_language:");
 		/*else if (find_field_name(lines.front(), "content_length:"))
 			split_fields(req->header->Content_Length, lines.front(), "content_length:");*/
 		else if (find_field_name(lines.front(), "content_location:"))
-			split_fields(req->header->Content_Location, lines.front(), "content_location:");
+			split_fields_str(req->header->Content_Location, lines.front(), "content_location:");
 		else if (find_field_name(lines.front(), "content_type:"))
-			split_fields(req->header->Content_Type, lines.front(), "content_type:");
+			split_fields_str(req->header->Content_Type, lines.front(), "content_type:");
 		else if (find_field_name(lines.front(), "date:"))
-			split_fields(req->header->Date, lines.front(), "date:");
+			split_fields_str(req->header->Date, lines.front(), "date:");
 		else if (find_field_name(lines.front(), "host:"))
-			split_fields_str(req->header->Host, lines.front(), "host:");
+			split_fields(req->header->Host, lines.front(), "host:");
 		else if (find_field_name(lines.front(), "last_modified:"))
-			split_fields(req->header->Last_modified, lines.front(), "last_modified:");
+			split_fields_str(req->header->Last_modified, lines.front(), "last_modified:");
 		else if (find_field_name(lines.front(), "referer:"))
-			split_fields_str(req->header->Referer, lines.front(), "referer:");
+			split_fields(req->header->Referer, lines.front(), "referer:");
 		else if (find_field_name(lines.front(), "retry_after:"))
-			split_fields(req->header->retry_after, lines.front(), "retry_after:");
+			split_fields_str(req->header->retry_after, lines.front(), "retry_after:");
 		else if (find_field_name(lines.front(), "server:"))
-			split_fields(req->header->Server, lines.front(), "server:");
+			split_fields_str(req->header->Server, lines.front(), "server:");
 		else if (find_field_name(lines.front(), "transfer_encoding:"))
-			split_fields(req->header->Transfer_Encoding, lines.front(), "transfer_encoding:");
+			split_fields_str(req->header->Transfer_Encoding, lines.front(), "transfer_encoding:");
 		else if (find_field_name(lines.front(), "user_agent:"))
-			split_fields_str(req->header->User_Agent, lines.front(), "user_agent:");
+			split_fields(req->header->User_Agent, lines.front(), "user_agent:");
 		else if (find_field_name(lines.front(), "www_authenticate:"))
-			split_fields(req->header->WWW_Authenticate, lines.front(), "www_authenticate:");
+			split_fields_str(req->header->WWW_Authenticate, lines.front(), "www_authenticate:");
 		else
 			std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();
@@ -140,7 +140,7 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 }
 
 /*
-** Take the first line of the request split her in a list, 
+** Take the first line of the request split her in a list,
 ** add values in the struct t_req and delete used content to the lines list
 ** return negative value in case of error
 */
@@ -191,27 +191,11 @@ int		parse_request(t_req *req)
 	if ((req->body_index = get_body_index(req->full_req)) == -1)
 		return (ERROR);
 	list_lines = split_in_list(req->full_req.substr(0, req->body_index), "\t\n\r\v\f");
-	print_list(list_lines); //test
+	//print_list(list_lines); //test
 	if (parse_first_line(req, list_lines) < 0)
 		return (ERROR);
 	parse_header(req, list_lines);
 	get_body(req);
-	print_req_elem(req); //test
+	//print_req_elem(req); //test
 	return (SUCCESS);
 }
-
-/* \r\n\r\nvariable1=valeur\r\n */
-/*int main()
-{
-	t_req		r;
-	t_header	h;
-
-	r.full_req = "GET / HTTP/1.1\r\nHost: www.site.com\r\nAccept-Charsets: utf-8\r\nAccept: text/html\r\n\r\nvariable1=valeur";
-	r.header = &h;
-	if (parse_request(&r) < SUCCESS)
-	{
-		std::cout << "Error." << std::endl;
-		return (ERROR);
-	}
-	return (SUCCESS);
-}*/
