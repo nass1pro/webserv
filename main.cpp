@@ -6,13 +6,10 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/16 12:05:04 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 09:04:01 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <sys/socket.h>
-#include <sys/time.h>
 #include <sys/select.h>
 #include "include/config.hpp"
 #include "include/utils.hpp"
@@ -75,11 +72,15 @@ void read_socket(t_config &conf, t_active &active)
     if(conf.serv.req.size() != 0)
     {
         request = conf.serv.req.begin();
-        // while(request != conf.serv.req.end())
-        // {
-        //      parsing request and respons you need t_config
-        //    request++;
-        // }
+        while(request != conf.serv.req.end())
+        {
+            parse_request(request->segond, request->segond.full_req, conf);
+            if (request->segond.done == true)
+            {
+                function_where_i_receive_request_data_and_return_response(request, request->segond, conf);
+            }
+           request++;
+        }
     }
 }
 
