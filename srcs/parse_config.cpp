@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:48:00 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 10:37:46 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,48 @@ bool		find_config_elem(std::list<std::string> &line, std::string const &name)
 }
 
 /*
+** parsing cgi
+*/
+int		parse_cgi(t_loc &l, std::list<std::string> line)
+{
+	if (find_config_elem(line, "AUTH_TYPE"))
+		conf_get_str(l.cgi.AUTH_TYPE, line);
+	else if (find_config_elem(line, "CONTENT_LENGTH"))
+		conf_get_str(l.cgi.CONTENT_LENGTH, line);
+	else if (find_config_elem(line, "CONTENT_TYPE"))
+		conf_get_str(l.cgi.CONTENT_TYPE, line);
+	else if (find_config_elem(line, "GATEWAY_INTERFACE"))
+		conf_get_str(l.cgi.GATEWAY_INTERFACE, line);
+	else if (find_config_elem(line, "PATH_INFO"))
+		conf_get_str(l.cgi.PATH_INFO, line);
+	else if (find_config_elem(line, "PATH_TRANSLATED"))
+		conf_get_str(l.cgi.PATH_TRANSLATED, line);
+	else if (find_config_elem(line, "QUERY_STRING"))
+		conf_get_str(l.cgi.QUERY_STRING, line);
+	else if (find_config_elem(line, "REMOTE_ADDR"))
+		conf_get_str(l.cgi.REMOTE_ADDR, line);
+	else if (find_config_elem(line, "REMOTE_IDENT"))
+		conf_get_str(l.cgi.REMOTE_IDENT, line);
+	else if (find_config_elem(line, "REMOTE_USER"))
+		conf_get_str(l.cgi.REMOTE_USER, line);
+	else if (find_config_elem(line, "REQUEST_METHOD"))
+		conf_get_str(l.cgi.REQUEST_METHOD, line);
+	else if (find_config_elem(line, "REQUEST_URI"))
+		conf_get_str(l.cgi.REQUEST_URI, line);
+	else if (find_config_elem(line, "SCRIPT_NAME"))
+		conf_get_str(l.cgi.SCRIPT_NAME, line);
+	else if (find_config_elem(line, "SERVER_NAME"))
+		conf_get_str(l.cgi.SERVER_NAME, line);
+	else if (find_config_elem(line, "SERVER_PORT"))
+		conf_get_str(l.cgi.SERVER_PORT, line);
+	else if (find_config_elem(line, "SERVER_PROTOCOL"))
+		conf_get_str(l.cgi.SERVER_PROTOCOL, line);
+	else if (find_config_elem(line, "SERVER_SOFTWARE"))
+		conf_get_str(l.cgi.SERVER_SOFTWARE, line);
+	return (SUCCESS);
+}
+
+/*
 **
 */
 int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
@@ -132,6 +174,8 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 			conf_get_str(loc.default_file_directory_request, tmp);
 		else if (find_config_elem(tmp, "upload_files_location"))
 			conf_get_str(loc.upload_files_location, tmp);
+		else if (find_config_elem(tmp, "fastcgi_param"))
+			parse_cgi(loc, tmp);
 	}
 	if (brackets != 0)
 		return (ERROR);

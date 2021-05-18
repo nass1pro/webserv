@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:47:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 10:37:48 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	print_header(t_header *h);
 void	print_req_elem(t_req *req);
 void	print_location(t_loc *loc);
 void	print_config(t_config *c);
+
 /*
 ** Utils functions
 */

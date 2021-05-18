@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:48:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 10:38:08 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,7 @@ int		parse_request(t_req *req)
 		return (ERROR);
 	parse_header(req, list_lines);
 	get_body(req);
+	req->done = true;
 	//print_req_elem(req); //test
 	return (SUCCESS);
 }
