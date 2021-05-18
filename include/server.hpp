@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 06:34:03 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/18 09:04:33 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 10:55:09 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "include/config.hpp"
+#include "config.hpp"
 
 # define CLIENT_MAX 200
 
@@ -61,7 +61,8 @@ typedef struct  s_config
     std::list<std::string>  location;
     std::list<std::string>  port;
     std::list<std::string>  index;
-    size_t                  body_size_limit;
+    size_t                  body_size_limit = 1;
+	bool					default_server = false;
     t_server                serv;
 
 }                           t_config;

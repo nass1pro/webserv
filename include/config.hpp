@@ -14,7 +14,7 @@ typedef struct	s_loc
 	std::string		location_match;
 	std::string		optional_modifier;
 	std::string		http_methods;
-	size_t			body_size = 1; //MB !!
+	size_t			body_size_limit = 1; //MB !!
 	std::string		directory_files_search;
 	std::string		directory_listing;
 	std::string		default_file_directory_request;
@@ -22,18 +22,20 @@ typedef struct	s_loc
 
 }				t_loc;
 
-typedef struct	s_config
-{
-	std::string				host;
-	std::list<std::string>	port;
-	std::string				name_server;
-	std::list<std::string>	index;
-	bool					default_server = false;
-	std::string				error_page;
-	std::list<t_loc>		locations;
-	size_t					body_size = 1; // MB !!
 
-}				t_config;
+
+// typedef struct	s_config
+// {
+// 	std::string				host;
+// 	std::list<std::string>	port;
+// 	std::string				name_server;
+// 	std::list<std::string>	index;
+// 	bool					default_server = false;
+// 	std::string				error_page;
+// 	std::list<t_loc>		locations;
+// 	size_t					body_size_limit = 1; // MB !!
+
+// }				t_config;
 
 typedef struct s_header
 {
