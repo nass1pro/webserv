@@ -1,3 +1,5 @@
+#ifndef __CONFIG_HPP__
+# define __CONFIG_HPP__
 
 #include <ctime>
 #include <iostream>
@@ -10,6 +12,7 @@
 #include <map> /////////////////// to_delete because multiple inclusion
 #include <sys/socket.h> /////////////////// to_delete because multiple inclusion
 
+<<<<<<< HEAD
 typedef struct	s_loc
 {
 	std::string		location_match;
@@ -22,6 +25,19 @@ typedef struct	s_loc
 	std::string		upload_files_location;
 
 }				t_loc;
+=======
+
+typedef struct	s_config
+{
+	std::string				host;
+	std::list <std::string>	port;
+	std::string				name_server;
+	std::string				index;
+	std::string				error_page;
+	std::list<std::string>	location;
+
+}				t_config;
+>>>>>>> main
 
 typedef struct	s_req
 {
@@ -43,6 +59,7 @@ typedef struct s_res
 	std::string			payload;
 } t_res;
 
+<<<<<<< HEAD
 typedef struct s_server
 {
     struct sockaddr_in          address; //structur pour socket
@@ -53,6 +70,11 @@ typedef struct s_server
     unsigned int                fd_max;
     std::map<int, t_req>        req;
     std::map<int, t_res>        res;
+=======
+t_res &function_where_i_receive_request_data_and_return_response(t_config &config, t_header &header, t_req &req);
+
+//previous req
+>>>>>>> main
 
 
 
@@ -121,6 +143,7 @@ typedef struct s_header
 //     std::string error_page;
 //     std::list<std::string> location;
 
+<<<<<<< HEAD
 // }              t_config;
 
 // typedef struct s_header
@@ -162,3 +185,8 @@ typedef struct s_header
 
 
 
+=======
+// } t_req;
+
+#endif
+>>>>>>> main
