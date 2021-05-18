@@ -2,25 +2,32 @@
 # define __CONFIG_HPP__
 
 # include <ctime>
+#include <stdio.h>
 # include <iostream>
-# include <string>
+# include <string.h>
 # include <list>
 # include <sstream>
 # include <string.h>
 # include <dirent.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/time.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <vector>
-#include <map>
-#include <fstream>
+# include <unistd.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <netinet/in.h>
+# include <sys/time.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <vector>
+# include <map>
+# include <fstream>
+# include <sys/select.h>
+# include <cstring>
+# include <errno.h>
+# include <sys/types.h>
+# include <stdexcept>
 // # include "server.hpp"
 
 # define CLIENT_MAX 200
+
 
 typedef struct s_header
 {
@@ -63,6 +70,7 @@ typedef struct	s_req
 	t_header			*header;
 	int						body_index;
     int error;
+	bool 					done;
 	std::string				body_content;
 }				t_req;
 
@@ -82,7 +90,7 @@ typedef struct s_server
     int                         socket_connection;
     unsigned int                fd_max;
     std::map<int, t_req>        req;
-    std::map<int, t_res>  res;
+    std::map<int, std::string>  res;
 
 
 
