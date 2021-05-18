@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:48:24 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 11:09:38 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
+#include "../include/server.hpp"
 
 /*
 ** Function for tests

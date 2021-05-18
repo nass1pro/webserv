@@ -8,7 +8,100 @@
 # include <sstream>
 # include <string.h>
 # include <dirent.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/time.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <vector>
+#include <map>
+#include <fstream>
+// # include "server.hpp"
 
+# define CLIENT_MAX 200
+
+typedef struct s_header
+{
+	std::string				Accept_Charsets;
+	std::list<std::string> 	Accept_Language;
+	std::string				Allow;
+	std::list<std::string>	Authorization;
+	std::string				Content_Language;
+	std::string		        Content_Length;
+	std::string				Content_Location;
+	std::string				Content_Type;
+	std::string				Date;
+	std::list<std::string>	Host;
+	std::string				Last_modified;
+	std::string	            Location;
+	std::list<std::string>	Referer;
+	std::string				retry_after;
+	std::string				Server;
+	std::string				Transfer_Encoding;
+	std::list<std::string>	User_Agent;
+	std::string				WWW_Authenticate;
+	std::list<std::string>	header_entire;
+	std::string				body_entire;
+
+} t_header;
+
+typedef struct s_active
+{
+    fd_set read;
+    fd_set write;
+}               t_active;
+
+typedef struct	s_req
+{
+	std::string				full_req;
+	std::string				method;
+	std::string				url;
+	std::list<std::string>	location;
+	std::string				version;
+	t_header			*header;
+	int						body_index;
+    int error;
+	std::string				body_content;
+}				t_req;
+
+typedef struct	s_res
+{
+	std::string		response_header;
+	unsigned int	statusCode;
+	std::string		payload;
+}				t_res;
+
+typedef struct s_server
+{
+    struct sockaddr_in          address; //structur pour socket
+    int                         socket_server; // socket d'entrer pour le client
+    int                         len_address;
+    int                         client[CLIENT_MAX + 1];
+    int                         socket_connection;
+    unsigned int                fd_max;
+    std::map<int, t_req>        req;
+    std::map<int, t_res>  res;
+
+
+
+}               t_server;
+
+
+typedef struct s_config
+{
+    std::list<std::string>  host;
+    std::string             name_server;
+    std::string             error_page;
+    std::list<std::string>  location;
+    std::list<std::string>  port;
+    std::list<std::string>  index;
+    size_t                  body_size_limit = 1;
+	bool					default_server = false;
+    t_server                serv;
+
+}                           t_config;
 typedef struct	s_loc
 {
 	std::string		location_match;
@@ -37,48 +130,26 @@ typedef struct	s_loc
 
 // }				t_config;
 
-typedef struct s_header
-{
-	std::string				Accept_Charsets;
-	std::list<std::string> 	Accept_Language;
-	std::string				Allow;
-	std::list<std::string>	Authorization;
-	std::string				Content_Language;
-	unsigned int			Content_Length;
-	std::string				Content_Location;
-	std::string				Content_Type;
-	std::string				Date;
-	std::list<std::string>	Host;
-	std::string				Last_modified;
-	std::list<std::string>	Location;
-	std::list<std::string>	Referer;
-	std::string				retry_after;
-	std::string				Server;
-	std::string				Transfer_Encoding;
-	std::list<std::string>	User_Agent;
-	std::string				WWW_Authenticate;
-	std::list<std::string>	header_entire;
-	std::string				body_entire;
+void setAllow(t_config &config, t_req &req, int statusCode);
+void setContentLanguage(t_config &config, t_req &req, int statusCode);
+void setTransferEncoding(t_config &config, t_req &req, int statusCode);
+void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
+void setContentType(t_config &config, t_req &req, int statusCode);
+void setDate( t_config &config, t_req &req, int statusCode);
+void setLastModified(t_config &config, t_req &req, int statusCode);
+void setLocation(t_config &config, t_req &req, int statusCode);
+void setRetryAfter(t_config &config, t_req &req, int statusCode);
+void setServer(t_config &config, t_req &req, int statusCode);
+void setWWWAuthenticate(t_config &config, t_req &req, int statusCode);
+void setPayload(t_config &config, t_req &req, int statusCode);
+void setContentLocation(t_config &config, t_req &req, int statusCode);
+void set_response_data( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
+void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void file_create_or_replace( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void put_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void concatenate_header( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void error_500_handling( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
 
-} t_header;
-
-typedef struct	s_req
-{
-	std::string				full_req;
-	std::string				method;
-	std::string				url;
-	std::list<std::string>	location;
-	std::string				version;
-	struct s_header			*header;
-	int						body_index;
-	std::string				body_content;
-}				t_req;
-
-typedef struct	s_res
-{
-	std::string		res_complet;
-	unsigned int	statusCode;
-	std::string		payload;
-}				t_res;
 
 #endif

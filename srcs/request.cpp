@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:48:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/18 11:15:46 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 			split_fields(req->header->Authorization, lines.front(), "authorization:");
 		else if (find_field_name(lines.front(), "content_language:"))
 			split_fields_str(req->header->Content_Language, lines.front(), "content_language:");
-		/*else if (find_field_name(lines.front(), "content_length:"))
-			split_fields(req->header->Content_Length, lines.front(), "content_length:");*/
+		// else if (find_field_name(lines.front(), "content_length:"))
+			// split_fields_str(req->header->Content_Length, lines.front(), "content_length:");
 		else if (find_field_name(lines.front(), "content_location:"))
 			split_fields_str(req->header->Content_Location, lines.front(), "content_location:");
 		else if (find_field_name(lines.front(), "content_type:"))
