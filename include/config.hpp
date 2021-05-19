@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 13:13:41 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 14:04:12 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define __CONFIG_HPP__
 
 # include <ctime>
-#include <stdio.h>
+# include <stdio.h>
 # include <iostream>
 # include <string.h>
 # include <list>
@@ -36,6 +36,8 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <stdexcept>
+# include <fcntl.h>
+
 // # include "server.hpp"
 
 # define CLIENT_MAX 200
@@ -146,7 +148,7 @@ typedef struct	s_loc
 
 typedef struct s_config
 {
-    std::list<std::string>  host;
+    std::string				host;
     std::string             name_server;
     std::string             error_page;
     std::list<t_loc>		location;

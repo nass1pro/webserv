@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 06:34:03 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/18 11:36:10 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 14:09:56 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void                        launche_server(std::list<t_config> &conf);
 void                        setup_server(t_config &conf);
 void                        customer_disconnection(t_server &server, t_active &active);
 void                        customer_restart(t_server &server);
-void                        client_restart(t_server &server,t_active &active);
+void                        client_restart(t_server &server,unsigned int i);
 void                        clien_disconnection(t_server &server, unsigned int i);
 void                        set_socket(t_server &server, t_active &active);
 void                        server_init_socket(std::list<t_config> &conf, t_active &active);

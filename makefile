@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRC = main.cpp srcs/parse_config.cpp srcs/printers.cpp srcs/request.cpp srcs/server.cpp srcs/utils.cpp \
+SRC = main.cpp srcs/parse_config.cpp srcs/request.cpp srcs/server.cpp srcs/utils.cpp \
 		srcs/response/response.cpp
 
 CC = clang++
@@ -19,15 +19,15 @@ CCFLAGS = -g -Wall -Wextra -Werror -std=c++11
 NAME = webserv
 RM = rm -rf
 
-all	: $(NAME) 
+all	: $(NAME)
 
 $(NAME) :
-	$(CC) $(CCFLAGS) $(SRC) -o $(NAME) 
+	$(CC) $(CCFLAGS) $(SRC) -o $(NAME)
 
 fclean: clean
 	$(RM) *.dSYM
 
 clean:
-	$(RM) $(NAME)	
+	$(RM) $(NAME)
 
 re: fclean clean all
