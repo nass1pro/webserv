@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 09:52:43 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 10:05:03 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ typedef struct	s_loc
 	std::string		directory_listing;
 	std::string		default_file_directory_request;
 	std::string		upload_files_location;
-
+	t_cgi			cgi;
 }				t_loc;
 
 

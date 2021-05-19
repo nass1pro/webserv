@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   printers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 11:09:38 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/18 10:38:10 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
-#include "../include/server.hpp"
 
 /*
 ** Function for tests
@@ -58,6 +57,28 @@ void	print_member_list(std::list<Container> list, std::string label)
 	}
 }
 
+void	print_cgi(t_cgi c)
+{
+	P(" ******   CGI   ******");
+	print_member_str(c.AUTH_TYPE, " - AUTH_TYPE : ");
+	print_member_str(c.CONTENT_LENGTH, " - CONTENT_LENGTH : ");
+	print_member_str(c.CONTENT_TYPE, " - CONTENT_TYPE : ");
+	print_member_str(c.GATEWAY_INTERFACE, " - GATEWAY_INTERFACE : ");
+	print_member_str(c.PATH_INFO, " - PATH_INFO : ");
+	print_member_str(c.PATH_TRANSLATED, " - PATH_TRANSLATED : ");
+	print_member_str(c.QUERY_STRING, " - QUERY_STRING : ");
+	print_member_str(c.REMOTE_ADDR, " - REMOTE_ADDR : ");
+	print_member_str(c.REMOTE_IDENT, " - REMOTE_IDENT : ");
+	print_member_str(c.REMOTE_USER, " - REMOTE_USER : ");
+	print_member_str(c.REQUEST_METHOD, " - REQUEST_METHOD : ");
+	print_member_str(c.REQUEST_URI, " - REQUEST_URI : ");
+	print_member_str(c.SCRIPT_NAME, " - SCRIPT_NAME : ");
+	print_member_str(c.SERVER_NAME, " - SERVER_NAME : ");
+	print_member_str(c.SERVER_PORT, " - SERVER_PORT : ");
+	print_member_str(c.SERVER_PROTOCOL, " - SERVER_PROTOCOL : ");
+	print_member_str(c.SERVER_SOFTWARE, " - SERVER_SOFTWARE : ");
+}
+
 void	print_location(t_loc *loc)
 {
 	P("     ## print location ##");
@@ -73,6 +94,7 @@ void	print_location(t_loc *loc)
 	print_member_str(loc->directory_listing, "-- directory listing : ");
 	print_member_str(loc->default_file_directory_request, "-- default file directory request : ");
 	print_member_str(loc->upload_files_location, "-- upload files location : ");
+	print_cgi(loc->cgi);
 
 }
 /*
