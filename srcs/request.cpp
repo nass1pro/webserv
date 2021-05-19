@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 13:23:57 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 18:03:36 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,9 +195,12 @@ int		parse_request(t_req *req)
 	//print_list(list_lines); //test
 	if (parse_first_line(req, list_lines) < 0)
 		return (ERROR);
+	std::cout << req->full_req << std::endl;
 	parse_header(req, list_lines);
+
 	get_body(req);
 	req->done = true;
 	//print_req_elem(req); //test
+
 	return (SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 16:35:30 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 17:59:30 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,14 @@ int main(int ac, char **av)
     }
     if (parse_conf(av[1], conf) == -1)
         return 1;
-	
-    std::cout << conf.front().index.front() << std::endl;
-	return 0 ;
+
+    // std::cout << conf.front().index.front() << std::endl;
+	// return 0 ;
+
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
+        // l->serv.req.resize(200);
+        // l->serv.res.resize(200);
         setup_server(*l);
     }
     launche_server(conf);

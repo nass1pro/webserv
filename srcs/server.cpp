@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 15:38:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 17:55:46 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void server_init_socket(std::list<t_config> &conf, t_active &active)
     }
 }
 
-void get_request(t_server s, t_active &active)
+void get_request(t_server &s, t_active &active)
 {
     int message_len = -1;
     char buff[1000001];
