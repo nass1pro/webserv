@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 09:47:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:03:48 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ bool					find_field_name(std::string &line, std::string const &name);
 /*
 ** Request
 */
-int		parse_request(t_req *req);
+int		parse_request(t_req &req);
 
 /*
 ** Config
