@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 18:03:36 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 18:54:49 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int		split_fields(std::list<std::string> &fields, std::string &line, std::string
 
 	line.erase(0, field_name.size());
 	split = split_in_list(line, " ,");
+	print_list(split);
 	fields.insert(fields.end(), split.begin(), split.end());
 	return (SUCCESS);
 }
@@ -96,8 +97,10 @@ int		split_fields_str(std::string &field, std::string &line, std::string const &
 */
 int		parse_header(t_req *req, std::list<std::string> &lines)
 {
+
 	while (!lines.empty())
 	{
+		print_list(lines);
 		if (find_field_name(lines.front(), "accept-charsets:"))
 			split_fields_str(req->header->Accept_Charsets, lines.front(), "accept-charsets:");
 		else if (find_field_name(lines.front(), "accept-languages:"))
@@ -117,7 +120,9 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 		else if (find_field_name(lines.front(), "date:"))
 			split_fields_str(req->header->Date, lines.front(), "date:");
 		else if (find_field_name(lines.front(), "host:"))
+		{
 			split_fields(req->header->Host, lines.front(), "host:");
+		}
 		else if (find_field_name(lines.front(), "last_modified:"))
 			split_fields_str(req->header->Last_modified, lines.front(), "last_modified:");
 		else if (find_field_name(lines.front(), "referer:"))
@@ -197,7 +202,7 @@ int		parse_request(t_req *req)
 		return (ERROR);
 	std::cout << req->full_req << std::endl;
 	parse_header(req, list_lines);
-
+	std::cout<< "fini"<<std::endl;
 	get_body(req);
 	req->done = true;
 	//print_req_elem(req); //test

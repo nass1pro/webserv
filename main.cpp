@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 17:59:30 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:01:27 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void write_socket(t_server &server, t_active &active)
             }
             else
             {
-                server.res.erase(server.client[i]);
+                server.res.erase(server.client[i]);    
             }
         }
     }

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 13:24:04 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 18:27:20 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	print_location(t_loc *loc)
 
 	//P("-- body_size : ");
 	std::cout << "-- body_size : ";
-	PP(loc->body_size);
+	PP(loc->body_size_limit);
 
 	print_member_str(loc->directory_files_search, "-- directory files search : ");
 	print_member_str(loc->directory_listing, "-- directory listing : ");
@@ -109,14 +109,14 @@ void	print_config(t_config *c)
 	print_member_str(c->name_server, "-- Server_name : ");
 	print_member_list(c->index, "-- Index : ");
 	std::cout << "-- Default server : " << c->default_server << std::endl;
-	std::cout << "-- Body size : " << c->body_size << std::endl;
+	std::cout << "-- Body size limit : " << c->body_size_limit << std::endl;
 	print_member_str(c->error_page, "- Error page : "); //surement modif list
 
 	P("-- Locations : ");
-	if (!c->locations.empty())
+	if (!c->location.empty())
 	{
-		std::list<t_loc>::iterator it = c->locations.begin();
-		while (it != c->locations.end())
+		std::list<t_loc>::iterator it = c->location.begin();
+		while (it != c->location.end())
 		{
 			print_location(&(*it));
 			++it;
