@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 14:04:12 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 14:59:39 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,26 +174,27 @@ typedef struct s_config
 
 // }				t_config;
 
-void setAllow(t_config &config, t_req &req, int statusCode);
-void setContentLanguage(t_config &config, t_req &req, int statusCode);
-void setTransferEncoding(t_config &config, t_req &req, int statusCode);
-void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
-void setContentType(t_config &config, t_req &req, int statusCode);
-void setDate( t_config &config, t_req &req, int statusCode);
-void setLastModified(t_config &config, t_req &req, int statusCode);
-void setLocation(t_config &config, t_req &req, int statusCode);
-void setRetryAfter(t_config &config, t_req &req, int statusCode);
-void setServer(t_config &config, t_req &req, int statusCode);
-void setWWWAuthenticate(t_config &config, t_req &req, int statusCode);
-void setPayload(t_config &config, t_req &req, int statusCode);
-void setContentLocation(t_config &config, t_req &req, int statusCode);
-void set_response_data( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
-void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void file_create_or_replace( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void put_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void concatenate_header( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void error_500_handling( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void setAllow(t_req &req, int statusCode);
+void setContentLanguage(t_req &req);
+void setTransferEncoding(t_req &req);
+void setContentLength(t_res &res, t_req &req);
+void setContentType(t_req &req);
+void setDate(t_req &req);
+void setLastModified(t_req &req, int statusCode);
+void setLocation(t_req &req, int statusCode);
+void setRetryAfter(t_req &req, int statusCode);
+void setServer(t_config &config, t_req &req);
+void setWWWAuthenticate(t_req &req, int statusCode);
+// void setPayload(t_config &config, t_req &req, int statusCode);
+void setContentLocation(t_req &req, int statusCode);
+void set_response_data( t_res &res, t_req &req, int statusCode);
+void head_request(t_res &res, t_config &config, t_req &req);
+void file_create_or_replace(t_req &req);
+void put_request( t_res &res, t_config &config, t_req &req);
+void concatenate_header( t_res &res, t_req &req);
+void error_500_handling(std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
+
 
 
 #endif

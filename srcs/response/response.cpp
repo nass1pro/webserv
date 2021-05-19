@@ -6,12 +6,12 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/19 14:29:57 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 15:05:49 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
-#include "../../include/config.hpp"
+// #include "../../include/config.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
 
@@ -184,18 +184,18 @@ void setContentLocation(t_req &req, int statusCode)
 
 void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode)
 {
-	setAllow(config, req, statusCode);
-	setContentLanguage(config, req, statusCode);
+	setAllow(req, statusCode);
+	setContentLanguage( req);
 	setContentLength(res, req);
-	setContentLocation(config, req, statusCode);
-	setContentType(config, req, statusCode);
-	setDate(config, req, statusCode);
-	setLastModified(config, req, statusCode);
-	setLocation(config, req, statusCode);
-	setRetryAfter(config, req, statusCode);
-	setServer(config, req, statusCode);
-	setTransferEncoding(config, req, statusCode);
-	setWWWAuthenticate(config, req, statusCode);
+	setContentLocation(req, statusCode);
+	setContentType(req);
+	setDate(req);
+	setLastModified(req, statusCode);
+	setLocation(req, statusCode);
+	setRetryAfter(req, statusCode);
+	setServer(config, req);
+	setTransferEncoding(req);
+	setWWWAuthenticate(req, statusCode);
 }
 
 void head_request(t_res &res, t_config &config, t_req &req)
@@ -345,16 +345,16 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		set_response_data(res, config, req, 405);
 	}
 	else if (req.method == "GET") //read content
-		head_request(client, config, req);
+		head_request(res, config, req);
 	else if (req.method == "HEAD") //read header content
 	{
-		head_request(client, config, req);
+		head_request(res, config, req);
 		res.payload = std::string("\0");
 	}
 	else if (req.method == "PUT") //update content
-		put_request(client, config, req);
+		put_request(res, config, req);
 	else if (req.method == "POST") //create content
-		put_request(client, config, req);
+		put_request(res, config, req);
 	else
 		set_response_data(res, config, req, 405);
     concatenate_header(res, req);
