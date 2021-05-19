@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 12:27:36 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/19 10:49:58 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,15 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 }
 
 /*
-**
+** Init location values
+*/
+void	init_location(t_loc *loc)
+{
+	loc->body_size_limit = 1;
+}
+
+/*
+** parse the location in config file
 */
 int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 {
@@ -148,6 +156,7 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 	std::list<std::string>	tmp;
 	int						brackets = 1;
 
+	init_location(&loc);
 	tmp = split_in_list(line, " \t");
 	tmp.pop_front();
 	tmp.pop_back();
@@ -165,7 +174,7 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 		else if (find_config_elem(tmp, "http_methods"))
 			conf_get_str(loc.http_methods, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
-			conf_get_num(loc.body_size, tmp);
+			conf_get_num(loc.body_size_limit, tmp);
 		else if (find_config_elem(tmp, "directory_files_search"))
 			conf_get_str(loc.directory_files_search, tmp);
 		else if (find_config_elem(tmp, "directory_listing"))
@@ -179,7 +188,7 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 	}
 	if (brackets != 0)
 		return (ERROR);
-	c->locations.push_back(loc);
+	c->location.push_back(loc);
 	return (SUCCESS);
 }
 
@@ -198,6 +207,15 @@ int		find_location(std::string &line)
 }
 
 /*
+** Init conf struct
+*/
+void	init_config(t_config &conf)
+{
+	conf.body_size_limit = 1;
+	conf.default_server = false;
+}
+
+/*
 ** Parsinf of the server section
 */
 int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
@@ -207,6 +225,7 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 	int						open_brackets = 1;
 	t_config				c;
 
+	init_config(c);
 	while (std::getline(fd, reader))
 	{
 		tmp = split_in_list(reader, " \t\n\r\v\f");
@@ -218,13 +237,13 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		else if (find_location(reader))
 			parse_location(fd, &c, reader);
 		else if (find_config_elem(tmp, "host"))
-			conf_get_str(c.host, tmp);
+			conf_get_list(c.host, tmp);
 		else if (find_config_elem(tmp, "port"))
 			conf_get_list(c.port, tmp);
 		else if (find_config_elem(tmp, "index"))
 			conf_get_list(c.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
-			conf_get_num(c.body_size, tmp);
+			conf_get_num(c.body_size_limit, tmp);
 	}
 	if (open_brackets != 0)
 		return (ERROR);

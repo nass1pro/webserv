@@ -84,10 +84,11 @@ typedef struct	s_req
 	std::string				url;
 	std::list<std::string>	location;
 	std::string				version;
-	t_header			*header;
-	int						body_index;
+	t_header				*header;
+	size_t					body_index;
     int error;
 	std::string				body_content;
+	bool					done;
 }				t_req;
 
 typedef struct	s_res
@@ -112,26 +113,12 @@ typedef struct s_server
 
 }               t_server;
 
-
-typedef struct s_config
-{
-    std::list<std::string>  host;
-    std::string             name_server;
-    std::string             error_page;
-    std::list<std::string>  location;
-    std::list<std::string>  port;
-    std::list<std::string>  index;
-    size_t                  body_size_limit = 1;
-	bool					default_server = false;
-    t_server                serv;
-
-}                           t_config;
 typedef struct	s_loc
 {
 	std::string		location_match;
 	std::string		optional_modifier;
 	std::string		http_methods;
-	size_t			body_size_limit = 1; //MB !!
+	size_t			body_size_limit; //MB !!
 	std::string		directory_files_search;
 	std::string		directory_listing;
 	std::string		default_file_directory_request;
@@ -139,6 +126,19 @@ typedef struct	s_loc
 	t_cgi			cgi;
 }				t_loc;
 
+typedef struct s_config
+{
+    std::list<std::string>  host;
+    std::string             name_server;
+    std::string             error_page;
+    std::list<t_loc>		location;
+    std::list<std::string>  port;
+    std::list<std::string>  index;
+    size_t                  body_size_limit;
+	bool					default_server;
+    t_server                serv;
+
+}                           t_config;
 
 
 // typedef struct	s_config
