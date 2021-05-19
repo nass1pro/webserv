@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/19 16:27:25 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 19:16:32 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,22 @@ void setAllow(t_req &req, int statusCode)
 	 Method Not Allowed status code to indicate which request methods can be used.*/
 	if (statusCode == 405)
 	{
-		req.header->Allow = std::string("Allow: GET, HEAD, PUT, POST");
+		req.header.Allow = std::string("Allow: GET, HEAD, PUT, POST");
 	}
 	else
-		req.header->Allow = std::string("\0");
+		req.header.Allow = std::string("\0");
 }
 
 void setContentLanguage(t_req &req)
 {
 	/*If no Content-Language is specified,
 	the default is that the content is intended for all language audiences.*/
-	req.header->Content_Language = std::string("\0");
+	req.header.Content_Language = std::string("\0");
 }
 
 void setTransferEncoding(t_req &req)
 {
-	req.header->Transfer_Encoding = std::string("\0");
+	req.header.Transfer_Encoding = std::string("\0");
 }
 
 void setContentLength(t_res &res, t_req &req)
@@ -45,12 +45,12 @@ void setContentLength(t_res &res, t_req &req)
 	std::ostringstream ss;
 	ss << "Content-Length: ";
 	ss << res.payload.size();
-	req.header->Content_Length = ss.str();
+	req.header.Content_Length = ss.str();
 }
 
 void setContentType(t_req &req)
 {
-	req.header->Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
+	req.header.Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
 }
 
 void setDate(t_req &req)
@@ -106,15 +106,15 @@ void setDate(t_req &req)
 	ss << ':';
 	ss << now->tm_sec;
 	ss << " GMT";
-	req.header->Date = ss.str();
+	req.header.Date = ss.str();
 }
 
 void setLastModified(t_req &req, int statusCode)
 {
 	if (statusCode == 200 || statusCode ==  201)
-		req.header->Last_modified = std::string(req.header->Date);
+		req.header.Last_modified = std::string(req.header.Date);
 	else
-		req.header->Last_modified = std::string("\0");
+		req.header.Last_modified = std::string("\0");
 }
 
 void setLocation(t_req &req, int statusCode)
@@ -130,33 +130,33 @@ void setLocation(t_req &req, int statusCode)
 		// 		break ;
 		// 	}
 		// }
-		req.header->Content_Location = std::string(req.url);
+		req.header.Content_Location = std::string(req.url);
 	}
 	else
-		req.header->Content_Location = std::string("\0");
+		req.header.Content_Location = std::string("\0");
 }
 
 void setRetryAfter(t_req &req, int statusCode)
 {
 	if (statusCode == 413)
-		req.header->retry_after = std::string("Retry-After: 120");
+		req.header.retry_after = std::string("Retry-After: 120");
 	else
-		req.header->retry_after = std::string("\0");
+		req.header.retry_after = std::string("\0");
 }
 
 void setServer(t_config &config, t_req &req)
 {
-	req.header->Server = std::string("Server: ");
-	req.header->Server += config.name_server;
-	req.header->Server += ("/1.0");
+	req.header.Server = std::string("Server: ");
+	req.header.Server += config.name_server;
+	req.header.Server += ("/1.0");
 }
 
 void setWWWAuthenticate(t_req &req, int statusCode)
 {
 	if (statusCode == 401)
-		req.header->WWW_Authenticate = std::string("WWW-Authenticate: something");
+		req.header.WWW_Authenticate = std::string("WWW-Authenticate: something");
 	else
-		req.header->WWW_Authenticate = std::string("\0");
+		req.header.WWW_Authenticate = std::string("\0");
 }
 
 // void setPayload(t_config &config, t_req &req, int statusCode)
@@ -176,10 +176,10 @@ void setContentLocation(t_req &req, int statusCode)
 		// 		break ;
 		// 	}
 		// }
-		req.header->Location = std::string(req.url);
+		req.header.Location = std::string(req.url);
 	}
 	else
-		req.header->Content_Location = std::string("\0");
+		req.header.Content_Location = std::string("\0");
 }
 
 void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode)
@@ -208,7 +208,7 @@ void head_request(t_res &res, t_config &config, t_req &req)
 			std::ifstream ifs(req.url); //get the input file stream with the requested url
 			// config.serv.res[client->first].payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			
+
 			set_response_data(res, config, req, 200);
 			return ;
 		}
@@ -259,53 +259,53 @@ void concatenate_header( t_res &res, t_req &req)
 {
 	if (req.method == "GET" || req.method == "HEAD")
 	{
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Content_Length);
+			res.response_header.append(req.header.Content_Length);
 			res.response_header.append("\n");
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Content_Location);
+			res.response_header.append(req.header.Content_Location);
 			res.response_header.append("\n");
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Content_Type);
+			res.response_header.append(req.header.Content_Type);
 			res.response_header.append("\n");
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Date);
+			res.response_header.append(req.header.Date);
 			res.response_header.append("\n");
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Last_modified);
+			res.response_header.append(req.header.Last_modified);
 			res.response_header.append("\n");
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Server);
-			res.response_header.append("\n");
-			
-		}
-		if (req.header->Content_Length != "\0")
-		{
-			res.response_header.append(req.header->Content_Length);
+			res.response_header.append(req.header.Server);
 			res.response_header.append("\n");
 
 		}
-		if (req.header->Content_Length != "\0")
+		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append(req.header->Location);
+			res.response_header.append(req.header.Content_Length);
+			res.response_header.append("\n");
+
+		}
+		if (req.header.Content_Length != "\0")
+		{
+			res.response_header.append(req.header.Location);
 			res.response_header.append("\n");
 
 		}
 	}
 	else if (req.method == "PUT" || req.method == "POST")
 	{
-		res.response_header += req.header->Content_Location;
+		res.response_header += req.header.Content_Location;
 		res.response_header.append("\n");
 
 	}
@@ -315,7 +315,7 @@ void concatenate_header( t_res &res, t_req &req)
 void error_500_handling(std::map<int, t_req>::iterator &client, t_config &config, t_req &req)
 {
     t_res res;
-	
+
 	res.statusCode = 500;
     std::ifstream ifs("error_pages/500.html");
 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
@@ -362,6 +362,6 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	//concatenate erthing in corresponding res in map
 	config.serv.res[client->first].append(res.response_header);
 	config.serv.res[client->first].append(res.payload);
-	
+
 	// return (res);
 }

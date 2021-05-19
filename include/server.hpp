@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/09 06:34:03 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 14:09:56 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:17:51 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void                        clien_disconnection(t_server &server, unsigned int i
 void                        set_socket(t_server &server, t_active &active);
 void                        server_init_socket(std::list<t_config> &conf, t_active &active);
 
-void                        get_request(t_server s, t_active &active);
+void                        get_request(t_server &s, t_active &active);
 void                        accept_connection(t_server &server);
 void                        new_connection(t_server &server, t_active &active);
 void ft_server(std::list<t_config> &conf, t_active &active, void (*f)(t_server &, t_active &));
