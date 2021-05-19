@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/19 15:05:49 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 16:27:25 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     // t_response sur lequel je travaille se trouve dans t_server qui se trouve dans t_config
     // t_header dans t_request
 	t_res res;
-
+	std::cout << "TEST SOMETHING" << std::endl;
     if (req.error == 413)
 		set_response_data(res, config, req, 413);
 	else if (req.version != "1.1")

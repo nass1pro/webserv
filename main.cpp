@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 13:17:27 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 16:35:30 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,10 @@ int main(int ac, char **av)
     }
     if (parse_conf(av[1], conf) == -1)
         return 1;
-    for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
+	
+    std::cout << conf.front().index.front() << std::endl;
+	return 0 ;
+	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
         setup_server(*l);
     }
