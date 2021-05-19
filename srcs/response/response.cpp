@@ -6,11 +6,12 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/19 13:00:36 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/19 14:29:57 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
+#include "../../include/config.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
 
@@ -199,9 +200,9 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 
 void head_request(t_res &res, t_config &config, t_req &req)
 {
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
-		std::string path = *it;
+		std::string path = it->location_match;
 		if(path == req.url) // means the url exist and the request is valid
 		{
 			std::ifstream ifs(req.url); //get the input file stream with the requested url
@@ -231,9 +232,9 @@ void put_request( t_res &res, t_config &config, t_req &req)
 {
 	//response for put method no payload and header very minimalist
 	// check if resource exist
-	for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
-		std::string potential_file_path = std::string(*it);
+		std::string potential_file_path = std::string(it->location_match);
 		potential_file_path += req.url;
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
