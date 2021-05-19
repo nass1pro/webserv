@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 14:12:04 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 15:38:40 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 void setup_server(t_config &conf)
 {
     int opt = 1;
+
+    conf.serv.len_address = sizeof(conf.serv.address);
 
     for(int i = 0; i <= CLIENT_MAX + 1; i++)
     {
@@ -51,7 +53,7 @@ void setup_server(t_config &conf)
     }
     if (bind(conf.serv.socket_server, (struct sockaddr *)&conf.serv.address, conf.serv.len_address) == -1)
     {
-        std::cout<< "ERROR in blind"<< std::endl;
+        std::cout<< "ERROR in bind"<< std::endl;
         exit(1);
     }
     if (listen(conf.serv.socket_server, CLIENT_MAX) == -1)
