@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 13:10:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 13:13:41 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ typedef struct	s_req
     int error;
 	bool 					done;
 	std::string				body_content;
-	bool					done;
 }				t_req;
 
 typedef struct	s_res
