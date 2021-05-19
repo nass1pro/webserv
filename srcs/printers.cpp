@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 18:27:20 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:33:49 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	print_config(t_config *c)
 	print_member_str(c->name_server, "-- Server_name : ");
 	print_member_list(c->index, "-- Index : ");
 	std::cout << "-- Default server : " << c->default_server << std::endl;
-	std::cout << "-- Body size limit : " << c->body_size_limit << std::endl;
+	std::cout << "-- Body size : " << c->body_size_limit << std::endl;
 	print_member_str(c->error_page, "- Error page : "); //surement modif list
 
 	P("-- Locations : ");
@@ -130,145 +130,145 @@ void	print_config(t_config *c)
 /*
 ** Print all elements in header struct
 */
-void	print_header(t_header *h)
+void	print_header(t_header &h)
 {
 	P("------------------- START HEADER -------------------");
 
 	P("-- Accept_Charset : ");
-	if (!h->Accept_Charsets.empty())
+	if (!h.Accept_Charsets.empty())
 	{
-		print_list(h->Accept_Charsets);
+		print_list(h.Accept_Charsets);
 	}
 	else
 		P("Empty");
 
 	P("-- Accept_Language : ");
-	if (!h->Accept_Language.empty())
+	if (!h.Accept_Language.empty())
 	{
-		print_list(h->Accept_Language);
+		print_list(h.Accept_Language);
 	}
 	else
 		P("Empty");
 
 	P("-- Allow : ");
-	if (!h->Allow.empty())
+	if (!h.Allow.empty())
 	{
-		print_list(h->Allow);
+		print_list(h.Allow);
 	}
 	else
 		P("Empty");
 
 	P("-- Authorization : ");
-	if (!h->Authorization.empty())
+	if (!h.Authorization.empty())
 	{
-		print_list(h->Authorization);
+		print_list(h.Authorization);
 	}
 	else
 		P("Empty");
 
 	P("-- Content_Language : ");
-	if (!h->Content_Language.empty())
+	if (!h.Content_Language.empty())
 	{
-		print_list(h->Content_Language);
+		print_list(h.Content_Language);
 	}
 	else
 		P("Empty");
 
 	P("-- Content_Length : ");
-	P(h->Content_Length);
+	P(h.Content_Length);
 
 	P("-- Content_Location : ");
-	if (!h->Content_Location.empty())
+	if (!h.Content_Location.empty())
 	{
-		print_list(h->Content_Location);
+		print_list(h.Content_Location);
 	}
 	else
 		P("Empty");
 
 	P("-- Content_Type : ");
-	if (!h->Content_Type.empty())
+	if (!h.Content_Type.empty())
 	{
-		print_list(h->Content_Type);
+		print_list(h.Content_Type);
 	}
 	else
 		P("Empty");
 
 	P("-- Date : ");
-	if (!h->Date.empty())
+	if (!h.Date.empty())
 	{
-		print_list(h->Date);
+		print_list(h.Date);
 	}
 	else
 		P("Empty");
 
 	P("-- Host : ");
-	if (!h->Host.empty())
+	if (!h.Host.empty())
 	{
-		print_list(h->Host);
+		print_list(h.Host);
 	}
 	else
 		P("Empty");
 
 	P("-- Last_modified : ");
-	if (!h->Last_modified.empty())
+	if (!h.Last_modified.empty())
 	{
-		print_list(h->Last_modified);
+		print_list(h.Last_modified);
 	}
 	else
 		P("Empty");
 
 	P("-- Location : ");
-	if (!h->Location.empty())
+	if (!h.Location.empty())
 	{
-		print_list(h->Location);
+		print_list(h.Location);
 	}
 	else
 		P("Empty");
 
 	P("-- Referer : ");
-	if (!h->Referer.empty())
+	if (!h.Referer.empty())
 	{
-		print_list(h->Referer);
+		print_list(h.Referer);
 	}
 	else
 		P("Empty");
 
 	P("-- retry_after : ");
-	if (!h->retry_after.empty())
+	if (!h.retry_after.empty())
 	{
-		print_list(h->retry_after);
+		print_list(h.retry_after);
 	}
 	else
 		P("Empty");
 
 	P("-- Server : ");
-	if (!h->Server.empty())
+	if (!h.Server.empty())
 	{
-		print_list(h->Server);
+		print_list(h.Server);
 	}
 	else
 		P("Empty");
 
 	P("-- Transfer_Encoding : ");
-	if (!h->Transfer_Encoding.empty())
+	if (!h.Transfer_Encoding.empty())
 	{
-		print_list(h->Transfer_Encoding);
+		print_list(h.Transfer_Encoding);
 	}
 	else
 		P("Empty");
 
 	P("-- User_Agent : ");
-	if (!h->User_Agent.empty())
+	if (!h.User_Agent.empty())
 	{
-		print_list(h->User_Agent);
+		print_list(h.User_Agent);
 	}
 	else
 		P("Empty");
 
 	P("-- WWW_Authenticate : ");
-	if (!h->WWW_Authenticate.empty())
+	if (!h.WWW_Authenticate.empty())
 	{
-		print_list(h->WWW_Authenticate);
+		print_list(h.WWW_Authenticate);
 	}
 	else
 		P("Empty");
