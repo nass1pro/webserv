@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 19:06:25 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:21:58 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,38 +101,38 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 	{
 		if (find_field_name(lines.front(), "accept-charsets:"))
 			split_fields_str(req.header.Accept_Charsets, lines.front(), "accept-charsets:");
-		/*else if (find_field_name(lines.front(), "accept-languages:"))
-			split_fields(h.Accept_Language, lines.front(), "accept-languages:");
+		else if (find_field_name(lines.front(), "accept-languages:"))
+			split_fields(req.header.Accept_Language, lines.front(), "accept-languages:");
 		else if (find_field_name(lines.front(), "allow:"))
-			split_fields_str(h.Allow, lines.front(), "allow:");
+			split_fields_str(req.header.Allow, lines.front(), "allow:");
 		else if (find_field_name(lines.front(), "authorization:"))
-			split_fields(h.Authorization, lines.front(), "authorization:");
+			split_fields(req.header.Authorization, lines.front(), "authorization:");
 		else if (find_field_name(lines.front(), "content_language:"))
-			split_fields_str(h.Content_Language, lines.front(), "content_language:");
+			split_fields_str(req.header.Content_Language, lines.front(), "content_language:");
 		else if (find_field_name(lines.front(), "content_length:"))
-			split_fields_str(h.Content_Length, lines.front(), "content_length:");
+			split_fields_str(req.header.Content_Length, lines.front(), "content_length:");
 		else if (find_field_name(lines.front(), "content_location:"))
-			split_fields_str(h.Content_Location, lines.front(), "content_location:");
+			split_fields_str(req.header.Content_Location, lines.front(), "content_location:");
 		else if (find_field_name(lines.front(), "content_type:"))
-			split_fields_str(h.Content_Type, lines.front(), "content_type:");
+			split_fields_str(req.header.Content_Type, lines.front(), "content_type:");
 		else if (find_field_name(lines.front(), "date:"))
-			split_fields_str(h.Date, lines.front(), "date:");*/
+			split_fields_str(req.header.Date, lines.front(), "date:");
 		else if (find_field_name(lines.front(), "host:"))
 			split_fields(req.header.Host, lines.front(), "host:");
-	/*	else if (find_field_name(lines.front(), "last_modified:"))
-			split_fields_str(h.Last_modified, lines.front(), "last_modified:");
+		else if (find_field_name(lines.front(), "last_modified:"))
+			split_fields_str(req.header.Last_modified, lines.front(), "last_modified:");
 		else if (find_field_name(lines.front(), "referer:"))
-			split_fields(h.Referer, lines.front(), "referer:");
+			split_fields(req.header.Referer, lines.front(), "referer:");
 		else if (find_field_name(lines.front(), "retry_after:"))
-			split_fields_str(h.retry_after, lines.front(), "retry_after:");
+			split_fields_str(req.header.retry_after, lines.front(), "retry_after:");
 		else if (find_field_name(lines.front(), "server:"))
-			split_fields_str(h.Server, lines.front(), "server:");
+			split_fields_str(req.header.Server, lines.front(), "server:");
 		else if (find_field_name(lines.front(), "transfer_encoding:"))
-			split_fields_str(h.Transfer_Encoding, lines.front(), "transfer_encoding:");
+			split_fields_str(req.header.Transfer_Encoding, lines.front(), "transfer_encoding:");
 		else if (find_field_name(lines.front(), "user_agent:"))
-			split_fields(h.User_Agent, lines.front(), "user_agent:");
+			split_fields(req.header.User_Agent, lines.front(), "user_agent:");
 		else if (find_field_name(lines.front(), "www_authenticate:"))
-			split_fields_str(h.WWW_Authenticate, lines.front(), "www_authenticate:");*/
+			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www_authenticate:");
 		else
 			std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();
