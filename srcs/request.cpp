@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/18 12:29:50 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/19 10:47:24 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ bool	find_field_name(std::string &line, std::string const &name)
 	std::string tester;
 
 	tester = line.substr(0, name.size());
-	for (int i = 0; i < tester.length(); i++)
+	for (size_t i = 0; i < tester.length(); i++)
 	{
 		tester[i] = tolower(tester[i]);
 	}
@@ -108,8 +108,8 @@ int		parse_header(t_req *req, std::list<std::string> &lines)
 			split_fields(req->header->Authorization, lines.front(), "authorization:");
 		else if (find_field_name(lines.front(), "content_language:"))
 			split_fields_str(req->header->Content_Language, lines.front(), "content_language:");
-		/*else if (find_field_name(lines.front(), "content_length:"))
-			split_fields(req->header->Content_Length, lines.front(), "content_length:");*/
+		else if (find_field_name(lines.front(), "content_length:"))
+			split_fields_str(req->header->Content_Length, lines.front(), "content_length:");
 		else if (find_field_name(lines.front(), "content_location:"))
 			split_fields_str(req->header->Content_Location, lines.front(), "content_location:");
 		else if (find_field_name(lines.front(), "content_type:"))
@@ -164,9 +164,10 @@ int		parse_first_line(t_req *req, std::list<std::string> &lines)
 /*
 ** Initialise struct t_req
 */
-void	init(t_req *req)
+void	init_request(t_req *req)
 {
 	req->body_index = 0;
+	req->done = false;
 }
 
 /*
@@ -187,7 +188,7 @@ int		parse_request(t_req *req)
 {
 	std::list<std::string> list_lines;
 
-	init(req);
+	init_request(req);
 	if ((req->body_index = get_body_index(req->full_req)) == -1)
 		return (ERROR);
 	list_lines = split_in_list(req->full_req.substr(0, req->body_index), "\t\n\r\v\f");
