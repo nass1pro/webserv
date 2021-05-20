@@ -6,14 +6,17 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/20 13:50:00 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/20 14:52:07 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
+#include "../../include/utils.hpp"
 // #include "../../include/config.hpp"
 
 //200 ok 201 created 404 not found 405 method not allowed 413 payload too large 500 internal server error
+
+
 
 void setAllow(t_req &req, int statusCode)
 {
@@ -219,6 +222,7 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setServer(config, req);
 	setTransferEncoding(req);
 	setWWWAuthenticate(req, statusCode);
+	res.statusCode = statusCode;
 	// std::cout << "RES HEADER : " << res.response_header << std::endl;
 	// std::cout << "RES Payload : " << res.payload << std::endl;
 
@@ -298,6 +302,15 @@ void concatenate_header( t_res &res, t_req &req)
 {
 	if (req.method == "GET" || req.method == "HEAD")
 	{
+		if (req.header.Content_Length != "\0")
+		{
+			// std::string code;
+	
+			// std::cout << "CODE : " <<  		ft_itoa(res.statusCode, code) << std::endl;
+
+			res.response_header.append("200");
+			res.response_header.append("\n");
+		}
 		if (req.header.Content_Length != "\0")
 		{
 			res.response_header.append(req.header.Content_Length);

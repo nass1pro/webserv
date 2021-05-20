@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/04/21 11:33:06 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:46:59 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,34 @@
 ** (maybe modify for accept word or invidividual ?)
 ** Split return the filled list<string>
 */
+
+std::string ft_itoa(int n, std::string zebi)
+{
+	// char			str[4];
+	int				len;
+	unsigned int	u_nbr;
+
+	len = n < 0 || n == 0 ? 1 : 0;
+	u_nbr = n < 0 ? -n : n;
+	while (u_nbr > 0)
+	{
+		u_nbr /= 10;
+		len++;
+	}
+	// if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
+	// 	return (NULL);
+	// str[len] = '\0';
+	u_nbr = n < 0 ? -n : n;
+	if (n < 0)
+		zebi[0] = '-';
+	while (--len >= (n < 0 ? 1 : 0))
+	{
+		zebi[len] = (u_nbr % 10) | 0x30;
+		u_nbr /= 10;
+	}
+	return (zebi);
+}
+
 std::list<std::string> split_in_list(std::string str, std::string charset)
 {
 	std::list<std::string>	ret;
