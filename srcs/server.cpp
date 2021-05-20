@@ -6,17 +6,21 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/16 11:59:02 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/19 19:34:24 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/config.hpp"
+#include "../include/config.hpp"
 #include <sys/socket.h>
 #include <sys/select.h>
+#include "../include/server.hpp"
 
-void setup_server(t_conf &conf)
+
+void setup_server(t_config &conf)
 {
     int opt = 1;
+
+    conf.serv.len_address = sizeof(conf.serv.address);
 
     for(int i = 0; i <= CLIENT_MAX + 1; i++)
     {
@@ -29,15 +33,15 @@ void setup_server(t_conf &conf)
         exit(1);
     }
 
-    conf.serv.fd_max = conf.serv.server_socket;
-	if(setsockopt(conf.serv.server_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) == -1)
+    conf.serv.fd_max = conf.serv.socket_server;
+	if(setsockopt(conf.serv.socket_server, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) == -1)
 	{
 		std::cout << "Error: sotsockopt failed" << std::endl;
 		exit(1);
 	}
 
     conf.serv.address.sin_family = AF_INET;
-    conf.serv.address.sin_addr.s_addr = inet_addr(c.host.c_str());
+    conf.serv.address.sin_addr.s_addr = inet_addr(conf.host.c_str());
     try
     {
         conf.serv.address.sin_port = htons(std::stoi(conf.port.front()));
@@ -47,9 +51,9 @@ void setup_server(t_conf &conf)
         std::cout<< "ERROR port is not a number in .conf";
         exit(1);
     }
-    if (blind(conf.serv.socket_server, (struct sockaddr *)&conf.serv.address, conf.serv.len_address) == -1)
+    if (bind(conf.serv.socket_server, (struct sockaddr *)&conf.serv.address, conf.serv.len_address) == -1)
     {
-        std::cout<< "ERROR in blind"<< std::endl;
+        std::cout<< "ERROR in bind"<< std::endl;
         exit(1);
     }
     if (listen(conf.serv.socket_server, CLIENT_MAX) == -1)
@@ -59,12 +63,20 @@ void setup_server(t_conf &conf)
     }
 }
 
+void clien_disconnection(t_server &server, unsigned int i)
+{
+    server.res.erase(server.client[i]);
+    server.req.erase(server.client[i]);
+    close(server.client[i]);
+    server.client[i] = 0;
+}
+
 void customer_disconnection(t_server &server, t_active &active)
 {
     FD_ZERO(&active.write);
     FD_ZERO(&active.read);
 
-    for (int i = 0; i < server.fd_max; i++)
+    for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if(server.client[i] > 0)
         {
@@ -75,29 +87,21 @@ void customer_disconnection(t_server &server, t_active &active)
 
 void customer_restart(t_server &server)
 {
-    for (int i = 0; i < server.fd_max; i++)
+    for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if(server.client[i] > 0)
         {
-            clien_restart(server, i);
+            client_restart(server, i);
         }
     }
 }
 
-void client_restart(t_server &server,t_active &active)
+void    client_restart(t_server &server, unsigned int i)
 {
-    server.respons.erase(server.client[i]);
+    server.res.erase(server.client[i]);
     server.req.erase(server.client[i]);
 }
 
-
-void clien_disconnection(t_server &server, unsigned int i)
-{
-    server.respons.erase(server.client[i]);
-    server.req.erase(server.client[i]);
-    close(server.client[i]);
-    server.client[i] = 0;
-}
 
 void set_socket(t_server &server, t_active &active)
 {
@@ -107,7 +111,7 @@ void set_socket(t_server &server, t_active &active)
     for(unsigned int i = 0; i < server.fd_max; i++)
     {
         FD_SET(server.client[i], &active.read);
-        if(server.find(server.clien[i]) != server.respons.end())
+        if(server.res.find(server.client[i]) != server.res.end())
         {
             FD_SET(server.client[i], &active.write);
         }
@@ -125,23 +129,23 @@ void server_init_socket(std::list<t_config> &conf, t_active &active)
     }
 }
 
-void get_request(t_server s, t_active &active)
+void get_request(t_server &s, t_active &active)
 {
     int message_len = -1;
-    int buff[1000001];
+    char buff[1000001];
 
     for(unsigned int i = 0; i < s.fd_max; i++)
     {
         if(FD_ISSET(s.client[i], &active.read))
         {
-            if((message_len = recv(s.clien[i], buff, 1000000, 0)) == -1)
+            if((message_len = recv(s.client[i], buff, 1000000, 0)) == -1)
             {
                 std::cout<<"error"<< std::endl;
-                clien_disconnection(server, i, false);// false = restart client
+                clien_disconnection(s, i);
             }
             if(message_len == 0)
             {
-                clien_disconnection(server, i, true); // true = close connection
+                clien_disconnection(s, i);
             }
 
             else
@@ -160,7 +164,7 @@ void get_request(t_server s, t_active &active)
 
 void accept_connection(t_server &server)
 {
-    if((server.socket_connection = accept(server.socket_server, (struct sockaddr *)&server.address, (socklen_t *)&server.leen_address)) == -1)
+    if((server.socket_connection = accept(server.socket_server, (struct sockaddr *)&server.address, (socklen_t *)&server.len_address)) == -1)
     {
         ;
         //error
@@ -169,8 +173,8 @@ void accept_connection(t_server &server)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SELFL, O_NONBLOCK);
-    for (unsigned int i = 0; i < s.fd_max; i++)
+    fcntl(server.socket_connection, F_SETFL, SO_NOSIGPIPE);
+    for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)
         {
@@ -180,7 +184,7 @@ void accept_connection(t_server &server)
     }
 }
 
-void new_connection(t_server &server, t_actve &active)
+void new_connection(t_server &server, t_active &active)
 {
     if(FD_ISSET(server.socket_server, &active.read))
     {
@@ -190,6 +194,6 @@ void new_connection(t_server &server, t_actve &active)
 
 void ft_server(std::list<t_config> &conf, t_active &active, void (*f)(t_server &, t_active &))
 {
-    for (std::list<t_config>::iterator i = c.begin(); i != c.end(); i++)
-		f((*i).s, active_socket);
+    for (std::list<t_config>::iterator i = conf.begin(); i != conf.end(); i++)
+		f((*i).serv, active);
 }

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 10:05:03 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 10:38:35 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define __CONFIG_HPP__
 
 # include <ctime>
-#include <stdio.h>
+# include <stdio.h>
 # include <iostream>
 # include <string.h>
 # include <list>
@@ -36,6 +36,8 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <stdexcept>
+# include <fcntl.h>
+
 // # include "server.hpp"
 
 # define CLIENT_MAX 200
@@ -63,7 +65,6 @@ typedef struct	s_cgi
 	std::string	SERVER_PROTOCOL;
 	std::string	SERVER_SOFTWARE;
 }				t_cgi;
-
 
 typedef struct s_header
 {
@@ -103,8 +104,8 @@ typedef struct	s_req
 	std::string				url;
 	std::list<std::string>	location;
 	std::string				version;
-	t_header			*header;
-	int						body_index;
+	t_header				header;
+	size_t					body_index;
     int error;
 	bool 					done;
 	std::string				body_content;
@@ -132,26 +133,12 @@ typedef struct s_server
 
 }               t_server;
 
-
-typedef struct s_config
-{
-    std::list<std::string>  host;
-    std::string             name_server;
-    std::string             error_page;
-    std::list<std::string>  location;
-    std::list<std::string>  port;
-    std::list<std::string>  index;
-    size_t                  body_size_limit = 1;
-	bool					default_server = false;
-    t_server                serv;
-
-}                           t_config;
 typedef struct	s_loc
 {
 	std::string		location_match;
 	std::string		optional_modifier;
 	std::string		http_methods;
-	size_t			body_size_limit = 1; //MB !!
+	size_t			body_size_limit; //MB !!
 	std::string		directory_files_search;
 	std::string		directory_listing;
 	std::string		default_file_directory_request;
@@ -159,6 +146,19 @@ typedef struct	s_loc
 	t_cgi			cgi;
 }				t_loc;
 
+typedef struct s_config
+{
+    std::string				host;
+    std::string             name_server;
+    std::string             error_page;
+    std::list<t_loc>		location;
+    std::list<std::string>  port;
+    std::list<std::string>  index;
+    size_t                  body_size_limit;
+	bool					default_server;
+    t_server                serv;
+
+}                           t_config;
 
 
 // typedef struct	s_config
@@ -174,26 +174,27 @@ typedef struct	s_loc
 
 // }				t_config;
 
-void setAllow(t_config &config, t_req &req, int statusCode);
-void setContentLanguage(t_config &config, t_req &req, int statusCode);
-void setTransferEncoding(t_config &config, t_req &req, int statusCode);
-void setContentLength( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
-void setContentType(t_config &config, t_req &req, int statusCode);
-void setDate( t_config &config, t_req &req, int statusCode);
-void setLastModified(t_config &config, t_req &req, int statusCode);
-void setLocation(t_config &config, t_req &req, int statusCode);
-void setRetryAfter(t_config &config, t_req &req, int statusCode);
-void setServer(t_config &config, t_req &req, int statusCode);
-void setWWWAuthenticate(t_config &config, t_req &req, int statusCode);
-void setPayload(t_config &config, t_req &req, int statusCode);
-void setContentLocation(t_config &config, t_req &req, int statusCode);
-void set_response_data( std::map<int, t_req>::iterator &client, t_config &config, t_req &req, int statusCode);
-void head_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void file_create_or_replace( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void put_request( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void concatenate_header( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
-void error_500_handling( std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
+void setAllow(t_req &req, int statusCode);
+void setContentLanguage(t_req &req);
+void setTransferEncoding(t_req &req);
+void setContentLength(t_res &res, t_req &req);
+void setContentType(t_req &req);
+void setDate(t_req &req);
+void setLastModified(t_req &req, int statusCode);
+void setLocation(t_req &req, int statusCode);
+void setRetryAfter(t_req &req, int statusCode);
+void setServer(t_config &config, t_req &req);
+void setWWWAuthenticate(t_req &req, int statusCode);
+// void setPayload(t_config &config, t_req &req, int statusCode);
+void setContentLocation(t_req &req, int statusCode);
+void set_response_data( t_res &res, t_req &req, int statusCode);
+void head_request(t_res &res, t_config &config, t_req &req);
+void file_create_or_replace(t_req &req);
+void put_request( t_res &res, t_config &config, t_req &req);
+void concatenate_header( t_res &res, t_req &req);
+void error_500_handling(std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
+
 
 
 #endif
