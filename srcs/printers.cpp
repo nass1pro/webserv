@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 19:33:49 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 17:10:43 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,13 +306,13 @@ void	print_req_elem(t_req *req)
 	else
 		P("Empty");
 
-	P("-- Location : ");
-	if (!req->location.empty())
-	{
-		PP("A venir");
-	}
-	else
-		P("Empty");
+	// P("-- Location : ");
+	// if (!req->location.empty())
+	// {
+	// 	PP("A venir");
+	// }
+	// else
+	// 	P("Empty");
 
 	P("-- Version : ");
 	if (!req->version.empty())
