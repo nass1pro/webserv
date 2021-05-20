@@ -6,11 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 19:34:17 by nahaddac         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
->>>>>>> jules
+/*   Updated: 2021/05/20 10:28:43 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +199,7 @@ int		parse_request(t_req &req)
 	//print_list(list_lines); //test
 	if (parse_first_line(req, list_lines) < 0)
 		return (ERROR);
-	std::cout << req->full_req << std::endl;
+	std::cout << req.full_req << std::endl;
 	parse_header(req, list_lines);
 	std::cout<< "fini"<<std::endl;
 	get_body(req);
