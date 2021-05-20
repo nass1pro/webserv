@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 18:58:00 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/20 17:07:34 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <ctime>
 # include <stdio.h>
+# include <stdlib.h>
 # include <iostream>
 # include <string.h>
 # include <list>
@@ -66,6 +67,19 @@ typedef struct	s_cgi
 	std::string	SERVER_SOFTWARE;
 }				t_cgi;
 
+typedef struct	s_loc
+{
+	std::string		location_match;
+	std::string		optional_modifier;
+	std::string		http_methods;
+	size_t			body_size_limit; //MB !!
+	std::string		directory_files_search;
+	std::string		directory_listing;
+	std::string		default_file_directory_request;
+	std::string		upload_files_location;
+	t_cgi			cgi;
+}				t_loc;
+
 typedef struct s_header
 {
 	std::string				Accept_Charsets;
@@ -75,6 +89,7 @@ typedef struct s_header
 	std::string				Content_Language;
 	std::string		        Content_Length;
 	std::string				Content_Location;
+	//content_type = std::list<std::string>
 	std::string				Content_Type;
 	std::string				Date;
 	std::list<std::string>	Host;
@@ -102,11 +117,11 @@ typedef struct	s_req
 	std::string				full_req;
 	std::string				method;
 	std::string				url;
-	std::list<std::string>	location;
+	t_loc					location;
 	std::string				version;
 	t_header				header;
 	size_t					body_index;
-    int error;
+    int 					error;
 	bool 					done;
 	std::string				body_content;
 }				t_req;
@@ -133,22 +148,11 @@ typedef struct s_server
 
 }               t_server;
 
-typedef struct	s_loc
-{
-	std::string		location_match;
-	std::string		optional_modifier;
-	std::string		http_methods;
-	size_t			body_size_limit; //MB !!
-	std::string		directory_files_search;
-	std::string		directory_listing;
-	std::string		default_file_directory_request;
-	std::string		upload_files_location;
-	t_cgi			cgi;
-}				t_loc;
 
 typedef struct s_config
 {
     std::string				host;
+	std::string				root;
     std::string             name_server;
     std::string             error_page;
     std::list<t_loc>		location;

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 19:32:58 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:48:05 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,13 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            parse_request(request->second);
+            parse_request(request->second, conf);
             if (request->second.done == true)
             {
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
             }
-           request++;
+           	else
+			   request++;
         }
     }
 }
