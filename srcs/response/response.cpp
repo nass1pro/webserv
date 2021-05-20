@@ -6,7 +6,11 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/05/20 16:43:06 by ehafidi          ###   ########.fr       */
+=======
+/*   Updated: 2021/05/20 16:03:23 by nahaddac         ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +30,12 @@ void setAllow(t_req &req, int statusCode)
 
 void setContentLanguage(t_req &req)
 {
+<<<<<<< HEAD
+=======
+	/*If no Content-Language is specified,
+	the default is that the content is intended for all language audiences.*/
+	// std::cout << "SET CONTENT LANGUAGE : " << std::endl;
+>>>>>>> main
 	req.header.Content_Language = std::string("\0");
 }
 
@@ -44,6 +54,7 @@ void setContentLength(t_res &res, t_req &req)
 
 void setContentType(t_req &req)
 {
+	// css php jpg
 	req.header.Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
 }
 
@@ -57,6 +68,7 @@ void setDate(t_req &req)
    		ss << "Sun, ";
    	else if (now->tm_wday == 1)
    		ss << "Mon, ";
+
    	else if (now->tm_wday == 2)
    		ss << "Tue, ";
    	else if (now->tm_wday == 3)
@@ -108,7 +120,7 @@ void setLastModified(t_req &req, int statusCode)
 	if (statusCode == 200 || statusCode ==  201)
 	{
 		req.header.Last_modified = std::string("Last-Modified: ");
-	
+
 		req.header.Last_modified.append(req.header.Date.substr(6));
 	}
 	else
@@ -119,7 +131,19 @@ void setLocation(t_req &req, int statusCode)
 {
 	if (statusCode == 201)
 	{
+<<<<<<< HEAD
 		req.header.Location = std::string("Location");		
+=======
+		// for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+		// {
+		// 	if (*it == "hello") //find condition to find path
+		// 	{
+		// 		header.Content_Location = std::string(*it);
+		// 		break ;
+		// 	}
+		// }
+		req.header.Location = std::string("Location");
+>>>>>>> main
 		req.header.Location.append(req.url);
 	}
 	else
@@ -151,9 +175,26 @@ void setWWWAuthenticate(t_req &req, int statusCode)
 
 void setContentLocation(t_req &req, int statusCode)
 {
+<<<<<<< HEAD
 	if (statusCode == 200 || statusCode == 201)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");		
+=======
+	// std::cout << "SATUS CODE : " << statusCode << std::endl;
+
+	if (statusCode == 200 || statusCode == 201)
+	{
+		// for (std::list<std::string>::iterator it = config.location.begin(); it != config.location.end(); it++)
+		// {
+		// 	if (*it == "hello") //find condition to find path
+		// 	{
+		// 		header.Content_Location = std::string(*it);
+		// 		break ;
+		// 	}
+		// }
+
+		req.header.Content_Location = std::string("Content-Location: ");
+>>>>>>> main
 		if (req.url == "/")
 		{
 			req.header.Content_Location.append("/frontend/index.html");
@@ -163,6 +204,11 @@ void setContentLocation(t_req &req, int statusCode)
 	{
 		req.header.Content_Location = std::string("\0");
 	}
+<<<<<<< HEAD
+=======
+	// std::cout << "CONT LOC : " << req.header.Content_Location <<  std::endl;
+
+>>>>>>> main
 }
 
 void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode)
@@ -248,6 +294,13 @@ void concatenate_header( t_res &res, t_req &req)
 	{
 		if (req.header.Content_Length != "\0")
 		{
+<<<<<<< HEAD
+=======
+			// std::string code;
+
+			// std::cout << "CODE : " <<  		ft_itoa(res.statusCode, code) << std::endl;
+
+>>>>>>> main
 			res.response_header.append("200");
 			res.response_header.append("\r\n");
 		}
@@ -258,6 +311,12 @@ void concatenate_header( t_res &res, t_req &req)
 		}
 		if (req.header.Content_Length != "\0")
 		{
+<<<<<<< HEAD
+=======
+			// std::cout << "HERE : " << std::endl;
+			// std::cout << "CONT LOC : " << req.header.Content_Location <<  std::endl;
+
+>>>>>>> main
 			res.response_header.append(req.header.Content_Location);
 			res.response_header.append("\r\n");
 		}
@@ -269,7 +328,13 @@ void concatenate_header( t_res &res, t_req &req)
 		if (req.header.Content_Length != "\0")
 		{
 			res.response_header.append(req.header.Date);
+<<<<<<< HEAD
 			res.response_header.append("\r\n");
+=======
+			res.response_header.append("\n");
+			// std::cout << "DATE : " << req.header.Date <<  std::endl;
+
+>>>>>>> main
 		}
 		if (req.header.Content_Length != "\0")
 		{
@@ -320,7 +385,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     if (req.error == 413)
 	{
 		std::cout << " /////// 413 ///////// "  << std::endl;
-	
+
 		set_response_data(res, config, req, 413);
 	}
 	else if (req.version != "HTTP/1.1")
@@ -364,13 +429,13 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	//concatenate erthing in corresponding res in map
 	config.serv.res[client->first].append(res.response_header);
 	// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-	
+
 	config.serv.res[client->first].append(res.payload);
 	config.serv.res[client->first].append("\r\n\r\n");
 	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-	
+
 	// std::cout  << " //////////////ICI " << std::endl;
-	
+
 	// int buff = client->first;
 	// client++;
 	// config.serv.req.erase(buff);
@@ -378,6 +443,6 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 	erras_req_client(client, config.serv);
 	// std::cout  << " ////////////// LAAA " << std::endl;
-	
+
 	// return (res);
 }

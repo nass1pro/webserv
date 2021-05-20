@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 14:29:17 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/20 16:24:00 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_header
 	std::string				Content_Language;
 	std::string		        Content_Length;
 	std::string				Content_Location;
-	std::string				Content_Type;
+	std::list<std::string>	Content_Type;
 	std::string				Date;
 	std::list<std::string>	Host;
 	std::string				Last_modified;
@@ -103,11 +103,11 @@ typedef struct	s_req
 	std::string				full_req;
 	std::string				method;
 	std::string				url;
-	std::list<std::string>	location;
+	t_loc					location;
 	std::string				version;
 	t_header				header;
 	size_t					body_index;
-    int error;
+    int 					error;
 	bool 					done;
 	std::string				body_content;
 }				t_req;
@@ -150,6 +150,7 @@ typedef struct	s_loc
 typedef struct s_config
 {
     std::string				host;
+	std::string				root;
     std::string             name_server;
     std::string             error_page;
     std::list<t_loc>		location;
