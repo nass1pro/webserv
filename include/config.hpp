@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 15:53:16 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 16:02:55 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_header
 	std::string				Content_Language;
 	std::string		        Content_Length;
 	std::string				Content_Location;
-	std::string				Content_Type;
+	std::list<std::string>	Content_Type;
 	std::string				Date;
 	std::list<std::string>	Host;
 	std::string				Last_modified;
