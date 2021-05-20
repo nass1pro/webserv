@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/19 14:16:02 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:50:04 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 	loc.location_match = tmp.back();
 	if (tmp.size() == 2)
 		loc.optional_modifier = tmp.front();
+	loc.directory_files_search = c->root;
 	while (std::getline(fd, reader))
 	{
 		tmp = split_in_list(reader, " \t\n\r\v\f");
@@ -236,6 +237,8 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		}
 		else if (find_location(reader))
 			parse_location(fd, &c, reader);
+		else if (find_config_elem(tmp, "root"))
+			conf_get_str(c.root, tmp);
 		else if (find_config_elem(tmp, "host"))
 			conf_get_str(c.host, tmp);
 		else if (find_config_elem(tmp, "port"))
