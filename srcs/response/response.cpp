@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:12:57 by ehafidi           #+#    #+#             */
-/*   Updated: 2021/05/20 13:42:17 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/20 13:50:00 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -437,6 +437,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
 	
 	config.serv.res[client->first].append(res.payload);
+	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	
 	// std::cout  << " //////////////ICI " << std::endl;
 	
 	// int buff = client->first;
