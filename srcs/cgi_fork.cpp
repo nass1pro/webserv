@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 12:26:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 13:44:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:18:34 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ void        parse_cgi_file(t_req &req, std::string const& ouput_file)
 	{
 		req.status_code = std::stoi(line.substr(7, 11));
 	}
+    catch (std::exception &e)
+    {
+        fd.close();
+		P("Stoi Error: " << e.what());
+		// throw server error 500;
+    }
+    std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
+	req.message_body = file.erase(0, find_first_two_line_returns(file) + 1);
+	fd.close();
 }
 
 bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const &env)
