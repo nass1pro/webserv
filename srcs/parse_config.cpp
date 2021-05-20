@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/20 14:50:04 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:02:32 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,8 @@ int		find_location(std::string &line)
 */
 void	init_config(t_config &conf)
 {
+	conf.name_server = "Webserv";
+	conf.root = "frontend";
 	conf.body_size_limit = 1;
 	conf.default_server = false;
 }
