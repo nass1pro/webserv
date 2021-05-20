@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/20 15:49:22 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 17:09:47 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,9 +188,11 @@ void	get_body(t_req &req)
 ** (take the _req struct as parameter with full_request field filled)
 ** for the moment return a negative number in case of weird behavior (!!) modifier retours erreurs etc
 */
-int		parse_request(t_req &req, t_conf &conf)
+int		parse_request(t_req &req, t_config &conf)
 {
 	std::list<std::string> list_lines;
+
+	conf.default_server = false;
 
 	init_request(req);
 	if ((req.body_index = get_body_index(req.full_req)) == -1)
