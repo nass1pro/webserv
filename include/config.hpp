@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 15:07:49 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:53:16 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ typedef struct	s_req
 	std::string				full_req;
 	std::string				method;
 	std::string				url;
-	std::list<std::string>	location;
+	t_loc					location;
 	std::string				version;
 	t_header				header;
 	size_t					body_index;
