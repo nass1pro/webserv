@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/20 15:02:32 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/21 17:54:08 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,29 +141,30 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 /*
 ** Init location values
 */
-void	init_location(t_loc *loc)
+void	init_location(t_config &conf, t_loc &loc)
 {
-	loc->body_size_limit = 1;
+	loc.directory_files_search = conf.root;
+	loc.body_size_limit = 1;
 }
 
 /*
 ** parse the location in config file
 */
-int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
+int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 {
 	std::string				reader;
 	t_loc					loc;
 	std::list<std::string>	tmp;
 	int						brackets = 1;
 
-	init_location(&loc);
+	init_location(c, loc);
 	tmp = split_in_list(line, " \t");
 	tmp.pop_front();
 	tmp.pop_back();
 	loc.location_match = tmp.back();
+	//cut_path(loc.location_match, c.root);
 	if (tmp.size() == 2)
 		loc.optional_modifier = tmp.front();
-	loc.directory_files_search = c->root;
 	while (std::getline(fd, reader))
 	{
 		tmp = split_in_list(reader, " \t\n\r\v\f");
@@ -174,6 +175,8 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 		}
 		else if (find_config_elem(tmp, "http_methods"))
 			conf_get_str(loc.http_methods, tmp);
+		else if (find_config_elem(tmp, "index"))
+			conf_get_list(loc.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
 			conf_get_num(loc.body_size_limit, tmp);
 		else if (find_config_elem(tmp, "directory_files_search"))
@@ -189,7 +192,7 @@ int		parse_location(std::ifstream &fd, t_config *c, std::string &line)
 	}
 	if (brackets != 0)
 		return (ERROR);
-	c->location.push_back(loc);
+	c.location.push_back(loc);
 	return (SUCCESS);
 }
 
@@ -212,8 +215,9 @@ int		find_location(std::string &line)
 */
 void	init_config(t_config &conf)
 {
+	conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
-	conf.root = "frontend";
+	conf.root = "/frontent/";
 	conf.body_size_limit = 1;
 	conf.default_server = false;
 }
@@ -238,9 +242,12 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 			break;
 		}
 		else if (find_location(reader))
-			parse_location(fd, &c, reader);
+			parse_location(fd, c, reader);
 		else if (find_config_elem(tmp, "root"))
+		{
 			conf_get_str(c.root, tmp);
+			//cut_path(c.root, ""); //check si "" est ok
+		}
 		else if (find_config_elem(tmp, "host"))
 			conf_get_str(c.host, tmp);
 		else if (find_config_elem(tmp, "port"))

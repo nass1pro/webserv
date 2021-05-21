@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 17:07:34 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/21 17:34:23 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,16 @@ typedef struct	s_cgi
 
 typedef struct	s_loc
 {
-	std::string		location_match;
-	std::string		optional_modifier;
-	std::string		http_methods;
-	size_t			body_size_limit; //MB !!
-	std::string		directory_files_search;
-	std::string		directory_listing;
-	std::string		default_file_directory_request;
-	std::string		upload_files_location;
-	t_cgi			cgi;
+	std::string				location_match;
+	std::string				optional_modifier;
+	std::string				http_methods;
+	size_t					body_size_limit; //MB !!
+	std::list<std::string>	index;
+	std::string				directory_files_search;
+	std::string				directory_listing;
+	std::string				default_file_directory_request;
+	std::string				upload_files_location;
+	t_cgi					cgi;
 }				t_loc;
 
 typedef struct s_header
