@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 17:07:34 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:02:37 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 */
 typedef struct	s_cgi
 {
+	bool		active;
 	std::string	AUTH_TYPE;
 	std::string	CONTENT_LENGTH;
 	std::string	CONTENT_TYPE;
