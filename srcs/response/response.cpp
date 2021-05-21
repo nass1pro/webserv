@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/20 17:12:37 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:56:17 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ void setLocation(t_req &req, int statusCode)
 {
 	if (statusCode == 201)
 	{
-		req.header.Location = std::string("Location");
-		req.header.Location.append(req.url);
+		req.header.Location = std::string("Location: ");
+		req.header.Location.append("/frontend/index.html");
 	}
 	else
 		req.header.Location = std::string("\0");
@@ -191,6 +191,8 @@ void head_request(t_res &res, t_config &config, t_req &req)
 		std::string path = it->location_match;
 		if(path == req.url) // means the url exist and the request is valid
 		{
+		std::cout << " REQ>URL " << req.url << std::endl;
+		
 			if (path == "/")
 			{
 				std::ifstream ifs("frontend/index.html"); //get the input file stream with the requested url
@@ -226,10 +228,13 @@ void put_request( t_res &res, t_config &config, t_req &req)
 	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
 		std::string potential_file_path = std::string(it->location_match);
-		potential_file_path += req.url;
+		std::cout << " POTENTIAL FILE PATH BEFORE " << potential_file_path << std::endl;			
+		potential_file_path.append(req.url);
+		std::cout << " POTENTIAL FILE PATH " << potential_file_path << std::endl;	
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
 		{
+				std::cout << " REQ>URL " << req.url << std::endl;	
 			res.statusCode = 201;
 			res.payload = std::string("\0");
 
@@ -240,17 +245,19 @@ void put_request( t_res &res, t_config &config, t_req &req)
 		}
 	}
 	// if exist 200
+	std::cout << " REQ URL BAD" << req.url << std::endl;
 	set_response_data(res, config, req, 201);
 	file_create_or_replace(req);
 }
 
 void concatenate_header( t_res &res, t_req &req)
 {
-	if (req.method == "GET" || req.method == "HEAD")
+	
+	if (req.method == "GET" || req.method == "HEAD" || req.method == "POST")
 	{
 		if (req.header.Content_Length != "\0")
 		{
-			res.response_header.append("200");
+			res.response_header.append("HTTP/1.1 200 OK");
 			res.response_header.append("\r\n");
 		}
 		if (req.header.Content_Length != "\0")
@@ -285,7 +292,7 @@ void concatenate_header( t_res &res, t_req &req)
 
 		}
 	}
-	else if (req.method == "PUT" || req.method == "POST")
+	else if (req.method == "PUT" /*|| req.method == "POST"*/)
 	{
 		res.response_header.append(req.header.Location);
 		res.response_header.append("\n");
@@ -319,7 +326,10 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
 	t_res res;
 	std::cout << "METHOD : " << req.method << std::endl;
-    if (req.error == 413)
+
+	std::cout << " BODY CONTENT : " << req.body_content << std::endl;
+
+    else if (req.error == 413)
 	{
 		std::cout << " /////// 413 ///////// "  << std::endl;
 
@@ -350,7 +360,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	}
 	else if (req.method == "POST") //create content
 	{
-		// std::cout << " /////// POST ///////// "  << std::endl;
+		std::cout << " /////// POST ///////// "  << std::endl;
 		put_request(res, config, req);
 	}
 	else
@@ -371,7 +381,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	config.serv.res[client->first].append("\r\n\r\n");
 	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
 
-	// std::cout  << " //////////////ICI " << std::endl;
+	std::cout  << " //////////////ICI " << std::endl;
 
 	// int buff = client->first;
 	// client++;
