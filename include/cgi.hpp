@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 11:17:38 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 12:28:35 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 12:38:57 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 */
 
 void        set_env(std::string var, std::string equal_to, std::vector<std::string> &env);
-void        set_env_vector(t_cgi const& cgi, t_req req, t_config &conf, std::vector<std::string> &env);
-void        set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf, std::vector<std::string> &env);
+void        set_env_vector(t_cgi const& cgi, std::vector<std::string> &env);
+void        set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env);
 std::string start_cgi(t_req &req, t_config &conf);
 
 

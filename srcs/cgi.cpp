@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 12:28:58 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 12:39:58 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void set_env(std::string var, std::string equal_to, std::vector<std::string> &en
     env.push_back(var + "=" + equal_to);
 }
 
-void set_env_vector(t_cgi const& cgi,t_config &conf ,std::vector<std::string> &env)
+void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 {
     set_env("AUTH_TYPE", cgi.AUTH_TYPE, env);
 	set_env("CONTENT_LENGTH", cgi.CONTENT_LENGTH, env);
@@ -39,7 +39,7 @@ void set_env_vector(t_cgi const& cgi,t_config &conf ,std::vector<std::string> &e
 	set_env("SERVER_SOFTWARE", cgi.SERVER_SOFTWARE, env);
 }
 
-void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf, std::vector<std::string> &env)
+void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
     cgi.CONTENT_LENGTH  = std::to_string(req.body_content.size());
     cgi.CONTENT_TYPE    = req.header.Content_Type.front();
@@ -62,7 +62,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     std::vector<std::string> env;
     std::string ret;
 
-    set_env_vector(req.location.cgi, req, conf, env);
+    set_header_cgi(req.location.cgi, req, conf, env);
     ret = req.location.directory_files_search + req.location.upload_files_location;
     // ret = req.location.???? + req.location.upload_files_location;
     if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
