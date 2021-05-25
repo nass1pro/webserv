@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 SRC = main.cpp srcs/parse_config.cpp srcs/request.cpp srcs/server.cpp srcs/utils.cpp \
-		srcs/response/response.cpp  srcs/printers.cpp
+		srcs/response/response.cpp  srcs/printers.cpp srcs/cgi.cpp
 
 CC = clang++
 CCFLAGS = -Wall -Wextra -Werror -std=c++98
