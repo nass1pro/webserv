@@ -6,11 +6,12 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 13:17:10 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:44:28 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cgi.hpp"
+
 
 
 void set_env(std::string var, std::string equal_to, std::vector<std::string> &env)
@@ -55,6 +56,7 @@ void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::stri
     set_env_vector(cgi, env);
 
 }
+
 
 std::string start_cgi(t_req &req, t_config &conf)
 {
