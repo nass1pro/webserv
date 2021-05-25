@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 13:40:31 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:22:03 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void	init_config(t_config &conf)
 {
 	conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
-	conf.root = "/frontend/";
+	conf.root = "frontend/";
 	//conf.index.push_back("index.html");
 	conf.body_size_limit = 1;
 	conf.default_server = false;

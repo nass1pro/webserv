@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 13:21:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:17:38 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	lines.pop_front();
 
 	get_req_location(req, conf);
-	print_location(&req.location);
+	//print_location(&req.location); //ETTETETETETSSS
 	return (SUCCESS);
 }
 
@@ -177,6 +177,7 @@ void	init_request(t_req &req)
 {
 	req.body_index = 0;
 	req.done = false;
+	req.error = 0;
 }
 
 /*
