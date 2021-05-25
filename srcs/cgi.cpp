@@ -6,11 +6,12 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 13:53:36 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:32:24 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cgi.hpp"
+#include "../include/utils.hpp"
 
 
 
@@ -25,18 +26,18 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 	set_env("CONTENT_LENGTH", cgi.CONTENT_LENGTH, env);
 	set_env("CONTENT_TYPE", cgi.CONTENT_TYPE, env);
 	set_env("GATEWAY_INTERFACE", cgi.GATEWAY_INTERFACE, env);
-	set_env("PATH_INFO", cgi.PATH_INFO, env); //req.URL
+	set_env("PATH_INFO", cgi.PATH_INFO, env);
 	set_env("PATH_TRANSLATED", cgi.PATH_TRANSLATED, env);
 	set_env("QUERY_STRING", cgi.QUERY_STRING, env);
 	set_env("REMOTE_ADDR", cgi.REMOTE_ADDR, env);
 	set_env("REMOTE_INDENT", cgi.REMOTE_IDENT, env);
 	set_env("REMOTE_USER", cgi.REMOTE_USER, env);
-	set_env("REQUEST_METHOD", cgi.REQUEST_METHOD, env); //env variable -> POST/GET/....
+	set_env("REQUEST_METHOD", cgi.REQUEST_METHOD, env);
 	set_env("REQUEST_URI", cgi.REQUEST_URI, env);
 	set_env("SCRIPT_NAME", cgi.SCRIPT_NAME, env);
 	set_env("SERVER_NAME", cgi.SERVER_NAME, env);
 	set_env("SERVER_PORT", cgi.SERVER_PORT, env);
-	set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env); //HTTP/1.1
+	set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env);
 	set_env("SERVER_SOFTWARE", cgi.SERVER_SOFTWARE, env);
 }
 
@@ -76,7 +77,7 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
     if (!fd.is_open())
 	{
 		fd.close();
-		// P("Error: parse_cgi_post_file didn't open");
+		P("Error: parse_cgi_post_file didn't open");
 		exit(1);
 	}
 
@@ -88,7 +89,7 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
     catch (std::exception &e)
     {
         fd.close();
-		// P("Stoi Error: " << e.what());
+		P("Stoi Error: " << e.what());
 		// throw server error 500;
     }
     std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
@@ -161,7 +162,6 @@ std::string start_cgi(t_req &req, t_config &conf)
 
     set_header_cgi(req.location.cgi, req, conf, env);
     ret = req.location.directory_files_search + req.location.upload_files_location;
-    // ret = req.location.???? + req.location.upload_files_location;
     if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
     {
         close(fd_upload);
@@ -177,7 +177,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
     if (req.location.cgi.SCRIPT_NAME != std::string("None"))
     {
-        // parse_cgi_file(req, ret);
+        parse_cgi_file(req, ret);
         ;
     }
 
