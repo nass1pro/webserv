@@ -63,27 +63,47 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 */
 //std::stiring
 
-/*bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, std::string &no_file_path)
+bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, std::string &no_file_path)
 {
 	std::string							file;
 	std::list<std::string>::iterator	it;
 
+	/*P("No file paht");
+	P(no_file_path);
+	P("url");    ////TEEEESSSTTTT
+	P(req.url);*/
 	if (no_file_path != req.url)
 	{
-		file = req.url.substr(0, no_file.path.size());
+		file = req.url.substr(no_file_path.size());
 		it = files_list.begin();
-		while (it != files.list.end())
+		while (it != files_list.end())
 		{
 			if (*it == file)
-
+				return (true);
+			++it;
 		}
+		return (false);
 	}
 	else
 	{
-
+		std::list<std::string>::iterator	it_index = req.location.index.begin();
+		while (it_index != req.location.index.end())
+		{
+			it = files_list.begin();
+			while (it != files_list.end())
+			{
+				if (*it == *it_index)
+				{
+					req.url.append(*it_index);
+					return (true);
+				}
+				++it;
+			}
+			++it_index;
+		}
+		return (false);
 	}
-		
-}*/
+}
 
 /*
 ** Put an error code in req->error if we can't find the file
@@ -117,7 +137,12 @@ bool	find_dir(t_req &req)
 		files_list.push_back(file->d_name); 
 	closedir(directory);
 	//print_list(files_list); //TEEETSTSTSSS
-	//check_files_in_directory(files_list, req, no_file_path);
+	if (!check_files_in_directory(files_list, req, no_file_path))
+	{
+		req.error = 404;
+		return (false);
+	}
+	P(req.url);
 	return (true);
 	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
@@ -140,11 +165,11 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 		new_url.erase(0, 1);
 	new_url.insert(0, conf.root);
 	//P(new_url); /////////////teeestststts
-	if (new_url.find_last_of("/") == new_url.size() - 1)
+	/*if (new_url.find_last_of("/") == new_url.size() - 1)
 	{
 		if (!loc.index.empty())
 			new_url.append(loc.index.front());
-	}
+	}*/
 	//P(new_url); /////////////////////PRINT TREST
 	return (new_url);
 }
@@ -195,10 +220,14 @@ void	get_req_location(t_req &req, t_config &conf)
 	}
 	//P("test");
 	if (!found)
+	{
+		P("Directory not found");
 		return ; // check retourner code erreur ou jsp
+	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
 	req.url = create_local_path(req, req.location, conf);
-	P(req.url);
-	find_dir(req);
+	//P(req.url); //TEEEESSTTT
+	if (!find_dir(req))
+		P("File not found");
 }
