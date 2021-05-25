@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/21 15:33:39 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/25 16:49:09 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,66 +194,44 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 
 void head_request(t_res &res, t_config &config, t_req &req)
 {
-	if (req.url == "/")
+	
+	std::cout << " REQ URL : " << req.url << std::endl;
+	if (req.url == "frontend/index.html")
 	{
-		set_response_data(res, config, req, 405);
-		return ;
+		std::ifstream ifs("error_pages/405.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 405);		
 	}
-	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
-	{
-		std::string path = it->location_match;
-		if(path == req.url) // means the url exist and the request is valid
-		{
-		// std::cout << " REQ>URL " << req.url << std::endl;
-		
-			if (path == "/")
-			{
-				std::ifstream ifs("frontend/index.html"); //get the input file stream with the requested url
-				res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			}
-			else
-			{
-				std::ifstream ifs(req.url); //get the input file stream with the requested url
-				res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			}
-
-			set_response_data(res, config, req, 200);
-			return ;
-		}
+	if (req.error == 404)
+	{ 
+		std::ifstream ifs("error_pages/404.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 404);
 	}
-	std::ifstream ifs("error_pages/404.html");
-	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-	set_response_data(res, config, req, 404);
+	// else //if (req.location->cgi.active == false)
+    // {
+    //     std::ifstream ifs(req.url); //get the input file stream with the requested url
+	// 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+   	// 	set_response_data(res, config, req, 200);
+	// }
 }
 
 void get_request(t_res &res, t_config &config, t_req &req)
 {
-	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
-	{
-		std::string path = it->location_match;
-		std::cout << " PATH " << path << std::endl;
-		std::cout << " REQ>URL " << req.url << std::endl;
-			std::cout << " ROOT " << it->default_file_directory_request << std::endl;
-		if (path == req.url || req.url == "/directory/youpi.bad_extension") // means the url exist and the request is valid
-		{
-			if (path == "/")
-			{
-				std::ifstream ifs("frontend/index.html"); //get the input file stream with the requested url
-				res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			}
-			else
-			{
-				std::ifstream ifs(req.url); //get the input file stream with the requested url
-				res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-			}
-
-			set_response_data(res, config, req, 200);
-			return ;
-		}
+	std::cout << " ON TEST ICI " << req.error << std::endl;	
+	if (req.error == 404)
+	{ 
+		std::cout << " ON pASSE ICI " << req.error << std::endl;			
+		std::ifstream ifs("error_pages/404.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 404);
 	}
-	std::ifstream ifs("error_pages/404.html");
-	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-	set_response_data(res, config, req, 404);
+	else //if (req.location->cgi.active == false)
+    {
+        std::ifstream ifs(req.url); //get the input file stream with the requested url
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+   		set_response_data(res, config, req, 200);
+	} 
 }
 
 void file_create_or_replace(t_req &req)
@@ -307,7 +285,7 @@ void post_request( t_res &res, t_config &config, t_req &req)
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
 		{
-				std::cout << " REQ>URL " << req.url << std::endl;	
+			std::cout << " REQ>URL " << req.url << std::endl;	
 			res.statusCode = 201;
 			res.payload = std::string("\0");
 
@@ -331,6 +309,7 @@ void concatenate_header( t_res &res, t_req &req)
 	{
 		if (req.header.Content_Length != "\0")
 		{
+			std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
 			if (res.statusCode == 200)
 				res.response_header.append("HTTP/1.1 200 OK");
 			else if (res.statusCode == 405)	
@@ -436,7 +415,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	}
 	else if (req.method == "GET") //read content
 	{
-		// std::cout << " /////// GET ///////// "  << std::endl;
+		std::cout << " /////// GET ///////// "  << std::endl;
 		get_request(res, config, req);
 		concatenate_header(res, req);
 		config.serv.res[client->first].append(res.response_header);
@@ -451,13 +430,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		// std::cout << " /////// HEAD ///////// "  << std::endl;
 		head_request(res, config, req);
 		res.payload = std::string("\0");
+		std::cout << " STATUS CODE IN HEAD " << res.statusCode << std::endl;
 		concatenate_header(res, req);
 		config.serv.res[client->first].append(res.response_header);
-		if (res.statusCode == 200)
-		{
-			config.serv.res[client->first].append(res.payload);
-			config.serv.res[client->first].append("\r\n\r\n");
-		}
 	}
 	else if (req.method == "PUT") //update content
 	{
