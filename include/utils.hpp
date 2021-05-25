@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/21 14:39:39 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:19:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <ctype.h>
 # include <unistd.h> // pour utiliser sleep() -> debug, a virer plus tard peut être
 # include <fstream>
+#include <sys/types.h>
+#include <dirent.h>
 # include "config.hpp"
 
 /*
@@ -43,6 +45,7 @@ void	print_header(t_header *h);
 void	print_req_elem(t_req *req);
 void	print_location(t_loc *loc);
 void	print_config(t_config *c);
+
 /*
 ** Utils functions
 */
@@ -58,6 +61,11 @@ void					cut_path(std::string &path, std::string &root);
 */
 std::string ft_itoa(int n, std::string zebi);
 int		parse_request(t_req &req, t_config &conf);
+
+/*
+** Parse url
+*/
+void	get_req_location(t_req &req, t_config &conf);
 
 /*
 ** Config
