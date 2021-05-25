@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 14:44:28 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:41:32 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 	set_env("SERVER_PORT", cgi.SERVER_PORT, env);
 	set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env); //HTTP/1.1
 	set_env("SERVER_SOFTWARE", cgi.SERVER_SOFTWARE, env);
+
+    //secret env ???????
 }
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
