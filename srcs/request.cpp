@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 11:43:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:17:38 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,112 +144,6 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 }
 
 /*
-** Copy a t_loc into another t_loc
-*/
-void	copy_loc(t_loc &dest, t_loc &copy)
-{
-	dest.location_match = copy.location_match;
-	dest.optional_modifier = copy.optional_modifier;
-	dest.http_methods = copy.http_methods;
-	dest.body_size_limit = copy.body_size_limit;
-	dest.directory_files_search = copy.directory_files_search;
-	dest.directory_listing = copy.directory_listing;
-	dest.default_file_directory_request = copy.default_file_directory_request;
-	dest.upload_files_location = copy.upload_files_location;
-	dest.index = copy.index;
-	
-	dest.cgi.AUTH_TYPE = copy.cgi.AUTH_TYPE;
-	dest.cgi.CONTENT_LENGTH = copy.cgi.CONTENT_LENGTH;
-	dest.cgi.CONTENT_TYPE = copy.cgi.CONTENT_TYPE;
-	dest.cgi.GATEWAY_INTERFACE = copy.cgi.GATEWAY_INTERFACE;
-	dest.cgi.PATH_INFO = copy.cgi.PATH_INFO;
-	dest.cgi.PATH_TRANSLATED = copy.cgi.PATH_TRANSLATED;
-	dest.cgi.QUERY_STRING = copy.cgi.QUERY_STRING;
-	dest.cgi.REMOTE_ADDR = copy.cgi.REMOTE_ADDR;
-	dest.cgi.REMOTE_IDENT = copy.cgi.REMOTE_IDENT;
-	dest.cgi.REMOTE_USER = copy.cgi.REMOTE_USER;
-	dest.cgi.REQUEST_METHOD = copy.cgi.REQUEST_METHOD;
-	dest.cgi.REQUEST_URI = copy.cgi.REQUEST_URI;
-	dest.cgi.SCRIPT_NAME = copy.cgi.SCRIPT_NAME;
-	dest.cgi.SERVER_NAME = copy.cgi.SERVER_NAME;
-	dest.cgi.SERVER_PORT = copy.cgi.SERVER_PORT;
-	dest.cgi.SERVER_PROTOCOL = copy.cgi.SERVER_PROTOCOL;
-	dest.cgi.SERVER_SOFTWARE = copy.cgi.SERVER_SOFTWARE;
-}
-
-/*
-** TODO parsing url
-** 
-*/
-
-/*
-** Create a local path with root etc
-*/
-std::string		create_local_path(std::string &url, t_loc &loc)
-{
-	std::string new_url;
-
-	new_url = url.substr(loc.location_match.size());
-	new_url.insert(0, loc.directory_files_search);
-	
-	if (new_url.find_last_of("/") == new_url.size() - 1)
-		new_url.insert(new_url.size(), loc.index.front());
-	P(new_url);
-	return (new_url);
-}
-
-/*
-** find a directory location
-*/
-bool	find_directory(std::string &path, std::string &dir)
-{
-	std::string	tmp;
-	size_t		end;
-
-	end = path.find_first_of("/");
-	if (path.size() > 0 && path[0] == '/')
-		end = path.find_first_of("/", 1);
-	if (end == std::string::npos)
-		end = path.size();
-	else
-		++end;
-	tmp = path.substr(0, end);
-	if (tmp == dir)
-		return (true);
-	return (false);
-}
-
-/*
-** find the location asked by de request 
-*/
-void	get_req_location(t_req &req, t_config &conf)
-{
-	std::list<t_loc>::iterator	it = conf.location.begin();
-	int 						found = 0;
-	std::string					compare = "http://" + conf.host + ":" + conf.port.front();
-	t_loc						req_loc;
-
-	if (req.url.find(compare) != std::string::npos)
-		req.url = req.url.substr(compare.size());
-
-	while (it != conf.location.end() && !found)
-	{
-		if (find_directory(req.url, it->location_match))
-		{
-			std::cout << "FOUND" << std::endl;
-			
-			found = 1;
-		}
-		if (!found)
-			++it;
-	}
-	copy_loc(req_loc, *it);
-	req.location = req_loc;
-	if (req_loc.directory_files_search != "")
-		req.url = create_local_path(req.url, req.location);	
-}
-
-/*
 ** Take the first line of the request split her in a list,
 ** add values in the struct t_req and delete used content to the lines list
 ** return negative value in case of error
@@ -272,7 +166,7 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	lines.pop_front();
 
 	get_req_location(req, conf);
-	print_location(&req.location);
+	//print_location(&req.location); //ETTETETETETSSS
 	return (SUCCESS);
 }
 
@@ -283,6 +177,7 @@ void	init_request(t_req &req)
 {
 	req.body_index = 0;
 	req.done = false;
+	req.error = 0;
 }
 
 /*
