@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 11:53:09 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 12:11:23 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ bool		find_config_elem(std::list<std::string> &line, std::string const &name)
 */
 int		parse_cgi(t_loc &l, std::list<std::string> line)
 {
+	l.cgi.active = true;
 	if (find_config_elem(line, "AUTH_TYPE"))
 		conf_get_str(l.cgi.AUTH_TYPE, line);
 	else if (find_config_elem(line, "CONTENT_LENGTH"))
