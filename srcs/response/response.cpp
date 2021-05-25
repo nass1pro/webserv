@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 16:49:09 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/25 17:24:48 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void setDate(t_req &req)
 
 void setLastModified(t_req &req, int statusCode)
 {
-	if (statusCode == 200 || statusCode ==  201 || statusCode ==  405 )
+	if (statusCode == 200 || statusCode == 201 || statusCode == 405 || statusCode == 404)
 	{
 		req.header.Last_modified = std::string("Last-Modified: ");
 
@@ -167,6 +167,14 @@ void setContentLocation(t_req &req, int statusCode)
 		if (req.url == "/")
 		{
 			req.header.Content_Location.append("/error_pages/405.html");
+		}
+	}
+	else if (statusCode == 404)
+	{
+		req.header.Content_Location = std::string("Content-Location: ");
+		if (req.url == "/")
+		{
+			req.header.Content_Location.append("/error_pages/404.html");
 		}
 	}
 	else
@@ -307,6 +315,7 @@ void concatenate_header( t_res &res, t_req &req)
 	
 	if (req.method == "GET" || req.method == "HEAD" || req.method == "POST")
 	{
+		std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;	
 		if (req.header.Content_Length != "\0")
 		{
 			std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
@@ -314,6 +323,8 @@ void concatenate_header( t_res &res, t_req &req)
 				res.response_header.append("HTTP/1.1 200 OK");
 			else if (res.statusCode == 405)	
 				res.response_header.append("HTTP/1.1 405 ");
+			else if (res.statusCode == 404)	
+				res.response_header.append("HTTP/1.1 404 ");				
 			res.response_header.append("\r\n");
 		}
 		if (req.header.Content_Length != "\0")
