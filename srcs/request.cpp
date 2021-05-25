@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/21 17:54:54 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 11:43:58 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,11 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 }
 
 /*
+** TODO parsing url
+** 
+*/
+
+/*
 ** Create a local path with root etc
 */
 std::string		create_local_path(std::string &url, t_loc &loc)
@@ -188,11 +193,7 @@ std::string		create_local_path(std::string &url, t_loc &loc)
 	new_url.insert(0, loc.directory_files_search);
 	
 	if (new_url.find_last_of("/") == new_url.size() - 1)
-	{
-		P("test");
-		P(loc.index.front());
 		new_url.insert(new_url.size(), loc.index.front());
-	}
 	P(new_url);
 	return (new_url);
 }
@@ -271,7 +272,7 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	lines.pop_front();
 
 	get_req_location(req, conf);
-	//print_location(&req.location);
+	print_location(&req.location);
 	return (SUCCESS);
 }
 
