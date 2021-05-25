@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 18:03:30 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 18:04:45 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int						split_fields(std::list<std::string> &fields, std::string &line, std::st
 int						split_fields_str(std::string &field, std::string &line, std::string const &field_name);
 bool					find_field_name(std::string &line, std::string const &name);
 void					cut_path(std::string &path, std::string &root);
-bool					is_exist(std::string url);
+bool					is_exist(std::string &url);
 
 /*
 ** Request

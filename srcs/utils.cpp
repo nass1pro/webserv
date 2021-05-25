@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 18:00:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 18:04:38 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	is_file_exist(std::string &url, std::string &no_file_path, std::list<std::s
 /*
 ** Take an url, cut the file, check if the directory path exist and list the files in a list
 */
-bool	is_exist(std::string url)
+bool	is_exist(std::string &url)
 {
 	std::list<std::string>	files_list;
 	std::string				no_file_path = url;
