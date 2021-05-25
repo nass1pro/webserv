@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 14:00:42 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:44:28 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
     if (req.location.cgi.SCRIPT_NAME != std::string("None"))
     {
-        // parse_cgi_file(req, ret);
-        ;
+        parse_cgi_file(req, ret);
     }
 
     return (ret);
