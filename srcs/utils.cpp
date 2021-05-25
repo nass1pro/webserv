@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/20 14:46:59 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/21 14:39:43 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,20 @@
 #include "../include/utils.hpp"
 
 /*
-** Split a string into a list of strings on the charset
-** Charset is individuals characters not a word
-** (maybe modify for accept word or invidividual ?)
-** Split return the filled list<string>
+** Cut a 
 */
+void	cut_path(std::string &path, std::string &root)
+{
+	if (path == "/")
+		path = root;
+	else
+	{
+		if (path.size() > 0 && path[0] == '/')
+			path = path.substr(1);
+		if (path.size() > 0 && path[path.size() - 1] == '/')
+			path = path.substr(0, path.size() - 1);
+	}
+}
 
 std::string ft_itoa(int n, std::string zebi)
 {
@@ -47,6 +56,12 @@ std::string ft_itoa(int n, std::string zebi)
 	return (zebi);
 }
 
+/*
+** Split a string into a list of strings on the charset
+** Charset is individuals characters not a word
+** (maybe modify for accept word or invidividual ?)
+** Split return the filled list<string>
+*/
 std::list<std::string> split_in_list(std::string str, std::string charset)
 {
 	std::list<std::string>	ret;
