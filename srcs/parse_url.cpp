@@ -63,13 +63,64 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 */
 //std::stiring
 
+/*bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, std::string &no_file_path)
+{
+	std::string							file;
+	std::list<std::string>::iterator	it;
+
+	if (no_file_path != req.url)
+	{
+		file = req.url.substr(0, no_file.path.size());
+		it = files_list.begin();
+		while (it != files.list.end())
+		{
+			if (*it == file)
+
+		}
+	}
+	else
+	{
+
+	}
+		
+}*/
+
 /*
 ** Put an error code in req->error if we can't find the file
 */
-/*bool	find_file(t_req &req)
+bool	find_dir(t_req &req)
 {
-	std::string path_no_files = find_path(t_req->url);
-}*/
+	std::list<std::string>	files_list;
+	std::string				no_file_path = req.url;
+	struct dirent			*file;
+	DIR						*directory;
+
+	if (no_file_path.empty() || (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] == '/')) //if no file specified and no index return 404
+	{
+		if (req.location.index.empty())
+		{
+			req.error = 404;
+			return (false);
+		}
+	}
+	if (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] != '/')
+	{
+		no_file_path.erase(no_file_path.find_last_of("/") + 1);
+		//P(no_file_path); TETETETSTSSS
+	}
+	if ((directory = opendir(no_file_path.c_str())) == 0)
+	{
+		req.error = 404;
+		return (false);
+	}
+	while ((file = readdir(directory)) != 0)
+		files_list.push_back(file->d_name); 
+	closedir(directory);
+	//print_list(files_list); //TEEETSTSTSSS
+	//check_files_in_directory(files_list, req, no_file_path);
+	return (true);
+	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
+}
 
 /*
 ** Create a local path with root etc
@@ -94,7 +145,7 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 		if (!loc.index.empty())
 			new_url.append(loc.index.front());
 	}
-	P(new_url); /////////////////////PRINT TREST
+	//P(new_url); /////////////////////PRINT TREST
 	return (new_url);
 }
 
@@ -149,5 +200,5 @@ void	get_req_location(t_req &req, t_config &conf)
 	req.location = req_loc;
 	req.url = create_local_path(req, req.location, conf);
 	P(req.url);
-	//find_dir(req);
+	find_dir(req);
 }

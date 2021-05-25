@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 13:17:26 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:19:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <ctype.h>
 # include <unistd.h> // pour utiliser sleep() -> debug, a virer plus tard peut être
 # include <fstream>
+#include <sys/types.h>
+#include <dirent.h>
 # include "config.hpp"
 
 /*
