@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 11:17:38 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 13:46:39 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:01:11 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define __CGI_HPP__
 
 # include "config.hpp"
+# include "utils.hpp"
 
 
 void        set_env(std::string var, std::string equal_to, std::vector<std::string> &env);
