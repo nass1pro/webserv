@@ -136,7 +136,7 @@ bool	find_dir(t_req &req)
 	}
 	while ((file = readdir(directory)) != 0)
 	{
-		if (file->d_type != DT_DIR)
+		// if (file->d_type != DT_DIR)
 			files_list.push_back(file->d_name);
 	}
 	closedir(directory);
