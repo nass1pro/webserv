@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 22:15:05 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/26 22:18:15 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,9 +255,6 @@ void file_create_or_replace(t_req &req)
 void put_request( t_res &res, t_config &config, t_req &req)
 {
 	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	// (void)res;
-	// (void)config;
-	// std::ifstream file(req.url);	
 	
 	// if (req.error == 404)
 	// { 
@@ -277,10 +274,12 @@ void put_request( t_res &res, t_config &config, t_req &req)
         	ind++;
 		}
 		std::cout << " IND " << ind << std::endl;
+		//get the correct filename for the file "file_should_exist_after"
 		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
 		std::cout << " FILENAME " << filename << std::endl;
 		std::cout << " ROOT " << config.root << std::endl;
 		std::ofstream newfile(filename);
+		// addd content of client to new file
 		newfile << req.body_content << std::endl;
 		newfile.close();
 	// } 
