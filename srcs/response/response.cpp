@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 17:24:48 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/26 16:45:43 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,9 @@ void head_request(t_res &res, t_config &config, t_req &req)
 void get_request(t_res &res, t_config &config, t_req &req)
 {
 	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	if (req.error == 404)
+	std::ifstream file(req.url);	
+	
+	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
 	{ 
 		std::cout << " ON pASSE ICI " << req.error << std::endl;			
 		std::ifstream ifs("error_pages/404.html");
@@ -252,30 +254,27 @@ void file_create_or_replace(t_req &req)
 
 void put_request( t_res &res, t_config &config, t_req &req)
 {
-	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
-	{
-		std::string potential_file_path = std::string(it->location_match);
-		std::cout << " POTENTIAL FILE PATH BEFORE " << potential_file_path << std::endl;			
-		potential_file_path.append(req.url);
-		std::cout << " POTENTIAL FILE PATH " << potential_file_path << std::endl;	
-		std::ifstream potential_file(potential_file_path);
-		if (potential_file.is_open() == false)
-		{
-				std::cout << " REQ>URL " << req.url << std::endl;	
-			res.statusCode = 201;
-			res.payload = std::string("\0");
-
-			set_response_data(res, config, req, 201);
-			file_create_or_replace(req);
-
-			return ;
-		}
+	std::cout << " ON TEST ICI " << req.error << std::endl;	
+	// std::ifstream file(req.url);	
+	
+	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
+	{ 
+		std::cout << " ON pASSE ICI " << req.error << std::endl;			
+		std::ifstream ifs("error_pages/404.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 404);
 	}
-	// if exist 200
-	std::cout << " REQ URL BAD" << req.url << std::endl;
-	set_response_data(res, config, req, 201);
-	file_create_or_replace(req);
-}
+	// else 
+    // {
+	// 	for (std::string::size_type i = 0; i < s.size(); i++)
+	// 	{
+    //     	std::cout << s[i] << ' ';
+	// 	}
+	// 	std::ofstream outfile (req.url);
+	// 	outfile << "my text here!" << std::endl;
+	// 	outfile.close();
+	// } 
+}	
 
 void post_request( t_res &res, t_config &config, t_req &req)
 {
@@ -430,11 +429,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		get_request(res, config, req);
 		concatenate_header(res, req);
 		config.serv.res[client->first].append(res.response_header);
-		if (res.statusCode == 200)
-		{
-			config.serv.res[client->first].append(res.payload);
-			config.serv.res[client->first].append("\r\n\r\n");
-		}
+		config.serv.res[client->first].append(res.payload);
+		config.serv.res[client->first].append("\r\n\r\n");
 	}
 	else if (req.method == "HEAD") //read header content
 	{
