@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 16:45:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/26 18:04:10 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
 	std::cout << " ON TEST ICI " << req.error << std::endl;	
 	std::ifstream file(req.url);	
 	
-	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
+	if (req.error == 404)
 	{ 
 		std::cout << " ON pASSE ICI " << req.error << std::endl;			
 		std::ifstream ifs("error_pages/404.html");
@@ -284,7 +284,8 @@ void post_request( t_res &res, t_config &config, t_req &req)
 		// std::ifstream ifs("error_pages/405.html");
 		// res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));		
 		return ;
-	}	
+	}
+	// appeler ici le cgi a la place de otut ce qui suit. 	
 	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
 		std::string potential_file_path = std::string(it->location_match);
