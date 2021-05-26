@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 12:26:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 13:53:41 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:01:18 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 {
 	std::string executable = "/usr/bin/php";
 
-	if (req.loc.CGI.SCRIPT_NAME != std::string("None") && file_exists(req.loc.CGI.SCRIPT_NAME))
-		executable = req.loc.CGI.SCRIPT_NAME;
+	if (req.location.cgi.SCRIPT_NAME != std::string("None"))
+		executable = req.location.cgi.SCRIPT_NAME;
 	parameter.push_back(executable);
-	parameter.push_back(req.URL);
+	parameter.push_back(req.url);
 }
 
 void        parse_cgi_file(t_req &req, std::string const &ouput_file)
