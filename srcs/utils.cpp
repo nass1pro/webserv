@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 18:04:38 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/26 16:43:00 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ bool	is_exist(std::string &url)
 	if ((directory = opendir(no_file_path.c_str())) == 0)
 		return (false);
 	while ((file = readdir(directory)) != 0)
-		files_list.push_back(file->d_name); 
+	{
+		if (file->d_type != DT_DIR)
+			files_list.push_back(file->d_name);
+	}
 	closedir(directory);
 	return (is_file_exist(url, no_file_path, files_list));
 }
