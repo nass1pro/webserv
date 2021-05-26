@@ -6,12 +6,54 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/21 14:39:43 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/26 16:43:00 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
+
+/*
+** Check if a file exist
+** compare a filename with a string list of filenames in a directory
+*/
+bool	is_file_exist(std::string &url, std::string &no_file_path, std::list<std::string> &files_list)
+{
+	std::string							to_find = url.substr(no_file_path.size());
+	std::list<std::string>::iterator	it = files_list.begin();
+
+	while (it != files_list.end())
+	{
+		if (*it == to_find)
+			return (true);
+		++it;
+	}
+	return (false);
+}
+
+/*
+** Take an url, cut the file, check if the directory path exist and list the files in a list
+*/
+bool	is_exist(std::string &url)
+{
+	std::list<std::string>	files_list;
+	std::string				no_file_path = url;
+	struct dirent			*file;
+	DIR						*directory;
+
+
+	if (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] != '/')
+		no_file_path.erase(no_file_path.find_last_of("/") + 1);
+	if ((directory = opendir(no_file_path.c_str())) == 0)
+		return (false);
+	while ((file = readdir(directory)) != 0)
+	{
+		if (file->d_type != DT_DIR)
+			files_list.push_back(file->d_name);
+	}
+	closedir(directory);
+	return (is_file_exist(url, no_file_path, files_list));
+}
 
 /*
 ** Cut a 

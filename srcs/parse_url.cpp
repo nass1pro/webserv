@@ -72,6 +72,7 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 	P(no_file_path);
 	P("url");    ////TEEEESSSTTTT
 	P(req.url);*/
+	print_list(files_list);
 	if (no_file_path != req.url)
 	{
 		file = req.url.substr(no_file_path.size());
@@ -134,7 +135,10 @@ bool	find_dir(t_req &req)
 		return (false);
 	}
 	while ((file = readdir(directory)) != 0)
-		files_list.push_back(file->d_name); 
+	{
+		if (file->d_type != DT_DIR)
+			files_list.push_back(file->d_name);
+	}
 	closedir(directory);
 	//print_list(files_list); //TEEETSTSTSSS
 	if (!check_files_in_directory(files_list, req, no_file_path))
@@ -142,7 +146,7 @@ bool	find_dir(t_req &req)
 		req.error = 404;
 		return (false);
 	}
-	P(req.url);
+	//P(req.url); //TEEEESSSTTT
 	return (true);
 	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
@@ -221,6 +225,7 @@ void	get_req_location(t_req &req, t_config &conf)
 	//P("test");
 	if (!found)
 	{
+		//req.error = 404;
 		P("Directory not found");
 		return ; // check retourner code erreur ou jsp
 	}
@@ -230,4 +235,5 @@ void	get_req_location(t_req &req, t_config &conf)
 	//P(req.url); //TEEEESSTTT
 	if (!find_dir(req))
 		P("File not found");
+	P(req.url);
 }
