@@ -6,12 +6,13 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 16:55:02 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:13:14 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
 #include "../../include/utils.hpp"
+#include "../../include/cgi.hpp"
 
 
 void setAllow(t_req &req, int statusCode)
@@ -267,7 +268,7 @@ void request_get(t_res &res, t_config &config, t_req &req)
 
     if (req.location.cgi.active)
     {
-        req.url = start_cgi(req, conf);
+        req.url = start_cgi(req, config);
     }
     res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     set_response_data(res, config, req, 200);
@@ -284,7 +285,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
 {
     if (req.location.cgi.active)
     {
-        req.url = start_cgi(req, conf);
+        req.url = start_cgi(req, config);
     }
     if (is_exist(req.location.cgi.SCRIPT_NAME))
         set_response_data(res, config, req, 200);
@@ -297,7 +298,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
 
 void request_put(t_res &res, t_config &config, t_req &req)
 {
-    if (!is_exist(req.url))
+    if (is_exist(req.url) == true)
     {
         set_response_data(res, config, req, 200);
 		int ind = 0;
@@ -319,48 +320,24 @@ void request_put(t_res &res, t_config &config, t_req &req)
     }
     else
     {
-        set_response_data(res, config, req, 200);
-        std::ifstream ifs(req.url);
+        set_response_data(res, config, req, 201);
+        std::ofstream ifs(req.url);
         ifs << req.body_content << std::endl;
     }
 }
 
-t_res to_determine_method(t_res &res, t_config &config, t_req &req)
+void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 {
-    if (req.method == "GET")
-    {
-        request_get(res, config, req);
-        concatenate_header(res, req);
-        config.serv.res[client->first].append(res.response_header);
-		config.serv.res[client->first].append(res.payload);
-		config.serv.res[client->first].append("\r\n\r\n");
-    }
-    else if (req.method == "HEAD")
-    {
-        heads_request(res, config, req);
-        concatenate_header(res, req);
-        config.serv.res[client->first].append(res.response_header);
-		config.serv.res[client->first].append(res.payload);
-		// config.serv.res[client->first].append("\r\n\r\n");
-    }
-    else if (req.method == "POST")
-    {
-        post_request(res, config, req);
-        concatenate_header(res, req);
-        config.serv.res[client->first].append(res.response_header);
-		config.serv.res[client->first].append(res.payload);
-		// config.serv.res[client->first].append("\r\n\r\n");
-    }
-    else if (req.method == "PUT")
-    {
-        put_request(res, config, req);
-        concatenate_header(res, req);
-        config.serv.res[client->first].append(res.response_header);
-    	config.serv.res[client->first].append(res.payload);
-    	// config.serv.res[client->first].append("\r\n\r\n");
-    }
-
+    int cl;
+    cl = client->first;
+    client++;
+    server.req.erase(cl);
 }
+
+// t_res to_determine_method(t_res &res, t_config &config, t_req &req)
+// {
+//
+// }
 
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
@@ -395,6 +372,40 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     }
     else
     {
-        to_determine_method(res, config, req)
+        if (req.method == "GET")
+        {
+            request_get(res, config, req);
+            concatenate_header(res, req);
+            config.serv.res[client->first].append(res.response_header);
+    		config.serv.res[client->first].append(res.payload);
+    		config.serv.res[client->first].append("\r\n\r\n");
+        }
+        else if (req.method == "HEAD")
+        {
+            request_heads(res, config, req);
+            res.payload = std::string("\0");
+            concatenate_header(res, req);
+            config.serv.res[client->first].append(res.response_header);
+    		config.serv.res[client->first].append(res.payload);
+    		// config.serv.res[client->first].append("\r\n\r\n");
+        }
+        else if (req.method == "POST")
+        {
+            request_post(res, config, req);
+            concatenate_header(res, req);
+            config.serv.res[client->first].append(res.response_header);
+    		config.serv.res[client->first].append(res.payload);
+    		// config.serv.res[client->first].append("\r\n\r\n");
+        }
+        else if (req.method == "PUT")
+        {
+            request_put(res, config, req);
+            concatenate_header(res, req);
+            config.serv.res[client->first].append(res.response_header);
+        	config.serv.res[client->first].append(res.payload);
+        	// config.serv.res[client->first].append("\r\n\r\n");
+        }
+        erras_req_client(client, config.serv);
+        // to_determine_method(res, config, req);
     }
 }
