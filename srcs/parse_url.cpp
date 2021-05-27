@@ -6,16 +6,12 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/26 20:13:19 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:15:40 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/utils.hpp"
 
-/*
-** TODO parsing url
-**
-*/
 /*
 ** Copy a t_loc into another t_loc
 */
@@ -53,6 +49,7 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.cgi.SERVER_PROTOCOL = copy.cgi.SERVER_PROTOCOL;
 	dest.cgi.SERVER_SOFTWARE = copy.cgi.SERVER_SOFTWARE;
 }
+
 /*
 ** Check if the index is in the directory and add index filename in req.url
 */
@@ -76,6 +73,7 @@ bool	check_and_add_index(std::list<std::string> &files_list, t_req &req)
 	}
 	return (false);
 }
+
 /*
 ** Check if the filename is a directory
 */
@@ -83,7 +81,7 @@ bool	url_is_dir(std::string &filename, std::list<std::string> &files_list)
 {
 	DIR						*directory;
 	struct dirent			*file;
-	//std::list<std::string> 	new_list;
+
 	if ((directory = opendir(filename.c_str())) == 0)
 		return (false);
 	while ((file = readdir(directory)) != 0)
@@ -94,20 +92,16 @@ bool	url_is_dir(std::string &filename, std::list<std::string> &files_list)
 	closedir(directory);
 	return (true);
 }
+
 /*
 ** Return the path without the file
 */
-//std::stiring
 bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, std::string &no_file_path)
 {
 	std::string							file;
 	std::list<std::string>::iterator	it;
 	std::list<std::string>				new_list;
-	/*P("No file paht");
-	P(no_file_path);
-	P("url");    ////TEEEESSSTTTT
-	P(req.url);*/
-	//print_list(files_list);
+
 	if (no_file_path != req.url)
 	{
 		file = req.url.substr(no_file_path.size());
@@ -132,28 +126,12 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 	}
 	else
 	{
-		//std::cout << "Url avant boucle : " << req.url << std::endl;
-		//std::cout << "index : " << req.location.index.front() << std::endl;
 		if (check_and_add_index(files_list, req))
 			return (true);
-		/*std::list<std::string>::iterator	it_index = req.location.index.begin();
-		while (it_index != req.location.index.end())
-		{
-			it = files_list.begin();
-			while (it != files_list.end())
-			{
-				if (*it == *it_index)
-				{
-					req.url.append(*it_index);
-					return (true);
-				}
-				++it;
-			}
-			++it_index;
-		}*/
 		return (false);
 	}
 }
+
 /*
 ** Put an error code in req->error if we can't find the file
 */
@@ -172,28 +150,20 @@ bool	find_dir(t_req &req)
 		}
 	}
 	if (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] != '/')
-	{
 		no_file_path.erase(no_file_path.find_last_of("/") + 1);
-		//P(no_file_path); TETETETSTSSS
-	}
 	if ((directory = opendir(no_file_path.c_str())) == 0)
 	{
 		req.error = 404;
 		return (false);
 	}
 	while ((file = readdir(directory)) != 0)
-	{
-		//if (file->d_type != DT_DIR)
 			files_list.push_back(file->d_name);
-	}
 	closedir(directory);
-	//print_list(files_list); //TEEETSTSTSSS
 	if (!check_files_in_directory(files_list, req, no_file_path))
 	{
 		req.error = 404;
 		return (false);
 	}
-	//P(req.url); //TEEEESSSTTT
 	return (true);
 	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
@@ -213,16 +183,9 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 	if (!new_url.empty() && new_url[0] == '/')
 		new_url.erase(0, 1);
 	new_url.insert(0, conf.root);
-	//P(new_url); /////////////teeestststts
-	/*if (new_url.find_last_of("/") == new_url.size() - 1)
-	{
-		if (!loc.index.empty())
-			new_url.append(loc.index.front());
-	}*/
-	/*P("new_url");
-	P(new_url); /////////////////////PRINT TREST*/
 	return (new_url);
 }
+
 /*
 ** find a directory location
 */
@@ -257,25 +220,21 @@ void	get_req_location(t_req &req, t_config &conf)
 	{
 		if (find_directory(req.url, it->location_match))
 		{
-			std::cout << "FOUND" << std::endl;
+			std::cout << "FOUND" << std::endl; //TEEESSTSSS
 			found = 1;
 		}
 		if (!found)
 			++it;
 	}
-	//P("test");
 	if (!found)
 	{
-		//req.error = 404;
-		P("Directory not found");
+		req.error = 404;
+		P("Directory not found"); //Indications TETS
 		return ; // check retourner code erreur ou jsp
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
 	req.url = create_local_path(req, req.location, conf);
-	//P(req.url); //TEEEESSTTT
-	std::cout << "Url après local path : " << req.url << std::endl;
 	if (!find_dir(req))
 		P("File not found");
-	std::cout << "Url at the end : " << req.url << std::endl;
 }
