@@ -6,13 +6,12 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 16:52:13 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/27 15:17:24 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cgi.hpp"
 #include "../include/utils.hpp"
-
 
 
 void set_env(std::string var, std::string equal_to, std::vector<std::string> &env)

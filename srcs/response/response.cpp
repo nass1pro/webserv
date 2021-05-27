@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 22:18:15 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/05/27 16:48:09 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,16 +202,16 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 
 void head_request(t_res &res, t_config &config, t_req &req)
 {
-	
+
 	std::cout << " REQ URL : " << req.url << std::endl;
 	if (req.url == "frontend/index.html")
 	{
 		std::ifstream ifs("error_pages/405.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-		set_response_data(res, config, req, 405);		
+		set_response_data(res, config, req, 405);
 	}
 	if (req.error == 404)
-	{ 
+	{
 		std::ifstream ifs("error_pages/404.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
@@ -226,12 +226,12 @@ void head_request(t_res &res, t_config &config, t_req &req)
 
 void get_request(t_res &res, t_config &config, t_req &req)
 {
-	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	std::ifstream file(req.url);	
-	
+	std::cout << " ON TEST ICI " << req.error << std::endl;
+	std::ifstream file(req.url);
+
 	if (req.error == 404 )
-	{ 
-		std::cout << " ON pASSE ICI " << req.error << std::endl;			
+	{
+		std::cout << " ON pASSE ICI " << req.error << std::endl;
 		std::ifstream ifs("error_pages/404.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
@@ -241,7 +241,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
         std::ifstream ifs(req.url); //get the input file stream with the requested url
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
    		set_response_data(res, config, req, 200);
-	} 
+	}
 }
 
 void file_create_or_replace(t_req &req)
@@ -254,16 +254,16 @@ void file_create_or_replace(t_req &req)
 
 void put_request( t_res &res, t_config &config, t_req &req)
 {
-	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	
+	std::cout << " ON TEST ICI " << req.error << std::endl;
+
 	// if (req.error == 404)
-	// { 
-	// 	std::cout << " ON pASSE ICI " << req.error << std::endl;			
+	// {
+	// 	std::cout << " ON pASSE ICI " << req.error << std::endl;
 	// 	std::ifstream ifs("error_pages/404.html");
 	// 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	// 	set_response_data(res, config, req, 404);
 	// }
-	// else 
+	// else
     // {
 		set_response_data(res, config, req, 200);
 		int ind = 0;
@@ -282,8 +282,8 @@ void put_request( t_res &res, t_config &config, t_req &req)
 		// addd content of client to new file
 		newfile << req.body_content << std::endl;
 		newfile.close();
-	// } 
-}	
+	// }
+}
 
 void post_request( t_res &res, t_config &config, t_req &req)
 {
@@ -291,10 +291,10 @@ void post_request( t_res &res, t_config &config, t_req &req)
 	{
 		set_response_data(res, config, req, 405);
 		// std::ifstream ifs("error_pages/405.html");
-		// res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));		
+		// res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		return ;
 	}
-	// appeler ici le cgi a la place de otut ce qui suit. 	
+	// appeler ici le cgi a la place de otut ce qui suit.
 	for (std::list<t_loc>::iterator it = config.location.begin(); it != config.location.end(); it++)
 	{
 		std::string potential_file_path = std::string(it->location_match);
@@ -302,7 +302,7 @@ void post_request( t_res &res, t_config &config, t_req &req)
 		std::ifstream potential_file(potential_file_path);
 		if (potential_file.is_open() == false)
 		{
-			std::cout << " REQ>URL " << req.url << std::endl;	
+			std::cout << " REQ>URL " << req.url << std::endl;
 			res.statusCode = 201;
 			res.payload = std::string("\0");
 
@@ -321,19 +321,19 @@ void post_request( t_res &res, t_config &config, t_req &req)
 
 void concatenate_header( t_res &res, t_req &req)
 {
-	
+
 	if (req.method == "GET" || req.method == "HEAD" || req.method == "POST" ||req.method == "PUT")
 	{
-		std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;	
+		std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;
 		if (req.header.Content_Length != "\0")
 		{
 			std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
 			if (res.statusCode == 200)
 				res.response_header.append("HTTP/1.1 200 OK");
-			else if (res.statusCode == 405)	
+			else if (res.statusCode == 405)
 				res.response_header.append("HTTP/1.1 405 ");
-			else if (res.statusCode == 404)	
-				res.response_header.append("HTTP/1.1 404 ");				
+			else if (res.statusCode == 404)
+				res.response_header.append("HTTP/1.1 404 ");
 			res.response_header.append("\r\n");
 		}
 		if (req.header.Content_Length != "\0")
@@ -368,7 +368,6 @@ void concatenate_header( t_res &res, t_req &req)
 				res.response_header.append("\r\n\r\n");
 			else
 				res.response_header.append("\r\n\r\n");
-
 		}
 	}
 	// else if (req.method == "PUT" /*|| req.method == "POST"*/)
@@ -417,7 +416,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		{
 			config.serv.res[client->first].append(res.payload);
 			config.serv.res[client->first].append("\r\n\r\n");
-		}	
+		}
 	}
 	else if (req.version != "HTTP/1.1")
 	{
@@ -461,7 +460,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		{
 			config.serv.res[client->first].append(res.payload);
 			config.serv.res[client->first].append("\r\n\r\n");
-		}	
+		}
 	}
 	else if (req.method == "POST") //create content
 	{
