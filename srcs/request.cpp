@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 15:17:38 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/27 15:04:59 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,24 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 }
 
 /*
+** Set error code to 405 if the method isnt correct
+*/
+int		check_method(t_req &req)
+{
+	if (req.location.http_methods.empty())
+	{
+		if (req.method != req.location.http_methods)
+			return ((req.error = 405));
+	}
+	else
+	{
+		if (req.method != "PUT" && req.method != "GET" && req.method != "POST" && req.method != "HEAD" && req.method != "DELETE")
+			return ((req.error = 405));
+	}
+	return (0);
+}
+
+/*
 ** Take the first line of the request split her in a list,
 ** add values in the struct t_req and delete used content to the lines list
 ** return negative value in case of error
@@ -154,8 +172,16 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	std::list<std::string>	split;
 
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
+	{
+		req.error = 400;
 		return (ERROR);
+	}
 	split = split_in_list(line, " ");
+	if (split.size() != 3)
+	{
+		req.error = 400;
+		return (ERROR);
+	}
 	req.method = split.front();
 	split.pop_front();
 
@@ -166,7 +192,10 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	lines.pop_front();
 
 	get_req_location(req, conf);
-	//print_location(&req.location); //ETTETETETETSSS
+	if (req.error != 0)
+		return (ERROR);
+	if (check_method(req) != 0)
+		return (ERROR);
 	return (SUCCESS);
 }
 
@@ -183,10 +212,15 @@ void	init_request(t_req &req)
 /*
 ** Put all the body into req->body_content
 */
-void	get_body(t_req &req)
+void	get_body(t_req &req, t_config &conf)
 {
+	size_t		size;
+
 	if (req.body_index != req.full_req.size())
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
+	size = conf.body_size_limit * (size_t)1000000;
+	if (req.body_content.size() > size)
+		req.error = 413;
 }
 
 /*
@@ -198,18 +232,19 @@ int		parse_request(t_req &req, t_config &conf)
 {
 	std::list<std::string> list_lines;
 
-	//conf.default_server = false;
 	init_request(req);
 	if ((req.body_index = get_body_index(req.full_req)) == -1)
+	{
+		req.error = 400;
 		return (ERROR);
+	}
 	list_lines = split_in_list(req.full_req.substr(0, req.body_index), "\t\n\r\v\f");
-	//print_list(list_lines); //test
 	if (parse_first_line(req, list_lines, conf) < 0)
 		return (ERROR);
-	//std::cout << req.full_req << std::endl;
 	parse_header(req, list_lines);
-	//std::cout<< "fini"<<std::endl;
-	get_body(req);
+	get_body(req, conf);
+	if (req.error != 0)
+		return (ERROR);
 	req.done = true;
 	return (SUCCESS);
 }
