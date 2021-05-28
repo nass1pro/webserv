@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/27 15:04:59 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:29:48 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void	get_body(t_req &req, t_config &conf)
 
 	if (req.body_index != req.full_req.size())
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
-	size = conf.body_size_limit * (size_t)1000000;
+	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1000000;
 	if (req.body_content.size() > size)
 		req.error = 413;
 }
