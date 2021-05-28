@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/28 18:12:10 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:39:20 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,7 +369,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-    std::cout << req.error << " error recu" <<std::endl;
+    std::cout << "-----------------" <<req.error << " error recu" <<std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
@@ -379,7 +379,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             set_response_data(res, config, req, 400);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-			config.serv.res[client->first].append(res.payload);
+			// config.serv.res[client->first].append(res.payload);
 			// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.error == 404)
@@ -436,9 +436,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         	config.serv.res[client->first].append(res.payload);
         	// config.serv.res[client->first].append("\r\n\r\n");
         }
-		std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-        to_determine_method(res, config, req);
+		// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+        // to_determine_method(res, config, req);
     }
-	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
 	erras_req_client(client, config.serv);
 }

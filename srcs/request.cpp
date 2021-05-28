@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/28 18:11:45 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:37:49 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int		get_body_index(std::string full_req)
 		else
 			++i;
 	}
-	return (ERROR);
+	P("juleuuuuuuu")
+	return (size);
 }
 
 /*
@@ -215,10 +216,10 @@ void	init_request(t_req &req)
 void	get_body(t_req &req, t_config &conf)
 {
 	size_t		size;
-
+	(void)conf;
 	if (req.body_index != req.full_req.size())
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
-	size = conf.body_size_limit * (size_t)1000000;
+	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1000000;
 	if (req.body_content.size() > size)
 		req.error = 413;
 }
@@ -233,6 +234,7 @@ int		parse_request(t_req &req, t_config &conf)
 	std::list<std::string> list_lines;
 
 	init_request(req);
+	std::cout<< req.full_req<<std::endl;
 	if ((req.body_index = get_body_index(req.full_req)) == -1)
 	{
 		req.error = 400;
@@ -253,6 +255,7 @@ int		parse_request(t_req &req, t_config &conf)
 		return (ERROR);
 
 	}
+
 	req.done = true;
 	return (SUCCESS);
 }
