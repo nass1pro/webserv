@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/27 17:15:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/28 19:00:28 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,15 @@ bool	find_directory(std::string &path, std::string &dir)
 	tmp = path.substr(0, end);
 	if (tmp == dir)
 		return (true);
+	if (tmp.size() > 0 && tmp[tmp.size() - 1] != '/')
+	{
+		tmp.push_back('/');
+		if (tmp == dir)
+		{
+			path.insert(path.end(), '/');
+			return (true);
+		}
+	}
 	return (false);
 }
 /*
