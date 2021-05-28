@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 17:15:42 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:12:10 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,24 +265,50 @@ void request_get(t_res &res, t_config &config, t_req &req)
 {
     std::ifstream ifs(req.url); //get the input file stream with the requested url
 
-
-    if (req.location.cgi.active)
+	P("--------------je suis ici ");
+	P(req.url);
+	if (req.error == 404 )
+	{
+		std::cout << " ON pASSE ICI " << req.error << std::endl;
+		std::ifstream ifs("error_pages/404.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 404);
+	}
+    // if (req.location.cgi.active)
+    // {
+    //     req.url = start_cgi(req, config);
+    // }
+	else
     {
-        req.url = start_cgi(req, config);
-    }
-    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-    set_response_data(res, config, req, 200);
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    	set_response_data(res, config, req, 200);
+	}
 }
 
 void request_heads(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream ifs(req.url);
-    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-    set_response_data(res, config, req, 200);
+	if (req.url == "frontend/index.html")
+	{
+		std::ifstream ifs("error_pages/405.html");
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+		set_response_data(res, config, req, 405);
+	}
+	else
+	{
+		std::ifstream ifs(req.url);
+	    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+	    set_response_data(res, config, req, 200);
+	}
 }
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
+    if (req.body_content.size() == 0)
+    {
+
+        set_response_data(res, config, req, 405);
+        return ;
+    }
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);
@@ -343,13 +369,18 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
+    std::cout << req.error << " error recu" <<std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
         {
+			std::ifstream ifs("error_pages/404.html");
+			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
             set_response_data(res, config, req, 400);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
+			config.serv.res[client->first].append(res.payload);
+			// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.error == 404)
         {
@@ -405,7 +436,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         	config.serv.res[client->first].append(res.payload);
         	// config.serv.res[client->first].append("\r\n\r\n");
         }
-        erras_req_client(client, config.serv);
-        // to_determine_method(res, config, req);
+		std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+        to_determine_method(res, config, req);
     }
+	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	erras_req_client(client, config.serv);
 }
