@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/28 18:39:20 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/28 19:08:05 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,8 +265,7 @@ void request_get(t_res &res, t_config &config, t_req &req)
 {
     std::ifstream ifs(req.url); //get the input file stream with the requested url
 
-	P("--------------je suis ici ");
-	P(req.url);
+	// P(req.url);
 	if (req.error == 404 )
 	{
 		std::cout << " ON pASSE ICI " << req.error << std::endl;
@@ -374,6 +373,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     {
         if (req.error == 400)
         {
+			// P("je suis laaaaaa")
 			std::ifstream ifs("error_pages/404.html");
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
             set_response_data(res, config, req, 400);
