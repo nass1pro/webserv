@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/28 19:15:01 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/31 11:52:16 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,25 @@
 ** Return the index where the body starts in the full request.
 ** Return -1 if we can't find 2 \n in the request
 */
-int		get_body_index(std::string full_req)
+int		get_body_index(t_req &req/*std::string full_req*/)
 {
 	size_t i = 0;
-	size_t size = full_req.size();
+	size_t size = req.full_req.size();
 
 	if (size == 0)
 		return (-1);
 	while (i < size)
 	{
-		if (full_req[i] == '\n')
+		if (req.full_req[i] == '\n')
 		{
 			++i;
-			while (is_in_charset(full_req[i], "\t\r\v\f") && i < size)
+			while (is_in_charset(req.full_req[i], "\t\r\v\f") && i < size)
 				i++;
-			if (i < size && full_req[i] == '\n')
+			if (i < size && req.full_req[i] == '\n')
+			{
+				req.done = true;
 				return (++i);
+			}
 		}
 		else
 			++i;
@@ -234,11 +237,18 @@ int		parse_request(t_req &req, t_config &conf)
 	std::list<std::string> list_lines;
 
 	init_request(req);
+<<<<<<< HEAD
 	std::cout<< req.full_req<<std::endl;
 	if ((req.body_index = get_body_index(req.full_req)) == -1)
 	{
 		// req.error = 400;
 		// req.done = true;
+=======
+	if ((req.body_index = get_body_index(req/*.full_req*/)) == -1)
+	{
+		//req.error = 400;
+		std::cout << "Incomplete request." << std::endl;
+>>>>>>> jules
 		return (ERROR);
 	}
 	list_lines = split_in_list(req.full_req.substr(0, req.body_index), "\t\n\r\v\f");
@@ -253,9 +263,13 @@ int		parse_request(t_req &req, t_config &conf)
 	{
 		req.done = true;
 		return (ERROR);
+<<<<<<< HEAD
 
 	}
 
 	req.done = true;
+=======
+	//req.done = true;
+>>>>>>> jules
 	return (SUCCESS);
 }
