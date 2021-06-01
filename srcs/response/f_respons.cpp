@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 13:21:15 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:34:43 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ void concatenate_header( t_res &res, t_req &req)
 		//std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;
 		if (req.header.Content_Length != "\0")
 		{
-			std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
+			// std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
 			if (res.statusCode == 200)
 				res.response_header.append("HTTP/1.1 200 OK");
 			else if (res.statusCode == 405)
@@ -268,7 +268,7 @@ void request_get(t_res &res, t_config &config, t_req &req)
 	// P(req.url);
 	if (req.error == 404 )
 	{
-		std::cout << " ON pASSE ICI " << req.error << std::endl;
+		// std::cout << " ON pASSE ICI " << req.error << std::endl;
 		std::ifstream ifs("error_pages/404.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
@@ -308,7 +308,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
         set_response_data(res, config, req, 405);
         return ;
     }
-	std::cout<< "je suis la aaaaaaa"<<std::endl;
+	// std::cout<< "je suis la aaaaaaa"<<std::endl;
     // if (req.location.cgi.active)
     // {
     //     req.url = start_cgi(req, config);
@@ -324,6 +324,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
 
 void request_put(t_res &res, t_config &config, t_req &req)
 {
+
     if (is_exist(req.url) == true)
     {
         set_response_data(res, config, req, 200);
@@ -337,8 +338,8 @@ void request_put(t_res &res, t_config &config, t_req &req)
 		std::cout << " IND " << ind << std::endl;
 		//get the correct filename for the file "file_should_exist_after"
 		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
-		std::cout << " FILENAME " << filename << std::endl;
-		std::cout << " ROOT " << config.root << std::endl;
+		// std::cout << " FILENAME " << filename << std::endl;
+		// std::cout << " ROOT " << config.root << std::endl;
 		std::ofstream newfile(filename.c_str());
 		// addd content of client to new file
 		newfile << req.body_content << std::endl;
@@ -369,6 +370,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
+	std::cout<< "complet requet \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "-----------------" <<req.error << " error recu" <<std::endl;
     if (req.error != 0)
     {

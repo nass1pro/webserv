@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/31 12:05:43 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:41:24 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ int		get_body_index(t_req &req/*std::string full_req*/)
 		else
 			++i;
 	}
-	P("juleuuuuuuu")
-	return (size);
+	return (-1);
 }
 
 /*
@@ -139,8 +138,8 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			split_fields(req.header.User_Agent, lines.front(), "user_agent:");
 		else if (find_field_name(lines.front(), "www_authenticate:"))
 			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www_authenticate:");
-		else
-			std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
+		// else
+			// std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();
 	}
 	//req.header = h;
@@ -232,27 +231,28 @@ void	get_body(t_req &req, t_config &conf)
 ** (take the _req struct as parameter with full_request field filled)
 ** for the moment return a negative number in case of weird behavior (!!) modifier retours erreurs etc
 */
-int		parse_request(t_req &req, t_config &conf)
+int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &conf)
 {
 	std::list<std::string> list_lines;
 
-	std::cout<< req.full_req << std::endl;
+	std::cout<< "entrer \n " << conf.serv.req[client->first].full_req << "|| \n" <<std::endl;
 
-	init_request(req);
-	if ((req.body_index = get_body_index(req/*.full_req*/)) == -1)
+	init_request(conf.serv.req[client->first]);
+	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
 	{
 		//req.error = 400;
 		std::cout << "Incomplete request." << std::endl;
+		req.done = false;
 		return (ERROR);
 	}
-	list_lines = split_in_list(req.full_req.substr(0, req.body_index), "\t\n\r\v\f");
-	if (parse_first_line(req, list_lines, conf) < 0)
+	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
+	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
 		req.done = true;
 		return (ERROR);
 	}
-	parse_header(req, list_lines);
-	get_body(req, conf);
+	parse_header(conf.serv.req[client->first], list_lines);
+	get_body(conf.serv.req[client->first], conf);
 	if (req.error != 0)
 	{
 		req.done = true;

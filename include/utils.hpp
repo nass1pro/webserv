@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 12:55:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:05:11 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char					*ft_itoa(int nbr);
 ** Request
 */
 std::string ft_itoa(int n, std::string zebi);
-int		parse_request(t_req &req, t_config &conf);
+int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
 
 /*
 ** Parse url

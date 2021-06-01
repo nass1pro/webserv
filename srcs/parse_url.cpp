@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/28 19:00:28 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:21:21 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 					req.url.append("/");
 					if (check_and_add_index(new_list, req))
 						return (true);
-					P(req.url); // TEEEESSTTEEEE
+					// P(req.url); // TEEEESSTTEEEE
 				}
 			}
 			++it;
@@ -229,7 +229,7 @@ void	get_req_location(t_req &req, t_config &conf)
 	{
 		if (find_directory(req.url, it->location_match))
 		{
-			std::cout << "FOUND" << std::endl; //TEEESSTSSS
+			// std::cout << "FOUND" << std::endl; //TEEESSTSSS
 			found = 1;
 		}
 		if (!found)
