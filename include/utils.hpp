@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 14:05:11 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 15:10:03 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ bool					find_field_name(std::string &line, std::string const &name);
 void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
 char					*ft_itoa(int nbr);
+bool                    is_white_space(char c);
 
 /*
 ** Request

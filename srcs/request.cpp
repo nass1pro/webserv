@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 14:41:24 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 15:22:18 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,22 +242,35 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	{
 		//req.error = 400;
 		std::cout << "Incomplete request." << std::endl;
-		req.done = false;
+		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
-		req.done = true;
+		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 	get_body(conf.serv.req[client->first], conf);
-	if (req.error != 0)
+	if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{
-		req.done = true;
-		return (ERROR);
+		size_t i = 0;
+		i = conf.serv.req[client->first].full_req.size() - 1;
+		while(is_white_space(conf.serv.req[client->first].full_req[i]))
+		{
+			i--;
+		}
+		if (conf.serv.req[client->first].full_req[i] == '0' && conf.serv.req[client->first].full_req[i - 1] == '\n')
+			conf.serv.req[client->first].done = true;
+		else
+			conf.serv.req[client->first].done = false;
 	}
+	// if (req.error != 0)
+	// {
+	// 	req.done = true;
+	// 	return (ERROR);
+	// }
 	//req.done = true;
 	return (SUCCESS);
 }
