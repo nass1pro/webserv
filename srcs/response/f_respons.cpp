@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/31 12:06:55 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 12:32:51 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,15 +302,16 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
-    if (req.body_content.size() == 0)
+    if (req.body_content.size() || req.header.Content_Length == "0")
     {
         set_response_data(res, config, req, 405);
         return ;
     }
-    if (req.location.cgi.active)
-    {
-        req.url = start_cgi(req, config);
-    }
+	std::cout<< "je suis la aaaaaaa"<<std::endl;
+    // if (req.location.cgi.active)
+    // {
+    //     req.url = start_cgi(req, config);
+    // }
     if (is_exist(req.location.cgi.SCRIPT_NAME))
         set_response_data(res, config, req, 200);
     else
