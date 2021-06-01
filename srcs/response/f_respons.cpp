@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/28 19:08:05 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/31 12:06:55 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,6 @@ void request_post(t_res &res, t_config &config, t_req &req)
 {
     if (req.body_content.size() == 0)
     {
-
         set_response_data(res, config, req, 405);
         return ;
     }
@@ -368,7 +367,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-    std::cout << "-----------------" <<req.error << " error recu" <<std::endl;
+    // std::cout << "-----------------" <<req.error << " error recu" <<std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
