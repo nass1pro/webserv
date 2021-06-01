@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 16:45:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/01 11:49:30 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ void head_request(t_res &res, t_config &config, t_req &req)
 void get_request(t_res &res, t_config &config, t_req &req)
 {
 	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	std::ifstream file(req.url);	
+	std::ifstream file(req.url.c_str());	
 	
 	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
 	{ 
@@ -238,7 +238,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
 	}
 	else //if (req.location->cgi.active == false)
     {
-        std::ifstream ifs(req.url); //get the input file stream with the requested url
+        std::ifstream ifs(req.url.c_str()); //get the input file stream with the requested url
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
    		set_response_data(res, config, req, 200);
 	} 
@@ -246,7 +246,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
 
 void file_create_or_replace(t_req &req)
 {
-	std::ofstream replace(req.url);
+	std::ofstream replace(req.url.c_str());
 	std::string buffer;
 	replace << buffer << "\n";
 	replace.close();
@@ -289,7 +289,7 @@ void post_request( t_res &res, t_config &config, t_req &req)
 	{
 		std::string potential_file_path = std::string(it->location_match);
 		potential_file_path.append(req.url);
-		std::ifstream potential_file(potential_file_path);
+		std::ifstream potential_file(potential_file_path.c_str());
 		if (potential_file.is_open() == false)
 		{
 			std::cout << " REQ>URL " << req.url << std::endl;	

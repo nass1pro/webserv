@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 17:04:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/01 11:50:41 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);

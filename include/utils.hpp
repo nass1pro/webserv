@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/26 16:28:56 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/01 12:06:13 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 # include <ctype.h>
 # include <unistd.h> // pour utiliser sleep() -> debug, a virer plus tard peut être
 # include <fstream>
-#include <sys/types.h>
-#include <dirent.h>
+# include <sys/types.h>
+# include <dirent.h>
+# include <stdlib.h>
 # include "config.hpp"
 
 /*
@@ -56,6 +57,7 @@ int						split_fields_str(std::string &field, std::string &line, std::string con
 bool					find_field_name(std::string &line, std::string const &name);
 void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
+char					*ft_itoa(int nbr);
 
 /*
 ** Request

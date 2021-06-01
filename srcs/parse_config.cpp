@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/25 15:47:25 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/01 11:43:28 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@ bool	find_server(std::string &line)
 
 int		parse_conf(std::string path, std::list<t_config> &conf)
 {
-	std::ifstream	fd(path);
+	std::ifstream	fd(path.c_str());
 	std::string		reader;
 
 	if (!fd)
