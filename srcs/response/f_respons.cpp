@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 12:32:51 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 13:21:15 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void concatenate_header( t_res &res, t_req &req)
 
 	if (req.method == "GET" || req.method == "HEAD" || req.method == "POST" ||req.method == "PUT")
 	{
-		std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;
+		//std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;
 		if (req.header.Content_Length != "\0")
 		{
 			std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
@@ -263,7 +263,7 @@ void concatenate_header( t_res &res, t_req &req)
 
 void request_get(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream ifs(req.url); //get the input file stream with the requested url
+    std::ifstream ifs(req.url.c_str()); //get the input file stream with the requested url
 
 	// P(req.url);
 	if (req.error == 404 )
@@ -294,7 +294,7 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 	}
 	else
 	{
-		std::ifstream ifs(req.url);
+		std::ifstream ifs(req.url.c_str());
 	    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	    set_response_data(res, config, req, 200);
 	}
@@ -302,6 +302,7 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
+	//std::cout /*<< "Content Lengtht : "*/ << req.header.Content_Length << std::endl;
     if (req.body_content.size() || req.header.Content_Length == "0")
     {
         set_response_data(res, config, req, 405);
@@ -316,7 +317,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
         set_response_data(res, config, req, 200);
     else
     {
-        std::ifstream ifs(req.url);
+        std::ifstream ifs(req.url.c_str());
         set_response_data(res, config, req, 200);
     }
 }
@@ -338,7 +339,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
 		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
 		std::cout << " FILENAME " << filename << std::endl;
 		std::cout << " ROOT " << config.root << std::endl;
-		std::ofstream newfile(filename);
+		std::ofstream newfile(filename.c_str());
 		// addd content of client to new file
 		newfile << req.body_content << std::endl;
 		newfile.close();
@@ -346,7 +347,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
     else
     {
         set_response_data(res, config, req, 201);
-        std::ofstream ifs(req.url);
+        std::ofstream ifs(req.url.c_str());
         ifs << req.body_content << std::endl;
     }
 }

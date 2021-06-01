@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 15:17:24 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 13:01:13 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
-    cgi.CONTENT_LENGTH  = std::to_string(req.body_content.size());
-    cgi.CONTENT_TYPE    = req.header.Content_Type.front();
+    cgi.CONTENT_LENGTH  = ft_itoa((int)req.body_content.size());
+    cgi.CONTENT_TYPE    = req.header.Content_Type;
     cgi.PATH_INFO       = req.url;
     cgi.PATH_TRANSLATED = req.url;
-    cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr);
+    //cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr);
     cgi.REMOTE_USER     = req.header.Host.front();
     cgi.REQUEST_METHOD  = req.method;
     cgi.REQUEST_URI     = req.url;
@@ -71,7 +71,7 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 
 void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 {
-    std::ifstream   fd(ouput_file);
+    std::ifstream   fd(ouput_file.c_str());
 	std::string     line;
 	std::string     new_request;
 
@@ -85,7 +85,7 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
     getline(fd, line);
     try
 	{
-		req.error = std::stoi(line.substr(7, 11));
+		req.error = std::atoi(line.substr(7, 11).c_str());
 	}
     catch (std::exception &e)
     {
@@ -134,8 +134,8 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         {
             tab_execve[i] = (char*)parameter[i].c_str();
         }
-        tab_env[env.size()] = nullptr;
-		tab_execve[parameter.size()] = nullptr;
+        tab_env[env.size()] = NULL;
+		tab_execve[parameter.size()] = NULL;
 
         if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 		{
