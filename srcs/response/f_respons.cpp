@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 14:34:43 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/01 17:23:06 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,6 +358,7 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
     int cl;
     cl = client->first;
     client++;
+
     server.req.erase(cl);
 }
 
@@ -370,13 +371,12 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-	std::cout<< "complet requet \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
-    // std::cout << "-----------------" <<req.error << " error recu" <<std::endl;
+	std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
+    std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
         {
-			// P("je suis laaaaaa")
 			std::ifstream ifs("error_pages/404.html");
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
             set_response_data(res, config, req, 400);
