@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 18:33:05 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 19:08:13 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,8 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	}
 	size_t size = 0;
 	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
+//	std::cout << "EST cE QUON A DES CGI PAR ICI ?????? --> " << req.location.cgi.SCRIPT_NAME << std::endl;
+//	std::cout << "EST cE QUON A DES CGI ACTIIIIIIVES PAR ICI ?????? --> " << req.location.cgi.active << std::endl;
 	//std::cout << req.body_content.size()  <<std::endl;
 	// if (req.body_content.size() > 10000000)
 	// 	req.error = 413;

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 13:32:38 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 19:06:59 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,13 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 {
 	dest.location_match = copy.location_match;
 	dest.optional_modifier = copy.optional_modifier;
-	dest.http_methods = copy.http_methods;
+	//dest.http_methods = copy.http_methods;
+	std::list<std::string>::iterator itme = copy.http_methods.begin();
+	while (itme != copy.http_methods.end())
+	{
+		dest.http_methods.push_back(*itme);
+		++itme;
+	}
 	dest.body_size_limit = copy.body_size_limit;
 	dest.directory_files_search = copy.directory_files_search;
 	dest.directory_listing = copy.directory_listing;
@@ -31,6 +37,7 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 		dest.index.push_back(*it);
 		++it;
 	}
+	dest.cgi.active = copy.cgi.active;
 	dest.cgi.AUTH_TYPE = copy.cgi.AUTH_TYPE;
 	dest.cgi.CONTENT_LENGTH = copy.cgi.CONTENT_LENGTH;
 	dest.cgi.CONTENT_TYPE = copy.cgi.CONTENT_TYPE;
