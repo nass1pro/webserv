@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 14:21:21 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 13:32:38 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ bool	find_dir(t_req &req)
 	return (true);
 	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
+
 /*
 ** Create a local path with root etc
 */
@@ -183,6 +184,7 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 	if (!new_url.empty() && new_url[0] == '/')
 		new_url.erase(0, 1);
 	new_url.insert(0, conf.root);
+	std::cout << "Local path" << new_url << std::endl;
 	return (new_url);
 }
 
@@ -243,6 +245,8 @@ void	get_req_location(t_req &req, t_config &conf)
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
+	if (req.method == "PUT")
+		return ;
 	req.url = create_local_path(req, req.location, conf);
 	if (!find_dir(req))
 		P("File not found");

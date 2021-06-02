@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 17:20:37 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 13:21:10 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ int		check_method(t_req &req)
 {
 	if (req.location.http_methods.empty())
 	{
+		std::cout << " ICI meHTHOD : " << req.location.http_methods << std::endl;
 		if (req.method != req.location.http_methods)
 			return ((req.error = 405));
 	}
