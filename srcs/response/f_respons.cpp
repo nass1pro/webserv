@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 17:23:06 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:36:52 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,8 +325,9 @@ void request_post(t_res &res, t_config &config, t_req &req)
 void request_put(t_res &res, t_config &config, t_req &req)
 {
 
-    if (is_exist(req.url) == true)
-    {
+    // if (is_exist(req.url) != true)
+    // {
+		std::cout<< "laaaa"<<std::endl;
         set_response_data(res, config, req, 200);
 		int ind = 0;
 		for (std::string::size_type i = req.url.size(); i > 0; i--)
@@ -344,13 +345,13 @@ void request_put(t_res &res, t_config &config, t_req &req)
 		// addd content of client to new file
 		newfile << req.body_content << std::endl;
 		newfile.close();
-    }
-    else
-    {
-        set_response_data(res, config, req, 201);
-        std::ofstream ifs(req.url.c_str());
-        ifs << req.body_content << std::endl;
-    }
+    // }
+    // else
+    // {
+    //     set_response_data(res, config, req, 200);
+    //     std::ofstream ifs(req.url.c_str());
+    //     ifs << req.body_content << std::endl;
+    // }
 }
 
 void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
@@ -371,8 +372,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-	std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
-    std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
+	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
+    // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)

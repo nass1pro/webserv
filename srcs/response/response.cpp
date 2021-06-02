@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 11:49:30 by judecuyp         ###   ########.fr       */
-=======
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 16:48:09 by nahaddac         ###   ########.fr       */
->>>>>>> jules
+/*   Updated: 2021/06/02 14:35:35 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,12 +227,12 @@ void head_request(t_res &res, t_config &config, t_req &req)
 void get_request(t_res &res, t_config &config, t_req &req)
 {
 <<<<<<< HEAD
-	std::cout << " ON TEST ICI " << req.error << std::endl;	
-	std::ifstream file(req.url.c_str());	
-	
+	std::cout << " ON TEST ICI " << req.error << std::endl;
+	std::ifstream file(req.url.c_str());
+
 	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
-	{ 
-		std::cout << " ON pASSE ICI " << req.error << std::endl;			
+	{
+		std::cout << " ON pASSE ICI " << req.error << std::endl;
 =======
 	std::cout << " ON TEST ICI " << req.error << std::endl;
 	std::ifstream file(req.url);

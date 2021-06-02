@@ -224,13 +224,10 @@ void	init_request(t_req &req)
 */
 void	get_body(t_req &req, t_config &conf)
 {
-	size_t		size;
 	(void)conf;
 	if (req.body_index != req.full_req.size())
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
-	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1000000;
-	if (req.body_content.size() > size)
-		req.error = 413;
+	
 }
 
 /*
@@ -242,7 +239,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 {
 	std::list<std::string> list_lines;
 
-	std::cout<< "recois \n " << conf.serv.req[client->first].full_req << "client : " << client->first << "|| \n" <<std::endl;
+	// std::cout<< "recois \n " << conf.serv.req[client->first].full_req << "client : " << client->first << "|| \n" <<std::endl;
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
 	{
@@ -293,6 +290,11 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 			return (ERROR);
 		}
 	}
+	size_t size = 0;
+	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
+	std::cout << req.body_content.size()  <<std::endl;
+	if (req.body_content.size() > 10000000)
+		req.error = 413;
 	// if (req.error != 0)
 	// {
 	// 	req.done = true;
