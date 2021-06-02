@@ -104,6 +104,7 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
     pid_t pid;
     int pp[2];
 
+
     if (pipe(pp) == -1)
     {
         std::cout<< "ERROR: pipe"<<std::endl;
@@ -121,7 +122,6 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         close(pp[1]);
         dup2(pp[0], STDIN_FILENO);
         dup2(fd_upload, STDOUT_FILENO);
-
         std::vector<std::string> parameter;
         init_execve_cgi(req, parameter);
         char *tab_env[env.size() + 1];
@@ -140,18 +140,20 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 		{
 			std::cout<<"Error: execve cgi php"<< std::endl;
-			///
 			close(pp[0]);
 			exit(1);
 		}
     }
     else
     {
+        
         close(pp[0]);
         write(pp[1], req.body_content.c_str(), req.body_content.size());
+        std::cout<<"leoeojhwf"<<std::endl;
         close(pp[1]);
         waitpid(pid, 0, 0);
     }
+    
     return true;
 }
 
@@ -164,22 +166,29 @@ std::string start_cgi(t_req &req, t_config &conf)
     std::cout << "On passe aux CGI" << std::endl;
     set_header_cgi(req.location.cgi, req, conf, env);
     ret = req.location.directory_files_search + req.location.upload_files_location;
-    if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
+    std::cout<< req.url << std::endl;
+    if((fd_upload = open(req.url.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
     {
+         
         close(fd_upload);
         std::cout<<"Error : file upload location error"<<std::endl;
         // trow 500
     }
     if (fork_cgi(fd_upload, req, env) == false)
     {
+        
         close(fd_upload);
         return "None";
     }
+    std::cout<<"je ne serais pas la "<<std::endl;
     close(fd_upload);
+    
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
-    if (req.location.cgi.SCRIPT_NAME != std::string("None"))
+   std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
+    if (req.location.cgi.SCRIPT_NAME.size())
     {
-        parse_cgi_file(req, ret);
+        std::cout<<"je suis cneoiwnf"<<std::endl;
+        parse_cgi_file(req, req.url);
     }
 
     return (ret);
