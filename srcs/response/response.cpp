@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 14:35:35 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:33:57 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 void head_request(t_res &res, t_config &config, t_req &req)
 {
 
-	std::cout << " REQ URL : " << req.url << std::endl;
+	//std::cout << " REQ URL : " << req.url << std::endl;
 	if (req.url == "frontend/index.html")
 	{
 		std::ifstream ifs("error_pages/405.html");
@@ -226,21 +226,12 @@ void head_request(t_res &res, t_config &config, t_req &req)
 
 void get_request(t_res &res, t_config &config, t_req &req)
 {
-<<<<<<< HEAD
-	std::cout << " ON TEST ICI " << req.error << std::endl;
-	std::ifstream file(req.url.c_str());
-
-	if (req.error == 404 || req.url == "frontend/YoupiBanane/Yeah")
-	{
-		std::cout << " ON pASSE ICI " << req.error << std::endl;
-=======
 	std::cout << " ON TEST ICI " << req.error << std::endl;
 	std::ifstream file(req.url);
 
 	if (req.error == 404 )
 	{
 		std::cout << " ON pASSE ICI " << req.error << std::endl;
->>>>>>> jules
 		std::ifstream ifs("error_pages/404.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);

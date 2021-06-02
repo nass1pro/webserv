@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 17:05:20 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:01:35 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct	s_loc
 {
 	std::string				location_match;
 	std::string				optional_modifier;
-	std::string				http_methods;
+	std::list<std::string>	http_methods;
 	size_t					body_size_limit; //MB !!
 	std::list<std::string>	index;
 	std::string				directory_files_search;

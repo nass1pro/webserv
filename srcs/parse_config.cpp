@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.s19.be>         +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 14:23:47 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:01:55 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			break;
 		}
 		else if (find_config_elem(tmp, "http_methods"))
-			conf_get_str(loc.http_methods, tmp);
+			conf_get_list(loc.http_methods, tmp);
 		else if (find_config_elem(tmp, "index"))
 			conf_get_list(loc.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))

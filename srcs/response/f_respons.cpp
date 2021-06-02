@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 14:36:52 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:32:50 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,20 +302,20 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
-	std::cout << "Content Lengtht : " << req.body_content << std::endl;
+	//std::cout << "Content Lengtht : " << req.body_content << std::endl;
 
     if (req.body_content.size() == 0)
     {
         set_response_data(res, config, req, 405);
         return ;
     }
-	// std::cout<< "je suis la aaaaaaa"<<std::endl;
-    // if (req.location.cgi.active)
-    // {
-    //     req.url = start_cgi(req, config);
-    // }
-    // if (is_exist(req.location.cgi.SCRIPT_NAME))
-    //     set_response_data(res, config, req, 200);
+	//std::cout<< "je suis la aaaaaaa"<<std::endl;
+    if (req.location.cgi.active)
+    {
+        req.url = start_cgi(req, config);
+    }
+    if (is_exist(req.location.cgi.SCRIPT_NAME))
+    	set_response_data(res, config, req, 200);
     else
     {
         std::ifstream ifs(req.url.c_str());
@@ -328,7 +328,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
 
     // if (is_exist(req.url) != true)
     // {
-		std::cout<< "laaaa"<<std::endl;
+		//std::cout<< "laaaa"<<std::endl;
         set_response_data(res, config, req, 200);
 		int ind = 0;
 		for (std::string::size_type i = req.url.size(); i > 0; i--)
@@ -337,7 +337,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
 				break;
         	ind++;
 		}
-		std::cout << " IND " << ind << std::endl;
+		//std::cout << " IND " << ind << std::endl;
 		//get the correct filename for the file "file_should_exist_after"
 		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
 		// std::cout << " FILENAME " << filename << std::endl;
@@ -375,7 +375,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
-	std::cout << "CODE : " << req.error << "\n"<< std::endl;
+	//std::cout << "CODE : " << req.error << "\n"<< std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)

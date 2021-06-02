@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 14:23:36 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:34:58 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::stri
     cgi.CONTENT_TYPE    = req.header.Content_Type;
     cgi.PATH_INFO       = req.url;
     cgi.PATH_TRANSLATED = req.url;
-    //cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr);
+    cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr); // VIRER TO STRIng CPP 11 MAIS BLC poUR lES tESTS
     cgi.REMOTE_USER     = req.header.Host.front();
     cgi.REQUEST_METHOD  = req.method;
     cgi.REQUEST_URI     = req.url;
@@ -161,6 +161,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     std::vector<std::string> env;
     std::string ret;
 
+    std::cout << "On passe aux CGI" << std::endl;
     set_header_cgi(req.location.cgi, req, conf, env);
     ret = req.location.directory_files_search + req.location.upload_files_location;
     if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)

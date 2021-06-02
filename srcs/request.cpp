@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 17:13:48 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:33:05 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,11 +153,19 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 */
 int		check_method(t_req &req)
 {
-	if (req.location.http_methods.empty())
+	//std::cout << ":ETHOD ; " << req.location.http_methods << std::endl;
+	if (!req.location.http_methods.empty())
 	{
-		std::cout << " ICI meHTHOD : " << req.location.http_methods << std::endl;
-		if (req.method != req.location.http_methods)
-			return ((req.error = 405));
+		std::list<std::string>::iterator it = req.location.http_methods.begin();
+		while (it != req.location.http_methods.end())
+		{
+			//std::cout << " ICI meHTHOD : " << *it << std::endl;
+			if (req.method == *it)
+				return (0);
+			++it;
+		}
+		return ((req.error = 405));
+		
 	}
 	else
 	{
@@ -251,27 +259,27 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
-		if (conf.serv.req[client->first].body_content.empty() && conf.serv.req[client->first].method == "POST")
+		/*if (conf.serv.req[client->first].body_content.empty() && conf.serv.req[client->first].method == "POST")
 		{
 			// std::cout<< "laaaaaaa"<< std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
-		}
-		else
+		}*/
+		//else
 			conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 	get_body(conf.serv.req[client->first], conf);
-	//std::cout<< std::endl << << std::endl;
-	std::cout<< conf.serv.req[client->first].header.Content_Length << "|content_length"<< std::endl;
-	std::cout<< conf.serv.req[client->first].method << "|POST"<< std::endl;
-	std::cout<< conf.serv.req[client->first].header.Transfer_Encoding << "|transs"<< std::endl;
+	//std::cout<< std::endl << conf.serv.req[client->first].full_req << std::endl << std::endl;
+	//std::cout<< conf.serv.req[client->first].header.Content_Length << "|content_length"<< std::endl;
+	//std::cout<< conf.serv.req[client->first].method << "|POST"<< std::endl;
+	//std::cout<< conf.serv.req[client->first].header.Transfer_Encoding << "|transs"<< std::endl;
 
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		std::cout<< "laaaaaaa"<< std::endl;
+		//std::cout<< "laaaaaaa"<< std::endl;
 		req.error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
@@ -304,7 +312,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	}
 	size_t size = 0;
 	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
-	std::cout << req.body_content.size()  <<std::endl;
+	//std::cout << req.body_content.size()  <<std::endl;
 	// if (req.body_content.size() > 10000000)
 	// 	req.error = 413;
 	// if (req.error != 0)

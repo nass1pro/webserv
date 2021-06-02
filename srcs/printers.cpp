@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:41 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/21 17:37:25 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:05:59 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	print_location(t_loc *loc)
 	P("     ## print location ##");
 	print_member_str(loc->location_match, "-- Location match : ");
 	print_member_str(loc->optional_modifier, "-- Optional modifier : ");
-	print_member_str(loc->http_methods, "-- http methods : ");
+	//print_member_str(loc->http_methods, "-- http methods : ");
 
 	//P("-- body_size : ");
 	std::cout << "-- body_size : ";
