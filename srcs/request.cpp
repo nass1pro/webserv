@@ -244,7 +244,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
 	{
 		//req.error = 400;
-		std::cout << "Incomplete request." << std::endl;
+		// std::cout << "Incomplete request." << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
@@ -263,7 +263,19 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 	get_body(conf.serv.req[client->first], conf);
-	if (conf.serv.req[client->first].header.Transfer_Encoding == " chunked")
+	std::cout<< conf.serv.req[client->first].header.Content_Length << "|content_length"<< std::endl;
+	std::cout<< conf.serv.req[client->first].method << "|POST"<< std::endl;
+	std::cout<< conf.serv.req[client->first].header.Transfer_Encoding << "|transs"<< std::endl;
+
+
+	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
+	{
+		std::cout<< "laaaaaaa"<< std::endl;
+		req.error = 405;
+		conf.serv.req[client->first].done = true;
+		return (ERROR);
+	}
+	else if (conf.serv.req[client->first].header.Transfer_Encoding == " chunked")
 	{
 		// std::cout<< "laaaaaaa"<< std::endl;
 		int i = 0;
@@ -280,7 +292,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		}
 		if (conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n')
 		{
-			P("laaaaaaa");
 			conf.serv.req[client->first].done = true;
 		}
 		else
@@ -293,8 +304,8 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	size_t size = 0;
 	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
 	std::cout << req.body_content.size()  <<std::endl;
-	if (req.body_content.size() > 10000000)
-		req.error = 413;
+	// if (req.body_content.size() > 10000000)
+	// 	req.error = 413;
 	// if (req.error != 0)
 	// {
 	// 	req.done = true;

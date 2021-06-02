@@ -184,7 +184,7 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 	if (!new_url.empty() && new_url[0] == '/')
 		new_url.erase(0, 1);
 	new_url.insert(0, conf.root);
-	std::cout << "Local path" << new_url << std::endl;
+	// std::cout << "Local path" << new_url << std::endl;
 	return (new_url);
 }
 

@@ -302,8 +302,9 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
-	//std::cout /*<< "Content Lengtht : "*/ << req.header.Content_Length << std::endl;
-    if (req.body_content.size() || req.header.Content_Length == "0")
+	std::cout << "Content Lengtht : " << req.body_content << std::endl;
+
+    if (req.body_content.size() == 0)
     {
         set_response_data(res, config, req, 405);
         return ;
@@ -313,8 +314,8 @@ void request_post(t_res &res, t_config &config, t_req &req)
     // {
     //     req.url = start_cgi(req, config);
     // }
-    if (is_exist(req.location.cgi.SCRIPT_NAME))
-        set_response_data(res, config, req, 200);
+    // if (is_exist(req.location.cgi.SCRIPT_NAME))
+    //     set_response_data(res, config, req, 200);
     else
     {
         std::ifstream ifs(req.url.c_str());
@@ -374,6 +375,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
+	std::cout << "CODE : " << req.error << "\n"<< std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)

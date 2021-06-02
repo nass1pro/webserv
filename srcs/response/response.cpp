@@ -412,7 +412,7 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
 	t_res res;
-	// std::cout << "METHOD : " << req.method << std::endl;
+	
 
 	// std::cout << " BODY CONTENT : " << req.body_content << std::endl;
    	if (req.error == 413)
