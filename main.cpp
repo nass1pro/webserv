@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 11:50:41 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:24:23 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -72,9 +72,8 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            std::cout << "ERROR DANS MAIN 1111: " << request->second.error << std::endl;
-            parse_request(request->second, conf);
-            std::cout << "ERROR DANS MAIN 00000 pour nassim: " << request->second.error << std::endl;
+            // std::cout << "---------> " << request->second.full_req << std::endl;
+            parse_request( request ,request->second, conf);
             if (request->second.done == true)
             {
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);

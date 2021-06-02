@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 12:06:13 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:28:14 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ bool					find_field_name(std::string &line, std::string const &name);
 void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
 char					*ft_itoa(int nbr);
+bool                    is_white_space(char c);
 
 /*
 ** Request
 */
 std::string ft_itoa(int n, std::string zebi);
-int		parse_request(t_req &req, t_config &conf);
+int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
 
 /*
 ** Parse url

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 11:17:38 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 12:15:55 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:28:02 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "config.hpp"
 # include "utils.hpp"
-//# include <sys/types.h>
 # include <sys/wait.h>
 
 void        set_env(std::string var, std::string equal_to, std::vector<std::string> &env);

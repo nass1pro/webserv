@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/26 16:43:00 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/01 15:09:35 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool	is_exist(std::string &url)
 }
 
 /*
-** Cut a 
+** Cut a
 */
 void	cut_path(std::string &path, std::string &root)
 {
@@ -115,7 +115,7 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 	pos = str.find_first_of(charset, start);
 	while (pos != std::string::npos)
 	{
-		
+
 		cut = str.substr(start, pos - start);
 		ret.push_back(cut);
 		while (charset.find(str[pos]) != std::string::npos/* && pos < str.size()*/)
@@ -129,6 +129,13 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 		ret.push_back(cut);
 	}
 	return (ret);
+}
+
+bool is_white_space(char c)
+{
+	if (c == '\n' || c == ' ' || c == '\r' || c == '\v' || c == '\f')
+		return true;
+	return false;
 }
 
 /*

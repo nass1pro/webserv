@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/01 12:14:50 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:23:36 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cgi.hpp"
 #include "../include/utils.hpp"
-
 
 
 void set_env(std::string var, std::string equal_to, std::vector<std::string> &env)
@@ -45,11 +44,11 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
-    cgi.CONTENT_LENGTH  = ft_itoa((int)req.body_content.size());/*std::to_string(req.body_content.size())*/;
-    cgi.CONTENT_TYPE    = req.header.Content_Type; // A mettre en liste
+    cgi.CONTENT_LENGTH  = ft_itoa((int)req.body_content.size());
+    cgi.CONTENT_TYPE    = req.header.Content_Type;
     cgi.PATH_INFO       = req.url;
     cgi.PATH_TRANSLATED = req.url;
-   //cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr);
+    //cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr);
     cgi.REMOTE_USER     = req.header.Host.front();
     cgi.REQUEST_METHOD  = req.method;
     cgi.REQUEST_URI     = req.url;

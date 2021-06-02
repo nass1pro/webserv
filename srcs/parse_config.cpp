@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 11:43:28 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:23:47 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,8 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 */
 void	init_location(t_config &conf, t_loc &loc)
 {
-	(void)conf; 
     //loc.directory_files_search = conf.root;
-	loc.body_size_limit = 1;
+	loc.body_size_limit = conf.body_size_limit;
 }
 
 /*

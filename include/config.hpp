@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/26 19:53:29 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:05:20 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,12 @@ void setWWWAuthenticate(t_req &req, int statusCode);
 // void setPayload(t_config &config, t_req &req, int statusCode);
 void setContentLocation(t_req &req, int statusCode);
 void set_response_data( t_res &res, t_req &req, int statusCode);
-void head_request(t_res &res, t_config &config, t_req &req);
+
+void request_put( t_res &res, t_config &config, t_req &req);
+void request_heads(t_res &res, t_config &config, t_req &req);
+
+
 void file_create_or_replace(t_req &req);
-void put_request( t_res &res, t_config &config, t_req &req);
 void concatenate_header( t_res &res, t_req &req);
 void error_500_handling(std::map<int, t_req>::iterator &client, t_config &config, t_req &req);
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
