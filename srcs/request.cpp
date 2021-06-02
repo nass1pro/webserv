@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 13:21:10 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/02 17:13:48 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,42 +104,42 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 	while (!lines.empty())
 	{
 		//print_list(lines); //////////////////////////////////////////////////////////////////////
-		if (find_field_name(lines.front(), "accept-charsets:"))
-			split_fields_str(req.header.Accept_Charsets, lines.front(), "accept-charsets:");
-		else if (find_field_name(lines.front(), "accept-languages:"))
-			split_fields(req.header.Accept_Language, lines.front(), "accept-languages:");
-		else if (find_field_name(lines.front(), "allow:"))
-			split_fields_str(req.header.Allow, lines.front(), "allow:");
-		else if (find_field_name(lines.front(), "authorization:"))
-			split_fields(req.header.Authorization, lines.front(), "authorization:");
-		else if (find_field_name(lines.front(), "content-language:"))
-			split_fields_str(req.header.Content_Language, lines.front(), "content-language:");
-		else if (find_field_name(lines.front(), "content-length:"))
-			split_fields_str(req.header.Content_Length, lines.front(), "content-length:");
-		else if (find_field_name(lines.front(), "content-location:"))
-			split_fields_str(req.header.Content_Location, lines.front(), "content-location:");
-		else if (find_field_name(lines.front(), "content-type:"))
-			split_fields_str(req.header.Content_Type, lines.front(), "content-type:");
-		else if (find_field_name(lines.front(), "date:"))
-			split_fields_str(req.header.Date, lines.front(), "date:");
-		else if (find_field_name(lines.front(), "host:"))
-			split_fields(req.header.Host, lines.front(), "host:");
-		else if (find_field_name(lines.front(), "last-modified:"))
-			split_fields_str(req.header.Last_modified, lines.front(), "last-modified:");
-		else if (find_field_name(lines.front(), "referer:"))
-			split_fields(req.header.Referer, lines.front(), "referer:");
-		else if (find_field_name(lines.front(), "retry-after:"))
-			split_fields_str(req.header.retry_after, lines.front(), "retry-after:");
-		else if (find_field_name(lines.front(), "server:"))
-			split_fields_str(req.header.Server, lines.front(), "server:");
-		else if (find_field_name(lines.front(), "transfer-encoding:"))
+		if (find_field_name(lines.front(), "accept-charsets: "))
+			split_fields_str(req.header.Accept_Charsets, lines.front(), "accept-charsets: ");
+		else if (find_field_name(lines.front(), "accept-languages: "))
+			split_fields(req.header.Accept_Language, lines.front(), "accept-languages: ");
+		else if (find_field_name(lines.front(), "allow: "))
+			split_fields_str(req.header.Allow, lines.front(), "allow: ");
+		else if (find_field_name(lines.front(), "authorization: "))
+			split_fields(req.header.Authorization, lines.front(), "authorization: ");
+		else if (find_field_name(lines.front(), "content-language: "))
+			split_fields_str(req.header.Content_Language, lines.front(), "content-language: ");
+		else if (find_field_name(lines.front(), "content-length: "))
+			split_fields_str(req.header.Content_Length, lines.front(), "content-length: ");
+		else if (find_field_name(lines.front(), "content-location: "))
+			split_fields_str(req.header.Content_Location, lines.front(), "content-location: ");
+		else if (find_field_name(lines.front(), "content-type: "))
+			split_fields_str(req.header.Content_Type, lines.front(), "content-type: ");
+		else if (find_field_name(lines.front(), "date: "))
+			split_fields_str(req.header.Date, lines.front(), "date: ");
+		else if (find_field_name(lines.front(), "host: "))
+			split_fields(req.header.Host, lines.front(), "host: ");
+		else if (find_field_name(lines.front(), "last-modified: "))
+			split_fields_str(req.header.Last_modified, lines.front(), "last-modified: ");
+		else if (find_field_name(lines.front(), "referer: "))
+			split_fields(req.header.Referer, lines.front(), "referer: ");
+		else if (find_field_name(lines.front(), "retry-after: "))
+			split_fields_str(req.header.retry_after, lines.front(), "retry-after: ");
+		else if (find_field_name(lines.front(), "server: "))
+			split_fields_str(req.header.Server, lines.front(), "server: ");
+		else if (find_field_name(lines.front(), "transfer-encoding: "))
 		{
-			split_fields_str(req.header.Transfer_Encoding, lines.front(), "transfer-encoding:");
+			split_fields_str(req.header.Transfer_Encoding, lines.front(), "transfer-encoding: ");
 		}
-		else if (find_field_name(lines.front(), "user-agent:"))
-			split_fields(req.header.User_Agent, lines.front(), "user-agent:");
-		else if (find_field_name(lines.front(), "www-authenticate:"))
-			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate:");
+		else if (find_field_name(lines.front(), "user-agent: "))
+			split_fields(req.header.User_Agent, lines.front(), "user-agent: ");
+		else if (find_field_name(lines.front(), "www-authenticate: "))
+			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate: ");
 		// else
 			// std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();
@@ -263,6 +263,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 	get_body(conf.serv.req[client->first], conf);
+	//std::cout<< std::endl << << std::endl;
 	std::cout<< conf.serv.req[client->first].header.Content_Length << "|content_length"<< std::endl;
 	std::cout<< conf.serv.req[client->first].method << "|POST"<< std::endl;
 	std::cout<< conf.serv.req[client->first].header.Transfer_Encoding << "|transs"<< std::endl;
@@ -275,7 +276,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
-	else if (conf.serv.req[client->first].header.Transfer_Encoding == " chunked")
+	else if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{
 		// std::cout<< "laaaaaaa"<< std::endl;
 		int i = 0;
