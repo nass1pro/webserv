@@ -309,11 +309,11 @@ void request_post(t_res &res, t_config &config, t_req &req)
         set_response_data(res, config, req, 405);
         return ;
     }
-	//std::cout<< "je suis la aaaaaaa"<<std::endl;
+	std::cout<< "je suis la aaaaaaa"<<std::endl;
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);
-		std::cout<< req.url << "iciiiiii" <<std::endl;
+		// std::cout<< req.url << "iciiiiii" <<std::endl;
 		set_response_data(res, config, req, 200);
     }
     if (is_exist(req.location.cgi.SCRIPT_NAME))
@@ -327,6 +327,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
 
 void request_put(t_res &res, t_config &config, t_req &req)
 {
+	std::cout<< "laaaa"<<std::endl;
 
     // if (is_exist(req.url) != true)
     // {
@@ -377,7 +378,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
-	//std::cout << "CODE : " << req.error << "\n"<< std::endl;
+	std::cout << "CODE : " << req.error << "\n"<< std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
@@ -433,6 +434,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             request_post(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
+			// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
     		//config.serv.res[client->first].append(res.payload);
     		// config.serv.res[client->first].append("\r\n\r\n");
         }
@@ -447,7 +449,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
         // to_determine_method(res, config, req);
     }
-	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	//std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	std::cout  << " CONTENT_LENGTH \n" << config.serv.req[client->first].location.cgi.CONTENT_LENGTH << std::endl;
 	erras_req_client(client, config.serv);
 
 }

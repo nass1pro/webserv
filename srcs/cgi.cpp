@@ -44,7 +44,8 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
-    cgi.CONTENT_LENGTH  = ft_itoa((int)req.body_content.size());
+    cgi.CONTENT_LENGTH  = std::to_string(req.body_content.size());
+    std::cout<< req.body_content.size() << "req.body_content.size() "<< std::endl;
     cgi.CONTENT_TYPE    = req.header.Content_Type;
     cgi.PATH_INFO       = req.url;
     cgi.PATH_TRANSLATED = req.url;
@@ -68,6 +69,40 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 	parameter.push_back(executable);
 	parameter.push_back(req.url);
 }
+
+static bool equal_to(char c, std::string chars)
+{
+	for (size_t i = 0; i < chars.size() ; i++)
+		if (chars[i] == c)
+			return true;
+	return false;
+}
+
+static int find_first_two_line_returns(std::string const &req)
+{
+	unsigned int counter;
+	bool follow;
+
+	counter = 0;
+	follow = false;
+	if (req.size() == 0)
+		return -1; //Returning error in this case does not seem correct, so return not ready, comes from recv fail
+	// P("body find:|" << req << "|" << "size: " << req.size());
+	for (unsigned int i = 0; i < req.size() ; i++)
+	{
+		if (req[i] == '\n' && follow == true)
+			return i;
+		if (req[i] == '\n')
+		{
+			follow = true;
+			counter++;
+		}
+		else if (!equal_to(req[i], " \t\v\f\r"))
+			follow = false;
+	}
+	return -1; //Returns -1 if not found //If not found it means not complete request
+}
+
 
 void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 {
@@ -94,8 +129,8 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 		// throw server error 500;
     }
     std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
-	// req.message_body = file.erase(0, find_first_two_line_returns(file) + 1);
-	req.body_content = file;
+	req.body_content= file.erase(0, find_first_two_line_returns(file) + 1);
+	// req.body_content = file;
 	fd.close();
 }
 
@@ -149,7 +184,6 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         
         close(pp[0]);
         write(pp[1], req.body_content.c_str(), req.body_content.size());
-        std::cout<<"leoeojhwf"<<std::endl;
         close(pp[1]);
         waitpid(pid, 0, 0);
     }
@@ -163,27 +197,28 @@ std::string start_cgi(t_req &req, t_config &conf)
     std::vector<std::string> env;
     std::string ret;
 
-    std::cout << "On passe aux CGI" << std::endl;
+
+    // std::cout << "On passe aux CGI" << std::endl;
     set_header_cgi(req.location.cgi, req, conf, env);
-    ret = req.location.directory_files_search + req.location.upload_files_location;
-    std::cout<< req.url << std::endl;
+    ret = req.url;
+    // std::cout<< req.url << std::endl;
     if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
     {
-         
         close(fd_upload);
         std::cout<<"Error : file upload location error"<<std::endl;
         // trow 500
     }
+    std::cout << "On passe aux CGI" << std::endl;
     if (fork_cgi(fd_upload, req, env) == false)
     {
         close(fd_upload);
         return "None";
     }
-    std::cout<<"je ne serais pas la "<<std::endl;
+    
     close(fd_upload);
     
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
-   std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
+//    std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
     if (req.location.cgi.SCRIPT_NAME.size() && is_exist(req.location.cgi.SCRIPT_NAME))
     {
         std::cout<<"je suis cneoiwnf"<<std::endl;
