@@ -433,7 +433,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             request_post(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-    		config.serv.res[client->first].append(res.payload);
+    		//config.serv.res[client->first].append(res.payload);
     		// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.method == "PUT")
@@ -447,7 +447,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
         // to_determine_method(res, config, req);
     }
-	// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+	std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
 	erras_req_client(client, config.serv);
 
 }

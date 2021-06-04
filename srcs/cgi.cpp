@@ -176,7 +176,6 @@ std::string start_cgi(t_req &req, t_config &conf)
     }
     if (fork_cgi(fd_upload, req, env) == false)
     {
-        
         close(fd_upload);
         return "None";
     }
@@ -185,7 +184,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
    std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
-    if (req.location.cgi.SCRIPT_NAME.size())
+    if (req.location.cgi.SCRIPT_NAME.size() && is_exist(req.location.cgi.SCRIPT_NAME))
     {
         std::cout<<"je suis cneoiwnf"<<std::endl;
         parse_cgi_file(req, ret);
