@@ -313,6 +313,8 @@ void request_post(t_res &res, t_config &config, t_req &req)
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);
+		std::cout<< req.url << "iciiiiii" <<std::endl;
+		set_response_data(res, config, req, 200);
     }
     if (is_exist(req.location.cgi.SCRIPT_NAME))
     	set_response_data(res, config, req, 200);
@@ -447,4 +449,5 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     }
 	// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
 	erras_req_client(client, config.serv);
+
 }

@@ -167,7 +167,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     set_header_cgi(req.location.cgi, req, conf, env);
     ret = req.location.directory_files_search + req.location.upload_files_location;
     std::cout<< req.url << std::endl;
-    if((fd_upload = open(req.url.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
+    if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
     {
          
         close(fd_upload);
@@ -188,7 +188,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     if (req.location.cgi.SCRIPT_NAME.size())
     {
         std::cout<<"je suis cneoiwnf"<<std::endl;
-        parse_cgi_file(req, req.url);
+        parse_cgi_file(req, ret);
     }
 
     return (ret);
