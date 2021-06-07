@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 19:06:59 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 15:18:25 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ bool	find_directory(std::string &path, std::string &dir)
 	tmp = path.substr(0, end);
 	if (tmp == dir)
 		return (true);
+	std::cout << "Tmp ==> " << tmp << std::endl;
 	if (tmp.size() > 0 && tmp[tmp.size() - 1] != '/')
 	{
 		tmp.push_back('/');
@@ -223,6 +224,24 @@ bool	find_directory(std::string &path, std::string &dir)
 	}
 	return (false);
 }
+
+/*
+**  Find if the path have a specific extention location
+*/
+bool	find_extention(std::string &url_path, std::string &extention_to_find)
+{
+	std::string tmp;
+
+	if (url_path.size() >= extention_to_find.size())
+	{
+		tmp = url_path.substr(url_path.size() - extention_to_find.size(), url_path.size());
+		std::cout << "TMP  -------------->>>> " << tmp << std::endl;
+		if (tmp == extention_to_find)
+			return (true);
+	}
+	return (false);
+}
+
 /*
 ** find the location asked by de request
 */
@@ -255,6 +274,22 @@ void	get_req_location(t_req &req, t_config &conf)
 	if (req.method == "PUT")
 		return ;
 	req.url = create_local_path(req, req.location, conf);
+	it = conf.location.begin();
+	while (it != conf.location.end() && found < 2)
+	{
+		if (!(it->optional_modifier.empty()))
+		{
+			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
+			if (find_extention(req.url, it->location_match))
+				found = 2;
+		}
+		++it;
+	}
+	if (found == 2)
+	{
+		copy_loc(req_loc, *it);
+		req.location = req_loc;
+	}
 	if (!find_dir(req))
 		P("File not found");
 }
