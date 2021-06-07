@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 15:18:25 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 20:19:22 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.location_match = copy.location_match;
 	dest.optional_modifier = copy.optional_modifier;
 	//dest.http_methods = copy.http_methods;
+
+	dest.http_methods.clear();
 	std::list<std::string>::iterator itme = copy.http_methods.begin();
 	while (itme != copy.http_methods.end())
 	{
@@ -31,6 +33,8 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.directory_listing = copy.directory_listing;
 	dest.default_file_directory_request = copy.default_file_directory_request;
 	dest.upload_files_location = copy.upload_files_location;
+	
+	dest.index.clear();
 	std::list<std::string>::iterator it = copy.index.begin();
 	while (it != copy.index.end())
 	{
@@ -212,7 +216,6 @@ bool	find_directory(std::string &path, std::string &dir)
 	tmp = path.substr(0, end);
 	if (tmp == dir)
 		return (true);
-	std::cout << "Tmp ==> " << tmp << std::endl;
 	if (tmp.size() > 0 && tmp[tmp.size() - 1] != '/')
 	{
 		tmp.push_back('/');
@@ -228,16 +231,59 @@ bool	find_directory(std::string &path, std::string &dir)
 /*
 **  Find if the path have a specific extention location
 */
-bool	find_extention(std::string &url_path, std::string &extention_to_find)
+bool	find_extention(std::string &url_path, std::string &extention_to_find, std::list<std::string> &methods, std::string &req_method)
 {
 	std::string tmp;
+	std::list<std::string>::iterator it;
 
 	if (url_path.size() >= extention_to_find.size())
 	{
 		tmp = url_path.substr(url_path.size() - extention_to_find.size(), url_path.size());
-		std::cout << "TMP  -------------->>>> " << tmp << std::endl;
 		if (tmp == extention_to_find)
-			return (true);
+		{
+			it = methods.begin();
+			while (it != methods.end())
+			{
+				if (req_method == *it)
+					return (true);
+				++it;
+			}
+			
+		}
+	}
+	return (false);
+}
+
+/*
+**
+*/
+bool	get_ext_loc(t_req &req, t_config &conf, int found)
+{
+	std::list<t_loc>::iterator	it;
+	t_loc						req_loc;
+
+	it = conf.location.begin();
+	while (it != conf.location.end() && found < 2)
+	{
+		if (!(it->optional_modifier.empty()))
+		{
+			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
+			if (find_extention(req.url, it->location_match, it->http_methods, req.method))
+			{
+				req_loc.location_match = req.location.location_match;
+				found += 1;
+			}
+		}
+		++it;
+	}
+	if (found == 2)
+	{
+		copy_loc(req_loc, *it); 
+		req.location = req_loc;
+		return (true);
+		//std::cout << req.url << std::endl;
+		//req.url = create_local_path(req, req.location, conf);
+		//std::cout << req.url << std::endl;
 	}
 	return (false);
 }
@@ -274,22 +320,7 @@ void	get_req_location(t_req &req, t_config &conf)
 	if (req.method == "PUT")
 		return ;
 	req.url = create_local_path(req, req.location, conf);
-	it = conf.location.begin();
-	while (it != conf.location.end() && found < 2)
-	{
-		if (!(it->optional_modifier.empty()))
-		{
-			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
-			if (find_extention(req.url, it->location_match))
-				found = 2;
-		}
-		++it;
-	}
-	if (found == 2)
-	{
-		copy_loc(req_loc, *it);
-		req.location = req_loc;
-	}
+	//get_ext_loc(req, conf, found);
 	if (!find_dir(req))
 		P("File not found");
 }

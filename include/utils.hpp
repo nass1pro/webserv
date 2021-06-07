@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.s19.be>         +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 14:28:14 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/07 17:35:36 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
 char					*ft_itoa(int nbr);
 bool                    is_white_space(char c);
+std::list<std::string>  split_body(std::string &str);
 
 /*
 ** Request

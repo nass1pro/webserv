@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/01 15:09:35 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/07 17:42:10 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,48 @@ std::string ft_itoa(int n, std::string zebi)
 		u_nbr /= 10;
 	}
 	return (zebi);
+}
+
+std::list<std::string> split_body(std::string &str)
+{
+	/*std::list<std::string>	ret;
+	std::string				line;
+	size_t					start = 0;
+	size_t					end = 0;
+
+	
+	while (str[start] && charset.find(str[start]) != std::string::npos)
+			++start;
+	//std::cout << "Start --> " << str.size() << std::endl; // TEEEEEEETSSSSSS
+	while (start < str.size())
+	{
+		end = start;
+		while (str[end] && charset.find(str[end]) == std::string::npos)
+			++end;
+		line = str.substr(start, end - start);
+		ret.push_back(line);
+		start = end;
+		while (str[start] && charset.find(str[start]) != std::string::npos)
+			++start;
+	}*/
+	std::list<std::string>		line_of_body;
+	std::string					line;
+	const size_t				size_body = str.size();
+
+	std::cout << "ON PASSE ICI !!! " << std::endl;
+	for (size_t j = 0; j < size_body; j++)
+	{
+		if (j == 0 && str[j] == '\n')
+			continue ;
+		else if (str[j] == '\n')
+		{
+			line_of_body.push_back(line);
+			line.clear();
+		}
+		else
+			line += str[j];
+	}
+	return (line_of_body);
 }
 
 /*

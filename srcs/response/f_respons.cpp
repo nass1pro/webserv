@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 18:32:50 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 17:44:44 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
         set_response_data(res, config, req, 405);
         return ;
     }
-	std::cout<< "je suis la aaaaaaa"<<std::endl;
+	//std::cout<< "je suis la aaaaaaa"<<std::endl; //TEEEEEEEEEESSSSSTTTTTT
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);

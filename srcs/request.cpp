@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 19:08:13 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 19:59:09 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 ** Return the index where the body starts in the full request.
 ** Return -1 if we can't find 2 \n in the request
 */
-int		get_body_index(t_req &req/*std::string full_req*/)
+int		get_body_index(t_req &req)
 {
 	size_t i = 0;
 	size_t size = req.full_req.size();
@@ -79,7 +79,6 @@ int		split_fields(std::list<std::string> &fields, std::string &line, std::string
 
 	line.erase(0, field_name.size());
 	split = split_in_list(line, " ,");
-	//print_list(split); ///////////////////////////////////////////////
 	fields.insert(fields.end(), split.begin(), split.end());
 	return (SUCCESS);
 }
@@ -103,7 +102,6 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 
 	while (!lines.empty())
 	{
-		//print_list(lines); //////////////////////////////////////////////////////////////////////
 		if (find_field_name(lines.front(), "accept-charsets: "))
 			split_fields_str(req.header.Accept_Charsets, lines.front(), "accept-charsets: ");
 		else if (find_field_name(lines.front(), "accept-languages: "))
@@ -153,13 +151,11 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 */
 int		check_method(t_req &req)
 {
-	//std::cout << ":ETHOD ; " << req.location.http_methods << std::endl;
 	if (!req.location.http_methods.empty())
 	{
 		std::list<std::string>::iterator it = req.location.http_methods.begin();
 		while (it != req.location.http_methods.end())
 		{
-			//std::cout << " ICI meHTHOD : " << *it << std::endl;
 			if (req.method == *it)
 				return (0);
 			++it;
@@ -185,12 +181,8 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	std::string 			line(lines.front());
 	std::list<std::string>	split;
 
-	// std::cout<< req.body_index << " celui la"<< req.full_req << std::endl;
-
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
-		// P("je suis laaaaaa 1")
-		// std::cout << "---"<< line << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
@@ -239,6 +231,44 @@ void	get_body(t_req &req, t_config &conf)
 }
 
 /*
+** Parse the body and cut 1 / 2 lines if the type is 'chuncked'
+*/
+void	parse_body(std::string &body)
+{
+		std::vector<std::string>	line_of_body;
+		std::string					line;
+		const size_t				size_body = body.size();
+		size_t						size_line_of_body;
+		size_t						i = 0;
+
+		for (size_t j = 0; j < size_body; j++)
+		{
+			if (j == 0 && body[j] == '\n')
+				continue ;
+			else if (body[j] == '\n')
+			{
+				line_of_body.push_back(line);
+				line.clear();
+			}
+			else
+				line += body[j];
+		}
+		std::vector<std::string>::iterator it = line_of_body.begin();
+		size_line_of_body = line_of_body.size();
+		body.clear();
+		body.reserve(1000000100);
+		for ( ; it != line_of_body.end(); it++)
+		{
+			if (*it == "0")
+				break ;
+			else if (i++ % 2)
+			{
+				body += (*it).erase((*it).size() - 1);
+			}
+		}	
+}
+
+/*
 ** main function for the parsing of the request
 ** (take the _req struct as parameter with full_request field filled)
 ** for the moment return a negative number in case of weird behavior (!!) modifier retours erreurs etc
@@ -247,7 +277,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 {
 	std::list<std::string> list_lines;
 
-	// std::cout<< "recois \n " << conf.serv.req[client->first].full_req << "client : " << client->first << "|| \n" <<std::endl;
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
 	{
@@ -261,7 +290,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	{
 		/*if (conf.serv.req[client->first].body_content.empty() && conf.serv.req[client->first].method == "POST")
 		{
-			// std::cout<< "laaaaaaa"<< std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}*/
@@ -270,26 +298,18 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
-	get_body(conf.serv.req[client->first], conf);
-	//std::cout<< std::endl << conf.serv.req[client->first].full_req << std::endl << std::endl;
-	//std::cout<< conf.serv.req[client->first].header.Content_Length << "|content_length"<< std::endl;
-	//std::cout<< conf.serv.req[client->first].method << "|POST"<< std::endl;
-	//std::cout<< conf.serv.req[client->first].header.Transfer_Encoding << "|transs"<< std::endl;
-
+	get_body(conf.serv.req[client->first], conf);\
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		//std::cout<< "laaaaaaa"<< std::endl;
 		req.error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	else if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{
-		// std::cout<< "laaaaaaa"<< std::endl;
 		int i = 0;
 		i = conf.serv.req[client->first].body_content.size() - 1;
-		// std::cout<< i << "\n" << std::endl;
 		if (conf.serv.req[client->first].body_content.empty())
 		{
 			conf.serv.req[client->first].done = false;
@@ -305,13 +325,13 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		}
 		else
 		{
-			// std::cout <<
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
 	}
-	size_t size = 0;
-	size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
+	parse_body(conf.serv.req[client->first].body_content);
+	//size_t size = 0;
+	//size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
 //	std::cout << "EST cE QUON A DES CGI PAR ICI ?????? --> " << req.location.cgi.SCRIPT_NAME << std::endl;
 //	std::cout << "EST cE QUON A DES CGI ACTIIIIIIVES PAR ICI ?????? --> " << req.location.cgi.active << std::endl;
 	//std::cout << req.body_content.size()  <<std::endl;

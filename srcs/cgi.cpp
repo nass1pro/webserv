@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 18:34:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 18:54:07 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
     cgi.CONTENT_LENGTH  = std::to_string(req.body_content.size());
-    std::cout<< req.body_content.size() << "req.body_content.size() "<< std::endl;
     cgi.CONTENT_TYPE    = req.header.Content_Type;
     cgi.PATH_INFO       = req.url;
     cgi.PATH_TRANSLATED = req.url;
@@ -129,8 +128,9 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 		// throw server error 500;
     }
     std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
-	req.body_content= file.erase(0, find_first_two_line_returns(file) + 1);
-	// req.body_content = file;
+	
+    req.body_content= file.erase(0, find_first_two_line_returns(file) + 1);
+	//req.body_content = file;
 	fd.close();
 }
 
@@ -181,11 +181,12 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
     }
     else
     {
-        
+        std::cout << "On est dans le else ici :)))))" << std::endl; //teeeeEESSSSTTTTT
         close(pp[0]);
         write(pp[1], req.body_content.c_str(), req.body_content.size());
         close(pp[1]);
         waitpid(pid, 0, 0);
+        std::cout << "On sort du else ici :)))))" << std::endl; //teeeeEESSSSTTTTT
     }
     
     return true;
@@ -200,17 +201,19 @@ std::string start_cgi(t_req &req, t_config &conf)
 
     // std::cout << "On passe aux CGI" << std::endl;
     set_header_cgi(req.location.cgi, req, conf, env);
-    ret = req.url;
-    // std::cout<< req.url << std::endl;
+    //ret = req.url;
+    ret = "frontend/default/upload";
+    //td::cout<< req.url << std::endl;
     if((fd_upload = open(ret.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0666)) == -1)
     {
         close(fd_upload);
         std::cout<<"Error : file upload location error"<<std::endl;
         // trow 500
     }
-    std::cout << "On passe aux CGI" << std::endl;
+    std::cout << "On passe aux CGI" << std::endl; //TEEESTtTT
     if (fork_cgi(fd_upload, req, env) == false)
     {
+        std::cout << "LES CGI FORK ONT ECHOUEES :(" << std::endl;
         close(fd_upload);
         return "None";
     }
@@ -219,6 +222,7 @@ std::string start_cgi(t_req &req, t_config &conf)
     
     // if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
 //    std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
+    //std::cout << "Script name exist" << is_exist(req.location.cgi.SCRIPT_NAME) << std::endl; //TEEEEEEESSSSTEEEE
     if (req.location.cgi.SCRIPT_NAME.size() && is_exist(req.location.cgi.SCRIPT_NAME))
     {
         std::cout<<"je suis cneoiwnf"<<std::endl;
