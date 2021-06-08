@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/08 14:54:24 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:21:55 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,9 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 }
 
 /*
-**
+** check in all the location if the end of the req.url is the same as the extension location
+** If we found a correct extension we check if the method is correct.
+** then we copy the loctation and 
 */
 bool	get_ext_loc(t_req &req, t_config &conf, int found)
 {
@@ -270,15 +272,19 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
 			if (find_extention(req.url, it->location_match, it->http_methods, req.method))
 			{
-				req_loc.location_match = req.location.location_match;
+				//req_loc.location_match = req.location.location_match;
 				found += 1;
+				break ;
 			}
 		}
 		++it;
 	}
 	if (found == 2)
 	{
-		copy_loc(req_loc, *it); 
+		copy_loc(req_loc, *it);
+		req_loc.location_match = req.location.location_match;
+		if (req_loc.directory_files_search.empty())
+			req_loc.directory_files_search = req.location.directory_files_search;
 		req.location = req_loc;
 		return (true);
 		//std::cout << req.url << std::endl;
@@ -317,7 +323,7 @@ void	get_req_location(t_req &req, t_config &conf)
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
-	//get_ext_loc(req, conf, found);
+	get_ext_loc(req, conf, found);
 	if (req.method == "PUT")
 		return ;
 	req.url = create_local_path(req, req.location, conf);
