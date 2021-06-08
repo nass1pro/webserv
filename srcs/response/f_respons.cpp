@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/07 17:44:44 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/08 15:32:20 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,10 +313,12 @@ void request_post(t_res &res, t_config &config, t_req &req)
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);
+		std::ifstream ifs(req.url.c_str());
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		// std::cout<< req.url << "iciiiiii" <<std::endl;
 		set_response_data(res, config, req, 200);
     }
-    if (is_exist(req.location.cgi.SCRIPT_NAME))
+    else if (is_exist(req.location.cgi.SCRIPT_NAME))
     	set_response_data(res, config, req, 200);
     else
     {
@@ -435,8 +437,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
 			// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-    		//config.serv.res[client->first].append(res.payload);
-    		// config.serv.res[client->first].append("\r\n\r\n");
+    		config.serv.res[client->first].append(res.payload);
+    		config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.method == "PUT")
         {

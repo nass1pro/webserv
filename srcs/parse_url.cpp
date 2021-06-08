@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 20:19:22 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/08 14:54:24 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,7 @@ void	get_req_location(t_req &req, t_config &conf)
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
+	//get_ext_loc(req, conf, found);
 	if (req.method == "PUT")
 		return ;
 	req.url = create_local_path(req, req.location, conf);
