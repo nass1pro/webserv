@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 13:12:56 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 14:52:52 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -378,7 +378,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 	std::cout << "//////////////////\n/////////////////////\n////////////////////////////\n/////////////////////////\n" << std::endl;
-	std::cout<< "FULL REQ|\n" << config.serv.req[client->first].full_req  << "|FULL REQ " <<std::endl;
+	//std::cout<< "FULL REQ|\n" << config.serv.req[client->first].full_req  << "|FULL REQ " <<std::endl; //TEEEEEEEESSSSTTT
 
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
