@@ -6,17 +6,12 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 18:05:01 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 18:39:43 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
-
-/*
-** TODO :
-**
-*/
 
 /*
 ** Return the index where the body starts in the full request.
@@ -143,12 +138,8 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			std::cout << "ON A TROUVE UN SECret DANS lA REQqqq" << std::endl;
 			req.header.Secret_req.push_back(lines.front());
 		}
-		// else
-			// std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();
 	}
-	//req.header = h;
-	//return (h);
 }
 
 /*
@@ -295,7 +286,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
-	get_body(conf.serv.req[client->first], conf);\
+	get_body(conf.serv.req[client->first], conf);
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
