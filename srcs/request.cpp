@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 15:41:08 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 16:27:26 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,6 +336,14 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		}
 	}
 	parse_body(conf.serv.req[client->first].body_content);
+	if (conf.serv.req[client->first].location.body_size_limit > 0)
+	{
+		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
+		{
+			conf.serv.req[client->first].error = 413;
+			return (ERROR);
+		}
+	}
 	//size_t size = 0;
 	//size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
 //	std::cout << "EST cE QUON A DES CGI PAR ICI ?????? --> " << req.location.cgi.SCRIPT_NAME << std::endl;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 19:00:12 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 16:26:32 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void	init_config(t_config &conf)
 	conf.name_server = "Webserv";
 	conf.root = "frontend/";
 	//conf.index.push_back("index.html");
-	conf.body_size_limit = 1;
+	conf.body_size_limit = 0;
 	conf.default_server = false;
 }
 
