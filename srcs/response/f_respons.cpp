@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/07 17:44:44 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 11:10:14 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
 #include "../../include/utils.hpp"
 #include "../../include/cgi.hpp"
-
+#include "../../include/config.hpp"
 
 void setAllow(t_req &req, int statusCode)
 {
@@ -59,7 +59,6 @@ void setDate(t_req &req)
    		ss << "Sun, ";
    	else if (now->tm_wday == 1)
    		ss << "Mon, ";
-
    	else if (now->tm_wday == 2)
    		ss << "Tue, ";
    	else if (now->tm_wday == 3)
@@ -306,23 +305,28 @@ void request_post(t_res &res, t_config &config, t_req &req)
 
     if (req.body_content.size() == 0)
     {
-        set_response_data(res, config, req, 405);
+     	// std::cout << " 11111111111111111 " << req.error << std::endl;
+	    set_response_data(res, config, req, 405);
         return ;
     }
-	//std::cout<< "je suis la aaaaaaa"<<std::endl; //TEEEEEEEEEESSSSSTTTTTT
     if (req.location.cgi.active)
     {
-        req.url = start_cgi(req, config);
-		// std::cout<< req.url << "iciiiiii" <<std::endl;
+        // std::cout << " 222222222222222222222 " << req.error << std::endl;  
+	    req.url = start_cgi(req, config);
+		res.payload.append(req.body_content);
 		set_response_data(res, config, req, 200);
     }
     if (is_exist(req.location.cgi.SCRIPT_NAME))
-    	set_response_data(res, config, req, 200);
-    else
-    {
-        std::ifstream ifs(req.url.c_str());
-        set_response_data(res, config, req, 200);
-    }
+    {	
+		     	std::cout << " 333333333333333333 " << req.error << std::endl;
+		set_response_data(res, config, req, 200);
+	}
+	// else
+    // {
+    //         	std::cout << " 4444444444444444444 " << req.error << std::endl;
+	//     std::ifstream ifs(req.url.c_str());
+    //     set_response_data(res, config, req, 200);
+    // }
 }
 
 void request_put(t_res &res, t_config &config, t_req &req)
@@ -343,8 +347,6 @@ void request_put(t_res &res, t_config &config, t_req &req)
 		//std::cout << " IND " << ind << std::endl;
 		//get the correct filename for the file "file_should_exist_after"
 		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
-		// std::cout << " FILENAME " << filename << std::endl;
-		// std::cout << " ROOT " << config.root << std::endl;
 		std::ofstream newfile(filename.c_str());
 		// addd content of client to new file
 		newfile << req.body_content << std::endl;
@@ -379,7 +381,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
 	std::cout << "CODE : " << req.error << "\n"<< std::endl;
-    if (req.error != 0)
+    if (req.error == 404)
     {
         if (req.error == 400)
         {
@@ -434,9 +436,15 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             request_post(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
+			std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
+    		config.serv.res[client->first].append(res.payload);
+			// int fd2 = open("INCHALLAH.txt", O_WRONLY);
+			// write(fd2, config.serv.res[client->first].c_str(), config.serv.res[client->first].size());
+			// close(fd2);
+			
 			// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-    		//config.serv.res[client->first].append(res.payload);
-    		// config.serv.res[client->first].append("\r\n\r\n");
+
+			// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.method == "PUT")
         {
