@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 19:59:09 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 13:45:12 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			split_fields(req.header.User_Agent, lines.front(), "user-agent: ");
 		else if (find_field_name(lines.front(), "www-authenticate: "))
 			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate: ");
+		else if (find_field_name(lines.front(), "X-Secret"))
+			req.header.Secret_req.push_back(lines.front());
 		// else
 			// std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
 		lines.pop_front();

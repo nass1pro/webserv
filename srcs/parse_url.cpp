@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_url.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 20:19:22 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 11:29:23 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,5 +322,10 @@ void	get_req_location(t_req &req, t_config &conf)
 	req.url = create_local_path(req, req.location, conf);
 	//get_ext_loc(req, conf, found);
 	if (!find_dir(req))
-		P("File not found");
+	{
+		if (req.method == "POST")
+			req.error = 0;
+		else
+			P("File not found");
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 18:01:35 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 13:46:06 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct	s_cgi
 	std::string	SERVER_PORT;
 	std::string	SERVER_PROTOCOL;
 	std::string	SERVER_SOFTWARE;
+	std::string	X_SECRET;
 }				t_cgi;
 
 typedef struct	s_loc
@@ -104,6 +105,7 @@ typedef struct s_header
 	std::list<std::string>	User_Agent;
 	std::string				WWW_Authenticate;
 	std::list<std::string>	header_entire;
+	std::list<std::string>	Secret_req;	
 	std::string				body_entire;
 
 } t_header;

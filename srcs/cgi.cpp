@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 10:50:36 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 13:51:41 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,43 +21,45 @@ void set_env(std::string var, std::string equal_to, std::vector<std::string> &en
 
 void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 {
-    // set_env("AUTH_TYPE", cgi.AUTH_TYPE, env);
-	// set_env("CONTENT_LENGTH", cgi.CONTENT_LENGTH, env);
-	// set_env("CONTENT_TYPE", cgi.CONTENT_TYPE, env);
-	// set_env("GATEWAY_INTERFACE", cgi.GATEWAY_INTERFACE, env);
-	// set_env("PATH_INFO", cgi.PATH_INFO, env);
-	// set_env("PATH_TRANSLATED", cgi.PATH_TRANSLATED, env);
-	// set_env("QUERY_STRING", cgi.QUERY_STRING, env);
-	// set_env("REMOTE_ADDR", cgi.REMOTE_ADDR, env);
-	// set_env("REMOTE_INDENT", cgi.REMOTE_IDENT, env);
-	// set_env("REMOTE_USER", cgi.REMOTE_USER, env);
-	// set_env("REQUEST_METHOD", cgi.REQUEST_METHOD, env);
-	// set_env("REQUEST_URI", cgi.REQUEST_URI, env);
-	// set_env("SCRIPT_NAME", cgi.SCRIPT_NAME, env);
-	// set_env("SERVER_NAME", cgi.SERVER_NAME, env);
-	// set_env("SERVER_PORT", cgi.SERVER_PORT, env);
-	// set_env("SERVER_SOFTWARE", cgi.SERVER_SOFTWARE, env);
-	// set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env);
-
-    set_env("AUTH_TYPE", "None", env);
+    set_env("AUTH_TYPE", cgi.AUTH_TYPE, env);
 	set_env("CONTENT_LENGTH", cgi.CONTENT_LENGTH, env);
 	set_env("CONTENT_TYPE", cgi.CONTENT_TYPE, env);
-	set_env("GATEWAY_INTERFACE", "None", env);
-	set_env("PATH_INFO", "./frontend/YoupiBanane/youpi.bla", env);
-	set_env("PATH_TRANSLATED", "./frontend/YoupiBanane/youpi.bla", env);
+	set_env("GATEWAY_INTERFACE", cgi.GATEWAY_INTERFACE, env);
+	set_env("PATH_INFO", cgi.PATH_INFO, env);
+	set_env("PATH_TRANSLATED", cgi.PATH_TRANSLATED, env);
 	set_env("QUERY_STRING", cgi.QUERY_STRING, env);
 	set_env("REMOTE_ADDR", cgi.REMOTE_ADDR, env);
-	set_env("REMOTE_INDENT", "None", env);
+	set_env("REMOTE_INDENT", cgi.REMOTE_IDENT, env);
 	set_env("REMOTE_USER", cgi.REMOTE_USER, env);
 	set_env("REQUEST_METHOD", cgi.REQUEST_METHOD, env);
-	set_env("REQUEST_URI", "./frontend/YoupiBanane/youpi.bla", env);
-	set_env("SCRIPT_NAME", "./cgi_tester", env);
+	set_env("REQUEST_URI", cgi.REQUEST_URI, env);
+	set_env("SCRIPT_NAME", cgi.SCRIPT_NAME, env);
 	set_env("SERVER_NAME", cgi.SERVER_NAME, env);
-	set_env("SERVER_PORT", "1900", env);
-	set_env("SERVER_SOFTWARE", "None", env);
+	set_env("SERVER_PORT", cgi.SERVER_PORT, env);
+	set_env("SERVER_SOFTWARE", cgi.SERVER_SOFTWARE, env);
 	set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env);
 
+    // set_env("AUTH_TYPE", "None", env);
+	// set_env("CONTENT_LENGTH", cgi.CONTENT_LENGTH, env);
+	// set_env("CONTENT_TYPE", cgi.CONTENT_TYPE, env);
+	// set_env("GATEWAY_INTERFACE", "None", env);
+	// set_env("PATH_INFO", "./frontend/YoupiBanane/youpi.bla", env);
+	// set_env("PATH_TRANSLATED", "./frontend/YoupiBanane/youpi.bla", env);
+	// set_env("QUERY_STRING", cgi.QUERY_STRING, env);
+	// set_env("REMOTE_ADDR", cgi.REMOTE_ADDR, env);
+	// set_env("REMOTE_INDENT", "None", env);
+	// set_env("REMOTE_USER", cgi.REMOTE_USER, env);
+	// set_env("REQUEST_METHOD", cgi.REQUEST_METHOD, env);
+	// set_env("REQUEST_URI", "./frontend/YoupiBanane/youpi.bla", env);
+	// set_env("SCRIPT_NAME", "./cgi_tester", env);
+	// set_env("SERVER_NAME", cgi.SERVER_NAME, env);
+	// set_env("SERVER_PORT", "1900", env);
+	// set_env("SERVER_SOFTWARE", "None", env);
+	// set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env);
+
     //secret env ???????
+    if (!cgi.X_SECRET.empty())
+        cgi.X_SECRET       
 }
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
@@ -73,7 +75,8 @@ void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::stri
     cgi.REQUEST_URI     = req.url;
     cgi.SERVER_NAME     = conf.host;
     cgi.SERVER_PROTOCOL = req.version;
-
+	if (!req.header.Secret_req.empty())
+		cgi.X_SECRET = req.header.Secret_req.front();
     set_env_vector(cgi, env);
 
 }
@@ -147,7 +150,7 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 		// throw server error 500;
     }
     std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
-	std::cout << "BODY|\n" << find_first_two_line_returns(file) << "\n|BODY" << std::endl;
+	// std::cout << "BODY|\n" << find_first_two_line_returns(file) << "\n|BODY" << std::endl;
     req.body_content = file.erase(0, find_first_two_line_returns(file) + 1);
     // int fd2 = open("INCHALLAH.txt", O_WRONLY);
 	// write(fd2, req.body_content.c_str(), req.body_content.size());

@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 11:10:14 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 13:12:56 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -377,11 +377,13 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
     t_res res;
+	std::cout << "//////////////////\n/////////////////////\n////////////////////////////\n/////////////////////////\n" << std::endl;
+	std::cout<< "FULL REQ|\n" << config.serv.req[client->first].full_req  << "|FULL REQ " <<std::endl;
 
 	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
     // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
 	std::cout << "CODE : " << req.error << "\n"<< std::endl;
-    if (req.error == 404)
+    if (req.error != 0)
     {
         if (req.error == 400)
         {
@@ -458,7 +460,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         // to_determine_method(res, config, req);
     }
 	//std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-	std::cout  << " CONTENT_LENGTH \n" << config.serv.req[client->first].location.cgi.CONTENT_LENGTH << std::endl;
+	// std::cout  << " CONTENT_LENGTH \n" << config.serv.req[client->first].location.cgi.CONTENT_LENGTH << std::endl;
 	erras_req_client(client, config.serv);
 
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 14:24:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/09 12:12:11 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     server_init_socket(conf, active);
     if ((error = select(FD_SETSIZE, &active.read, &active.write, NULL,&timeout)) == -1)
     {
-        std::cout << "Error: select failed" << std::endl;
+        // std::cout << "Error: select failed" << std::endl;
         detecte_connection( conf, active);
     }
     if (error == 0)
