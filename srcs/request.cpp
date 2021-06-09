@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 15:10:26 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 15:41:08 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
+		std::cout << "SIZE 0 DETECtED HERE :ooooooo" << std::endl;
 		req.error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 15:22:40 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 15:38:26 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ void	set_secret(std::string const &secret, std::string &env_secret)
 		else if (secret[i] == ':')
 			env_secret += '=';
 		else if (std::isdigit(secret[i]))
+		{
 			env_secret += secret[i];
+		}
 		else if (secret[i] == ' ')
-			continue ;
+			;
 		else
 			env_secret += toupper((int)secret[i]);
 		++i;
-		std::cout << "BOUCLE " << i << std::endl;
  	}
-	 std::cout << "BOUCLE SORTIE " << i << std::endl;
 }
 
 void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
@@ -83,15 +83,11 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 	// set_env("SERVER_SOFTWARE", "None", env);
 	// set_env("SERVER_PROTOCOL", cgi.SERVER_PROTOCOL, env);
 
-	//secret env ???????
-	std::cout << "Juste avant secret" << std::endl; //TEEEEEEEEEEESSSSSSTTTTTTTT
 	if (!cgi.X_SECRET.empty())
 	{
 		set_secret(cgi.X_SECRET, env_secret);
-		std::cout << "set secret ==> " << env_secret << std::endl; //TEEEEEEEEEEESSSSSSTTTTTTTT
 		env.push_back(env_secret);
 	}
-	std::cout << "Juste apres secret" << std::endl; //TEEEEEEEEEEESSSSSSTTTTTTTT
 }
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
@@ -108,10 +104,7 @@ void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::stri
 	cgi.SERVER_NAME     = conf.host;
 	cgi.SERVER_PROTOCOL = req.version;
 	if (!req.header.Secret_req.empty())
-	{
-		std::cout << "secret reqqqqq ==> " << req.header.Secret_req.front() << std::endl; //TEEEEEEEEEEESSSSSSTTTTTTTT
 		cgi.X_SECRET = req.header.Secret_req.front();
-	}
 	set_env_vector(cgi, env);
 
 }
