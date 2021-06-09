@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 19:08:27 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 19:35:21 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,10 +243,7 @@ void concatenate_header( t_res &res, t_req &req)
 	if (req.header.Content_Length != "\0")
 	{
 		res.response_header.append(req.header.Server);
-		// if (res.statusCode == 200)
-		// 	res.response_header.append("\r\n\r\n");
-		// else
-			res.response_header.append("\r\n\r\n");
+		res.response_header.append("\r\n\r\n");
 	}
 }
 
@@ -373,7 +370,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             config.serv.res[client->first].append(res.response_header);
     		config.serv.res[client->first].append(res.payload);
         }
-        else if (req.method == "HEAD" || (req.method == "POST" && req.body_content.size() < 500))
+        else if (req.method == "HEAD" || (req.method == "POST" && config.serv.req[client->first].location.body_size_limit > 0))
         {
             request_heads(res, config, req);
             res.payload = std::string("\0");
