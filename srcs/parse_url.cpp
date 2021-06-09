@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_url.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 11:29:23 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 18:06:36 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,9 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 }
 
 /*
-**
+** check in all the location if the end of the req.url is the same as the extension location
+** If we found a correct extension we check if the method is correct.
+** then we copy the loctation and 
 */
 bool	get_ext_loc(t_req &req, t_config &conf, int found)
 {
@@ -270,15 +272,19 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
 			if (find_extention(req.url, it->location_match, it->http_methods, req.method))
 			{
-				req_loc.location_match = req.location.location_match;
+				//req_loc.location_match = req.location.location_match;
 				found += 1;
+				break ;
 			}
 		}
 		++it;
 	}
 	if (found == 2)
 	{
-		copy_loc(req_loc, *it); 
+		copy_loc(req_loc, *it);
+		req_loc.location_match = req.location.location_match;
+		if (req_loc.directory_files_search.empty())
+			req_loc.directory_files_search = req.location.directory_files_search;
 		req.location = req_loc;
 		return (true);
 		//std::cout << req.url << std::endl;
@@ -292,6 +298,42 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 ** find the location asked by de request
 */
 void	get_req_location(t_req &req, t_config &conf)
+{
+	std::list<t_loc>::iterator	it = conf.location.begin();
+	int 						found = 0;
+	std::string					compare = "http://" + conf.host + ":" + conf.port.front();
+	t_loc						req_loc;
+	if (req.url.find(compare) != std::string::npos)
+		req.url = req.url.substr(compare.size());
+	while (it != conf.location.end() && !found)
+	{
+		if (find_directory(req.url, it->location_match))
+			found = 1;
+		if (!found)
+			++it;
+	}
+	if (!found)
+	{
+		req.error = 404;
+		P("Directory not found"); //Indications TETS
+		return ; // check retourner code erreur ou jsp
+	}
+	copy_loc(req_loc, *it);
+	req.location = req_loc;
+	get_ext_loc(req, conf, found);
+	if (req.method == "PUT")
+		return ;
+	req.url = create_local_path(req, req.location, conf);
+	if (!find_dir(req))
+	{
+		if (req.method == "POST")
+			req.error = 0;
+		else
+			P("File not found");
+	}
+}
+
+/*void	get_req_location(t_req &req, t_config &conf)
 {
 	std::list<t_loc>::iterator	it = conf.location.begin();
 	int 						found = 0;
@@ -328,4 +370,4 @@ void	get_req_location(t_req &req, t_config &conf)
 		else
 			P("File not found");
 	}
-}
+}*/

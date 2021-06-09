@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 16:27:26 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/09 18:05:01 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,23 +283,15 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	std::list<std::string> list_lines;
 
 	init_request(conf.serv.req[client->first]);
-	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
+	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
-		//req.error = 400;
-		// std::cout << "Incomplete request." << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
-		/*if (conf.serv.req[client->first].body_content.empty() && conf.serv.req[client->first].method == "POST")
-		{
-			conf.serv.req[client->first].done = false;
-			return (ERROR);
-		}*/
-		//else
-			conf.serv.req[client->first].done = true;
+		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
@@ -344,18 +336,5 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 			return (ERROR);
 		}
 	}
-	//size_t size = 0;
-	//size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
-//	std::cout << "EST cE QUON A DES CGI PAR ICI ?????? --> " << req.location.cgi.SCRIPT_NAME << std::endl;
-//	std::cout << "EST cE QUON A DES CGI ACTIIIIIIVES PAR ICI ?????? --> " << req.location.cgi.active << std::endl;
-	//std::cout << req.body_content.size()  <<std::endl;
-	// if (req.body_content.size() > 10000000)
-	// 	req.error = 413;
-	// if (req.error != 0)
-	// {
-	// 	req.done = true;
-	// 	return (ERROR);
-	// }
-	//req.done = true;
 	return (SUCCESS);
 }
