@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 13:46:06 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/10 15:52:04 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ typedef struct s_header
 	std::list<std::string>	User_Agent;
 	std::string				WWW_Authenticate;
 	std::list<std::string>	header_entire;
-	std::list<std::string>	Secret_req;	
+	std::list<std::string>	Secret_req;
 	std::string				body_entire;
 
 } t_header;
@@ -147,8 +147,6 @@ typedef struct s_server
     unsigned int                fd_max;
     std::map<int, t_req>        req;
     std::map<int, std::string>  res;
-
-
 
 }               t_server;
 
