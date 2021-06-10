@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 18:39:41 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 18:06:23 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,8 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 			parse_location(fd, c, reader);
 		else if (find_config_elem(tmp, "root"))
 			conf_get_str(c.root, tmp);
+		else if (find_config_elem(tmp, "name_server"))
+			conf_get_str(c.name_server, tmp);
 		else if (find_config_elem(tmp, "host"))
 			conf_get_str(c.host, tmp);
 		else if (find_config_elem(tmp, "port"))
