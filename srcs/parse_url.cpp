@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/10 11:59:22 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 12:00:38 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,10 +315,6 @@ void	get_req_location(t_req &req, t_config &conf)
 		return ;
 	req.url = create_local_path(req, req.location, conf);
 	if (!find_dir(req))
-<<<<<<< HEAD
-		P("File not found");
-}
-=======
 	{
 		if (req.method == "POST")
 			req.error = 0;
@@ -326,4 +322,3 @@ void	get_req_location(t_req &req, t_config &conf)
 			P("File not found");
 	}
 }
->>>>>>> elias_work
