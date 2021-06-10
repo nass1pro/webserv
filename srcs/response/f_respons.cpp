@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/10 18:17:53 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/10 20:29:37 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void setLocation(t_req &req, int statusCode)
 
 void setRetryAfter(t_req &req, int statusCode)
 {
-	if (statusCode == 413)./
+	if (statusCode == 413)
 		req.header.retry_after = std::string("Retry-After: 120");
 	else
 		req.header.retry_after = std::string("\0");

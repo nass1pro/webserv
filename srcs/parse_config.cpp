@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/10 18:26:06 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 19:42:29 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,39 @@ void	init_config(t_config &conf)
 }
 
 /*
+** Copy a and return the copied conf
+*/
+void	copy_conf(std::list<t_config> &conf, t_config &srcs, size_t len)
+{
+	t_config new_conf;
+	size_t i = 0;
+
+	new_conf.host = srcs.host;
+	new_conf.root = srcs.root;
+	new_conf.name_server = srcs.name_server;
+	new_conf.error_page = srcs.error_page;
+	std::list<t_loc>::iterator it_loc = srcs.location.begin();
+	while (it_loc != srcs.location.end())
+	{
+		t_loc	new_loc;
+		copy_loc(new_loc, *it_loc);
+		new_conf.location.push_back(new_loc);
+		++it_loc;
+	}
+	new_conf.port = srcs.port;
+	while (i < len)
+	{
+		new_conf.port.pop_front();
+		++i;
+	}
+	new_conf.index = srcs.index;
+	new_conf.error_page = srcs.error_page;
+	new_conf.body_size_limit = srcs.body_size_limit;
+	new_conf.default_server = false;
+	conf.insert(conf.end(), new_conf);
+}
+
+/*
 ** Parsinf of the server section
 */
 int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
@@ -257,6 +290,15 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 	conf.insert(conf.end(), c);
 	if (!conf.empty())
 		conf.front().default_server = true;
+	if (c.port.size() > 1)
+	{
+		size_t len = 1;
+		while (len < c.port.size())
+		{
+			copy_conf(conf, c, len);
+			++len;
+		}
+	}
 	return (SUCCESS);
 }
 

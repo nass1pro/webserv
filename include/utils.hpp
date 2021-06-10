@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 17:35:36 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 20:29:10 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ bool					is_exist(std::string &url);
 char					*ft_itoa(int nbr);
 bool                    is_white_space(char c);
 std::list<std::string>  split_body(std::string &str);
+void                    copy_loc(t_loc &dest, t_loc &copy);
 
 /*
 ** Request
