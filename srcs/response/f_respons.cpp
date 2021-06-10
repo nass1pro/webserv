@@ -6,14 +6,14 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/08 15:32:20 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 11:59:27 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/server.hpp"
 #include "../../include/utils.hpp"
 #include "../../include/cgi.hpp"
-
+#include "../../include/config.hpp"
 
 void setAllow(t_req &req, int statusCode)
 {
@@ -45,21 +45,19 @@ void setContentLength(t_res &res, t_req &req)
 
 void setContentType(t_req &req)
 {
-	// css php jpg
 	req.header.Content_Type = std::string("Content-Type: text/html; charset=UTF-8");
 }
 
 void setDate(t_req &req)
 {
 	std::ostringstream ss;
-	std::time_t t = std::time(0);   // get time now
+	std::time_t t = std::time(0);   
     std::tm* now = std::localtime(&t);
    	ss << "Date: ";
 	if (now->tm_wday == 0)
    		ss << "Sun, ";
    	else if (now->tm_wday == 1)
    		ss << "Mon, ";
-
    	else if (now->tm_wday == 2)
    		ss << "Tue, ";
    	else if (now->tm_wday == 3)
@@ -106,16 +104,10 @@ void setDate(t_req &req)
 	req.header.Date = ss.str();
 }
 
-void setLastModified(t_req &req, int statusCode)
+void setLastModified(t_req &req)
 {
-	if (statusCode == 200 || statusCode == 201 || statusCode == 405 || statusCode == 404)
-	{
-		req.header.Last_modified = std::string("Last-Modified: ");
-
-		req.header.Last_modified.append(req.header.Date.substr(6));
-	}
-	else
-		req.header.Last_modified = std::string("\0");
+	req.header.Last_modified = std::string("Last-Modified: ");
+	req.header.Last_modified.append(req.header.Date.substr(6));
 }
 
 void setLocation(t_req &req, int statusCode)
@@ -178,6 +170,14 @@ void setContentLocation(t_req &req, int statusCode)
 			req.header.Content_Location.append("/error_pages/404.html");
 		}
 	}
+	else if (statusCode == 413)
+	{
+		req.header.Content_Location = std::string("Content-Location: ");
+		if (req.url == "/")
+		{
+			req.header.Content_Location.append("/error_pages/413.html");
+		}
+	}	
 	else
 	{
 		req.header.Content_Location = std::string("\0");
@@ -192,7 +192,7 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setContentLocation(req, statusCode);
 	setContentType(req);
 	setDate(req);
-	setLastModified(req, statusCode);
+	setLastModified(req);
 	setLocation(req, statusCode);
 	setRetryAfter(req, statusCode);
 	setServer(config, req);
@@ -203,72 +203,56 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 
 void concatenate_header( t_res &res, t_req &req)
 {
-
-	if (req.method == "GET" || req.method == "HEAD" || req.method == "POST" ||req.method == "PUT")
+	if (req.header.Content_Length != "\0")
 	{
-		//std::cout << "CONTENT LENGTH : " << req.header.Content_Length << std::endl;
-		if (req.header.Content_Length != "\0")
-		{
-			// std::cout << " STATUS CODE IN HEADER " << res.statusCode << std::endl;
-			if (res.statusCode == 200)
-				res.response_header.append("HTTP/1.1 200 OK");
-			else if (res.statusCode == 405)
-				res.response_header.append("HTTP/1.1 405 ");
-			else if (res.statusCode == 404)
-				res.response_header.append("HTTP/1.1 404 ");
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Content_Length);
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Content_Location);
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Content_Type);
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Date);
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Last_modified);
-			res.response_header.append("\r\n");
-		}
-		if (req.header.Content_Length != "\0")
-		{
-			res.response_header.append(req.header.Server);
-			if (res.statusCode == 200)
-				res.response_header.append("\r\n\r\n");
-			else
-				res.response_header.append("\r\n\r\n");
-		}
+		if (res.statusCode == 200)
+			res.response_header.append("HTTP/1.1 200 OK");
+		else if (res.statusCode == 405)
+			res.response_header.append("HTTP/1.1 405 ");
+		else if (res.statusCode == 404)
+			res.response_header.append("HTTP/1.1 404 ");
+		else if (res.statusCode == 413)
+			res.response_header.append("HTTP/1.1 413 ");	
+		res.response_header.append("\r\n");
 	}
-	// else if (req.method == "PUT" /*|| req.method == "POST"*/)
-	// {
-	// 	res.response_header.append(req.header.Location);
-	// 	res.response_header.append("\n");
-
-	// }
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Content_Length);
+		res.response_header.append("\r\n");
+	}
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Content_Location);
+		res.response_header.append("\r\n");
+	}
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Content_Type);
+		res.response_header.append("\r\n");
+	}
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Date);
+		res.response_header.append("\r\n");
+	}
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Last_modified);
+		res.response_header.append("\r\n");
+	}
+	if (req.header.Content_Length != "\0")
+	{
+		res.response_header.append(req.header.Server);
+		res.response_header.append("\r\n\r\n");
+	}
 }
 
 
 void request_get(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream ifs(req.url.c_str()); //get the input file stream with the requested url
-
-	// P(req.url);
+    std::ifstream ifs(req.url.c_str()); 
 	if (req.error == 404 )
 	{
-		// std::cout << " ON pASSE ICI " << req.error << std::endl;
 		std::ifstream ifs("error_pages/404.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
@@ -302,62 +286,38 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
-	//std::cout << "Content Lengtht : " << req.body_content << std::endl;
-
     if (req.body_content.size() == 0)
     {
-        set_response_data(res, config, req, 405);
+	    req.url = start_cgi(req, config);
+		set_response_data(res, config, req, 200); 
         return ;
     }
-	//std::cout<< "je suis la aaaaaaa"<<std::endl; //TEEEEEEEEEESSSSSTTTTTT
     if (req.location.cgi.active)
     {
-        req.url = start_cgi(req, config);
-		std::ifstream ifs(req.url.c_str());
-		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-		// std::cout<< req.url << "iciiiiii" <<std::endl;
+	    req.url = start_cgi(req, config);
+		res.payload.append(req.body_content);
 		set_response_data(res, config, req, 200);
     }
-    else if (is_exist(req.location.cgi.SCRIPT_NAME))
-    	set_response_data(res, config, req, 200);
-    else
-    {
-        std::ifstream ifs(req.url.c_str());
-        set_response_data(res, config, req, 200);
-    }
+    if (is_exist(req.location.cgi.SCRIPT_NAME))
+    {	
+		set_response_data(res, config, req, 200);
+	}
 }
 
 void request_put(t_res &res, t_config &config, t_req &req)
 {
-	std::cout<< "laaaa"<<std::endl;
-
-    // if (is_exist(req.url) != true)
-    // {
-		//std::cout<< "laaaa"<<std::endl;
-        set_response_data(res, config, req, 200);
-		int ind = 0;
-		for (std::string::size_type i = req.url.size(); i > 0; i--)
-		{
-			if (req.url[i] == '/')
-				break;
-        	ind++;
-		}
-		//std::cout << " IND " << ind << std::endl;
-		//get the correct filename for the file "file_should_exist_after"
-		std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
-		// std::cout << " FILENAME " << filename << std::endl;
-		// std::cout << " ROOT " << config.root << std::endl;
-		std::ofstream newfile(filename.c_str());
-		// addd content of client to new file
-		newfile << req.body_content << std::endl;
-		newfile.close();
-    // }
-    // else
-    // {
-    //     set_response_data(res, config, req, 200);
-    //     std::ofstream ifs(req.url.c_str());
-    //     ifs << req.body_content << std::endl;
-    // }
+	set_response_data(res, config, req, 200);
+	int ind = 0;
+	for (std::string::size_type i = req.url.size(); i > 0; i--)
+	{
+		if (req.url[i] == '/')
+			break;
+		ind++;
+	}
+	std::string filename = req.url.substr((req.url.size() - --ind) , req.url.size());
+	std::ofstream newfile(filename.c_str());
+	newfile << req.body_content << std::endl;
+	newfile.close();
 }
 
 void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
@@ -365,22 +325,13 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
     int cl;
     cl = client->first;
     client++;
-
     server.req.erase(cl);
 }
-
-// t_res to_determine_method(t_res &res, t_config &config, t_req &req)
-// {
-//
-// }
 
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
     t_res res;
 
-	// std::cout<< "envoi \n" << config.serv.req[client->first].full_req << "|| \n" <<std::endl;
-    // std::cout << "\n-----------------" <<req.error << " error recu \n" <<std::endl;
-	std::cout << "CODE : " << req.error << "\n"<< std::endl;
     if (req.error != 0)
     {
         if (req.error == 400)
@@ -390,8 +341,6 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             set_response_data(res, config, req, 400);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-			// config.serv.res[client->first].append(res.payload);
-			// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.error == 404)
         {
@@ -420,25 +369,21 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
     		config.serv.res[client->first].append(res.payload);
-    		config.serv.res[client->first].append("\r\n\r\n");
         }
-        else if (req.method == "HEAD")
+        else if (req.method == "HEAD" || (req.method == "POST" && config.serv.req[client->first].location.body_size_limit > 0))
         {
             request_heads(res, config, req);
             res.payload = std::string("\0");
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
     		config.serv.res[client->first].append(res.payload);
-    		// config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.method == "POST")
         {
             request_post(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-			// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
     		config.serv.res[client->first].append(res.payload);
-    		config.serv.res[client->first].append("\r\n\r\n");
         }
         else if (req.method == "PUT")
         {
@@ -446,13 +391,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
         	config.serv.res[client->first].append(res.payload);
-        	// config.serv.res[client->first].append("\r\n\r\n");
         }
-		// std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-        // to_determine_method(res, config, req);
     }
-	//std::cout  << " RESPONSEEEEE \n" << config.serv.res[client->first] << std::endl;
-	std::cout  << " CONTENT_LENGTH \n" << config.serv.req[client->first].location.cgi.CONTENT_LENGTH << std::endl;
 	erras_req_client(client, config.serv);
-
 }

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/08 18:21:55 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 11:59:22 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 {
 	dest.location_match = copy.location_match;
 	dest.optional_modifier = copy.optional_modifier;
-	//dest.http_methods = copy.http_methods;
-
 	dest.http_methods.clear();
 	std::list<std::string>::iterator itme = copy.http_methods.begin();
 	while (itme != copy.http_methods.end())
@@ -128,7 +126,6 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 					req.url.append("/");
 					if (check_and_add_index(new_list, req))
 						return (true);
-					// P(req.url); // TEEEESSTTEEEE
 				}
 			}
 			++it;
@@ -152,7 +149,7 @@ bool	find_dir(t_req &req)
 	std::string				no_file_path = req.url;
 	struct dirent			*file;
 	DIR						*directory;
-	if (no_file_path.empty() || (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] == '/')) //if no file specified and no index return 404
+	if (no_file_path.empty() || (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] == '/'))
 	{
 		if (req.location.index.empty())
 		{
@@ -176,7 +173,6 @@ bool	find_dir(t_req &req)
 		return (false);
 	}
 	return (true);
-	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
 
 /*
@@ -195,7 +191,6 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 	if (!new_url.empty() && new_url[0] == '/')
 		new_url.erase(0, 1);
 	new_url.insert(0, conf.root);
-	// std::cout << "Local path" << new_url << std::endl;
 	return (new_url);
 }
 
@@ -257,7 +252,7 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 /*
 ** check in all the location if the end of the req.url is the same as the extension location
 ** If we found a correct extension we check if the method is correct.
-** then we copy the loctation and 
+** then we copy the loctation and put the path for create a local url
 */
 bool	get_ext_loc(t_req &req, t_config &conf, int found)
 {
@@ -269,10 +264,8 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 	{
 		if (!(it->optional_modifier.empty()))
 		{
-			// std::cout << "FOUND extention" << std::endl; //TEEESSTSSS
 			if (find_extention(req.url, it->location_match, it->http_methods, req.method))
 			{
-				//req_loc.location_match = req.location.location_match;
 				found += 1;
 				break ;
 			}
@@ -287,9 +280,6 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 			req_loc.directory_files_search = req.location.directory_files_search;
 		req.location = req_loc;
 		return (true);
-		//std::cout << req.url << std::endl;
-		//req.url = create_local_path(req, req.location, conf);
-		//std::cout << req.url << std::endl;
 	}
 	return (false);
 }
@@ -308,18 +298,15 @@ void	get_req_location(t_req &req, t_config &conf)
 	while (it != conf.location.end() && !found)
 	{
 		if (find_directory(req.url, it->location_match))
-		{
-			// std::cout << "FOUND" << std::endl; //TEEESSTSSS
 			found = 1;
-		}
 		if (!found)
 			++it;
 	}
 	if (!found)
 	{
 		req.error = 404;
-		P("Directory not found"); //Indications TETS
-		return ; // check retourner code erreur ou jsp
+		P("Directory not found");
+		return ;
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
@@ -327,7 +314,16 @@ void	get_req_location(t_req &req, t_config &conf)
 	if (req.method == "PUT")
 		return ;
 	req.url = create_local_path(req, req.location, conf);
-	//get_ext_loc(req, conf, found);
 	if (!find_dir(req))
+<<<<<<< HEAD
 		P("File not found");
 }
+=======
+	{
+		if (req.method == "POST")
+			req.error = 0;
+		else
+			P("File not found");
+	}
+}
+>>>>>>> elias_work

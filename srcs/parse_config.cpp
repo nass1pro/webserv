@@ -6,17 +6,12 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/02 19:00:12 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/09 18:39:41 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
-
-/*
-** TODO :
-** Check si les champs sont sensibles à la casse
-*/
 
 /*
 ** put the string contain in the first place in the reader (only if reader size == 1)
@@ -144,7 +139,6 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 */
 void	init_location(t_config &conf, t_loc &loc)
 {
-    //loc.directory_files_search = conf.root;
 	loc.body_size_limit = conf.body_size_limit;
 }
 
@@ -163,7 +157,6 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 	tmp.pop_front();
 	tmp.pop_back();
 	loc.location_match = tmp.back();
-	//cut_path(loc.location_match, c.root);
 	if (tmp.size() == 2)
 		loc.optional_modifier = tmp.front();
 	while (std::getline(fd, reader))
@@ -219,8 +212,7 @@ void	init_config(t_config &conf)
 	conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
 	conf.root = "frontend/";
-	//conf.index.push_back("index.html");
-	conf.body_size_limit = 1;
+	conf.body_size_limit = 0;
 	conf.default_server = false;
 }
 
@@ -246,10 +238,7 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		else if (find_location(reader))
 			parse_location(fd, c, reader);
 		else if (find_config_elem(tmp, "root"))
-		{
 			conf_get_str(c.root, tmp);
-			//cut_path(c.root, ""); //check si "" est ok
-		}
 		else if (find_config_elem(tmp, "host"))
 			conf_get_str(c.host, tmp);
 		else if (find_config_elem(tmp, "port"))

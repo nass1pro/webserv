@@ -6,17 +6,12 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/08 14:19:11 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 11:59:16 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
-
-/*
-** TODO :
-**
-*/
 
 /*
 ** Return the index where the body starts in the full request.
@@ -138,12 +133,13 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			split_fields(req.header.User_Agent, lines.front(), "user-agent: ");
 		else if (find_field_name(lines.front(), "www-authenticate: "))
 			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate: ");
-		// else
-			// std::cout << "Not implemented" << std::endl; // A voir comment gérér les autres cas
+		else if (find_field_name(lines.front(), "x-secret"))
+		{
+			std::cout << "ON A TROUVE UN SECret DANS lA REQqqq" << std::endl;
+			req.header.Secret_req.push_back(lines.front());
+		}
 		lines.pop_front();
 	}
-	//req.header = h;
-	//return (h);
 }
 
 /*
@@ -278,30 +274,23 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	std::list<std::string> list_lines;
 
 	init_request(conf.serv.req[client->first]);
-	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first]/*.full_req*/)) == -1)
+	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
-		//req.error = 400;
-		// std::cout << "Incomplete request." << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
-		/*if (conf.serv.req[client->first].body_content.empty() && conf.serv.req[client->first].method == "POST")
-		{
-			conf.serv.req[client->first].done = false;
-			return (ERROR);
-		}*/
-		//else
-			conf.serv.req[client->first].done = true;
+		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
-	get_body(conf.serv.req[client->first], conf);\
+	get_body(conf.serv.req[client->first], conf);
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
+		std::cout << "SIZE 0 DETECtED HERE :ooooooo" << std::endl;
 		req.error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
@@ -330,18 +319,13 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		}
 	}
 	parse_body(conf.serv.req[client->first].body_content);
-	//size_t size = 0;
-	//size = req.location.body_size_limit/*conf.body_size_limit*/ * (size_t)1001000;
-//	std::cout << "EST cE QUON A DES CGI PAR ICI ?????? --> " << req.location.cgi.SCRIPT_NAME << std::endl;
-//	std::cout << "EST cE QUON A DES CGI ACTIIIIIIVES PAR ICI ?????? --> " << req.location.cgi.active << std::endl;
-	//std::cout << req.body_content.size()  <<std::endl;
-	// if (req.body_content.size() > 10000000)
-	// 	req.error = 413;
-	// if (req.error != 0)
-	// {
-	// 	req.done = true;
-	// 	return (ERROR);
-	// }
-	//req.done = true;
+	if (conf.serv.req[client->first].location.body_size_limit > 0)
+	{
+		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
+		{
+			conf.serv.req[client->first].error = 413;
+			return (ERROR);
+		}
+	}
 	return (SUCCESS);
 }
