@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 18:39:43 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 14:43:04 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,14 +272,14 @@ void	parse_body(std::string &body)
 int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &conf)
 {
 	std::list<std::string> list_lines;
-
+	(void)req;
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
-	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, req.body_index), "\t\n\r\v\f");
+	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, conf.serv.req[client->first].body_index/*req.body_index*/), "\t\n\r\v\f");
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
 		conf.serv.req[client->first].done = true;
@@ -290,8 +290,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		std::cout << "SIZE 0 DETECtED HERE :ooooooo" << std::endl;
-		req.error = 405;
+		/*req*/conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
