@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 19:35:21 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/10 12:39:12 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,9 @@ void setContentLocation(t_req &req, int statusCode)
 
 void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode)
 {
+	std::cout << "\n~~~~~~~~~~~~~ SET REPONSE DATATATATATATATATA ~~~~~~~~~~~~~~\n" << std::endl;	
+	std::cout << "\n~~~~~~~~~~~~~ STATUS CODE : " << statusCode <<  "~~~~~~~~~~~~~~\n" << std::endl;	
+	
 	setAllow(req, statusCode);
 	setContentLanguage( req);
 	setContentLength(res, req);
@@ -208,7 +211,11 @@ void concatenate_header( t_res &res, t_req &req)
 		if (res.statusCode == 200)
 			res.response_header.append("HTTP/1.1 200 OK");
 		else if (res.statusCode == 405)
+		{
 			res.response_header.append("HTTP/1.1 405 ");
+			res.response_header.append("\r\n");
+			res.response_header.append(req.header.Allow);
+		}
 		else if (res.statusCode == 404)
 			res.response_header.append("HTTP/1.1 404 ");
 		else if (res.statusCode == 413)
@@ -270,6 +277,7 @@ void request_get(t_res &res, t_config &config, t_req &req)
 
 void request_heads(t_res &res, t_config &config, t_req &req)
 {
+	std::cout << "\n~~~~~~~~~~~~~ ON PASSE PAR HEADDDDDDDD ~~~~~~~~~~~~~~\n" << std::endl;	
 	if (req.url == "frontend/index.html")
 	{
 		std::ifstream ifs("error_pages/405.html");
@@ -331,10 +339,12 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
     t_res res;
-
+	// std::cout << "RESPONSE  |\n" << "\n| RESPONSE" << std::endl;
     if (req.error != 0)
     {
-        if (req.error == 400)
+		// std::cout << "RESPONSE  |\n" <<  " WHYYYYYYYYYY " << "\n| RESPONSE" << std::endl;
+        
+		if (req.error == 400)
         {
 			std::ifstream ifs("error_pages/404.html");
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
@@ -360,10 +370,12 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
         }
+		std::cout << "RESPONSE  ////////////|\n" << config.serv.res[client->first] <<  "\n|////////////// RESPONSE" << std::endl;
     }
     else
     {
-        if (req.method == "GET")
+		std::cout << "\nRESPONSE  ////////////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~////////////// RESPONSE\n" << std::endl;
+		if (req.method == "GET")
         {
             request_get(res, config, req);
             concatenate_header(res, req);
