@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/09 18:41:21 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/10 12:27:05 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,9 +304,15 @@ void	get_req_location(t_req &req, t_config &conf)
 	}
 	if (!found)
 	{
-		req.error = 404;
-		P("Directory not found");
-		return ;
+		it = conf.location.begin();
+		while (it != conf.location.end() && it->location_match != "/")
+			++it;
+		if (it == conf.location.end())
+		{
+			req.error = 404;
+			P("Directory not found");
+			return ;
+		}
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
