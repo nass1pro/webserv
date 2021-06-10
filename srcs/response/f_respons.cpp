@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/10 12:39:12 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/10 14:40:59 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ void setServer(t_config &config, t_req &req)
 
 void setWWWAuthenticate(t_req &req, int statusCode)
 {
-	if (statusCode == 401)
+	if (statusCode == 400)
 		req.header.WWW_Authenticate = std::string("WWW-Authenticate: something");
 	else
 		req.header.WWW_Authenticate = std::string("\0");
@@ -157,26 +157,22 @@ void setContentLocation(t_req &req, int statusCode)
 	else if (statusCode == 405)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		if (req.url == "/")
-		{
-			req.header.Content_Location.append("/error_pages/405.html");
-		}
+		req.header.Content_Location.append("/error_pages/405.html");
 	}
+	else if (statusCode == 400)
+	{
+		req.header.Content_Location = std::string("Content-Location: ");
+		req.header.Content_Location.append("/error_pages/400.html");
+	}	
 	else if (statusCode == 404)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		if (req.url == "/")
-		{
-			req.header.Content_Location.append("/error_pages/404.html");
-		}
+		req.header.Content_Location.append("/error_pages/404.html");
 	}
 	else if (statusCode == 413)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		if (req.url == "/")
-		{
-			req.header.Content_Location.append("/error_pages/413.html");
-		}
+		req.header.Content_Location.append("/error_pages/413.html");
 	}	
 	else
 	{
@@ -185,10 +181,7 @@ void setContentLocation(t_req &req, int statusCode)
 }
 
 void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode)
-{
-	std::cout << "\n~~~~~~~~~~~~~ SET REPONSE DATATATATATATATATA ~~~~~~~~~~~~~~\n" << std::endl;	
-	std::cout << "\n~~~~~~~~~~~~~ STATUS CODE : " << statusCode <<  "~~~~~~~~~~~~~~\n" << std::endl;	
-	
+{	
 	setAllow(req, statusCode);
 	setContentLanguage( req);
 	setContentLength(res, req);
@@ -202,12 +195,15 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setTransferEncoding(req);
 	setWWWAuthenticate(req, statusCode);
 	res.statusCode = statusCode;
+	std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE : " << res.statusCode << "~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+
 }
 
 void concatenate_header( t_res &res, t_req &req)
 {
 	if (req.header.Content_Length != "\0")
 	{
+		std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE IN CONCATE HEADER: " << res.statusCode << "~~~~~~~\n" << std::endl;
 		if (res.statusCode == 200)
 			res.response_header.append("HTTP/1.1 200 OK");
 		else if (res.statusCode == 405)
@@ -216,6 +212,8 @@ void concatenate_header( t_res &res, t_req &req)
 			res.response_header.append("\r\n");
 			res.response_header.append(req.header.Allow);
 		}
+		else if (res.statusCode == 400)
+			res.response_header.append("HTTP/1.1 400 ");
 		else if (res.statusCode == 404)
 			res.response_header.append("HTTP/1.1 404 ");
 		else if (res.statusCode == 413)
@@ -277,7 +275,6 @@ void request_get(t_res &res, t_config &config, t_req &req)
 
 void request_heads(t_res &res, t_config &config, t_req &req)
 {
-	std::cout << "\n~~~~~~~~~~~~~ ON PASSE PAR HEADDDDDDDD ~~~~~~~~~~~~~~\n" << std::endl;	
 	if (req.url == "frontend/index.html")
 	{
 		std::ifstream ifs("error_pages/405.html");
@@ -339,14 +336,18 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
     t_res res;
-	// std::cout << "RESPONSE  |\n" << "\n| RESPONSE" << std::endl;
+
     if (req.error != 0)
     {
-		// std::cout << "RESPONSE  |\n" <<  " WHYYYYYYYYYY " << "\n| RESPONSE" << std::endl;
-        
+		std::cout << "\n ~~~~~~~~~~~~~~~~~~~~~~ ICI ~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+		std::cout << "\n ~~~~~~~~ REQ ERROR : " << req.error << "~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+
 		if (req.error == 400)
         {
-			std::ifstream ifs("error_pages/404.html");
+			
+			std::cout << "\n ~~~~~~~~~~~~~~ 400 ~~~~~~~~~~~~~~~\n" << std::endl;			
+    		std::cout << "\nRESPONSE BEFORE 40000000000 ||||||\n" << config.serv.res[client->first] << "\n||||||| RESPONSE before 4000000000\n" << std::endl;
+			std::ifstream ifs("error_pages/400.html");
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
             set_response_data(res, config, req, 400);
     		concatenate_header(res, req);
@@ -354,15 +355,20 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         }
         else if (req.error == 404)
         {
-            set_response_data(res, config, req, 404);
+				std::cout << "\n ~~~~~~~~~~~~~~ 404 ~~~~~~~~~~~~~~~\n" << std::endl;			
+            
+			set_response_data(res, config, req, 404);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
         }
         else if (req.error == 405)
         {
+				std::cout << "\n ~~~~~~~~~~~~~~ 405 ~~~~~~~~~~~~~~~\n" << std::endl;			
+
             set_response_data(res, config, req, 405);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
+			 std::cout << "\nJUST AFTER 405 //////////////////////////////////// JUST AFTER 405\n" << std::endl;
         }
         else if (req.error == 413)
         {
@@ -370,11 +376,11 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
         }
-		std::cout << "RESPONSE  ////////////|\n" << config.serv.res[client->first] <<  "\n|////////////// RESPONSE" << std::endl;
-    }
+    	std::cout << "\nRESPONSE ||||||||||||||||||||||||||||||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||||||||||||||||||||||||||| RESPONSE\n" << std::endl;
+	}
     else
     {
-		std::cout << "\nRESPONSE  ////////////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~////////////// RESPONSE\n" << std::endl;
+		std::cout << "\n ~~~~~~~~~~~~~~~~~~~~~~ PASPAPSPAPS ICI ~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;				
 		if (req.method == "GET")
         {
             request_get(res, config, req);
@@ -389,7 +395,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
     		config.serv.res[client->first].append(res.payload);
-        }
+			std::cout << "\nJUST AFTER HEADDDDDDD ///////////////////\n" << config.serv.res[client->first] << "\n///////////////// JUST AFTER HEADDDDDDDDD\n" << std::endl;
+        
+		}
         else if (req.method == "POST")
         {
             request_post(res, config, req);
