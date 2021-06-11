@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/10 20:29:37 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/11 13:26:19 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,10 +262,10 @@ void request_get(t_res &res, t_config &config, t_req &req)
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
 	}
-    // if (req.location.cgi.active)
-    // {
-    //     req.url = start_cgi(req, config);
-    // }
+    if (req.location.cgi.active)
+    {
+        req.url = start_cgi(req, config);
+    }
 	else
     {
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
