@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 12:12:11 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/11 10:39:33 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,14 +127,21 @@ void            launche_server(std::list<t_config> &conf)
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
+    int ret;
 
     if (ac < 2)
     {
         std::cout << "ERROR : file config needed"<< std::endl;
         exit(1);
     }
-    if (parse_conf(av[1], conf) == -1)
+    if ((ret = parse_conf(av[1], conf)))
+    {
+        if (ret == 2)
+            std::cout << "Error: bad config file path." << std::endl;
+        else if (ret == ERROR)
+            std::cout << "Error: wrong syntax in config file." << std::endl;
         return 1;
+    }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
         // l->serv.req.resize(200);
