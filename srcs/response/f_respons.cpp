@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/10 19:56:01 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/11 13:32:14 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setTransferEncoding(req);
 	setWWWAuthenticate(req, statusCode);
 	res.statusCode = statusCode;
-	std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE : " << res.statusCode << "~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+	// std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE : " << res.statusCode << "~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
 
 }
 
@@ -203,7 +203,7 @@ void concatenate_header( t_res &res, t_req &req)
 {
 	if (req.header.Content_Length != "\0")
 	{
-		std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE IN CONCATE HEADER: " << res.statusCode << "~~~~~~~\n" << std::endl;
+		// std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE IN CONCATE HEADER: " << res.statusCode << "~~~~~~~\n" << std::endl;
 		if (res.statusCode == 200)
 			res.response_header.append("HTTP/1.1 200 OK");
 		else if (res.statusCode == 405)
@@ -262,10 +262,12 @@ void request_get(t_res &res, t_config &config, t_req &req)
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 404);
 	}
-    // if (req.location.cgi.active)
-    // {
-    //     req.url = start_cgi(req, config);
-    // }
+    if (req.location.cgi.active)
+    {
+        req.url = start_cgi(req, config);
+		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    	set_response_data(res, config, req, 200);
+    }
 	else
     {
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
@@ -339,6 +341,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
+	// std::cout << "ERROR ||||||||||||||||||||\n" << req.error << std::endl;
 	
     if (req.error != 0)
     {
@@ -364,29 +367,29 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             config.serv.res[client->first].append(res.response_header);
      		config.serv.res[client->first].append(res.payload);
 		}
-        else if (req.error == 405)
+        else if (req.error == 405 || req.error == 400)
         {
 			std::ifstream ifs(req.error_path);
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-     		config.serv.res[client->first].append(res.payload);		    
-			set_response_data(res, config, req, 405);
+     		set_response_data(res, config, req, 405);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-				std::cout << "PAYLOAD 405 :\n" << res.payload << std::endl;
+			config.serv.res[client->first].append(res.payload);		   
+				// std::cout << "PAYLOAD 405 :\n" << res.payload << std::endl;
         }
         else if (req.error == 413)
         {
 
-            std::cout << "ERROR PATH 413 :\n" << req.error_path << "|||| 404 :\n" << std::endl; 
+            // std::cout << "ERROR PATH 413 :\n" << req.error_path << "|||| 404 :\n" << std::endl; 
 			std::ifstream ifs(req.error_path);
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-     		config.serv.res[client->first].append(res.payload);
 			set_response_data(res, config, req, 413);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-        				std::cout << "PAYLOAD 413 :\n" << res.payload << std::endl;
+     		config.serv.res[client->first].append(res.payload);
+        				// std::cout << "PAYLOAD 413 :\n" << res.payload << std::endl;
 		}
-			std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
+			// std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
 	}
     else
     {
@@ -421,7 +424,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             config.serv.res[client->first].append(res.response_header);
         	config.serv.res[client->first].append(res.payload);
         }
-    	std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
+    	// std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
 	}
 
 	erras_req_client(client, config.serv, res);
