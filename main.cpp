@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/09 12:12:11 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/13 15:36:44 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void read_socket(t_config &conf, t_active &active)
             parse_request( request ,request->second, conf);
             if (request->second.done == true)
             {
+                    // std::cout << "---------> " << request->second.full_req << std::endl;        
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
             }
            	else
