@@ -15,7 +15,7 @@ SRC = main.cpp srcs/parse_config.cpp srcs/request.cpp srcs/server.cpp srcs/utils
 		srcs/ft_itoa.cpp
 
 CC = clang++
-CCFLAGS = -Wall -Wextra -Werror -std=c++98
+CCFLAGS = -Wall -Wextra -Werror -std=c++11
 
 NAME = webserv
 RM = rm -rf
