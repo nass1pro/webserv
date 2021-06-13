@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 16:37:07 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/06/13 16:56:05 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_secret(std::string const &secret, std::string &env_secret)
 {
 	size_t i = 0;
 	size_t len = secret.size();
-	
+
 	env_secret = "HTTP_";
 	while (i < len)
 	{
@@ -136,7 +136,7 @@ static int find_first_two_line_returns(std::string const &req)
 	follow = false;
 	if (req.size() == 0)
 		return -1; //Returning error in this case does not seem correct, so return not ready, comes from recv fail
-	
+
 	for (unsigned int i = 0; i < req.size() ; i++)
 	{
 		if (req[i] == '\n' && follow == true)
@@ -214,7 +214,7 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
 		}
 		for (size_t i = 0; i < parameter.size() + 1; i++)
 		{
-			std::string e1 = "cgi_tester";
+			std::string e1 = "ubuntu_cgi_tester";
 			std::string e2 = "./frontend/YoupiBanane/youpi.bla";
 			tab_execve[0] = (char*)e1.c_str();
 			tab_execve[1] = (char*)e2.c_str();
@@ -231,13 +231,13 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
 		}
 	}
 	else
-	{  
+	{
 		close(pp[0]);
 		write(pp[1], req.body_content.c_str(), req.body_content.size());
 		close(pp[1]);
 		waitpid(pid, 0, 0);
 	}
-	
+
 	return true;
 }
 
@@ -276,7 +276,7 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
 //         {
 //         	if (i == 1)
 // 			{
-// 				parameter[i].insert(0, "./");					
+// 				parameter[i].insert(0, "./");
 // 			}
 // 		    tab_execve[i] = (char*)parameter[i].c_str();
 
@@ -327,9 +327,9 @@ std::string start_cgi(t_req &req, t_config &conf)
 		close(fd_upload);
 		return "None";
 	}
-	
+
 	close(fd_upload);
-	
+
 	// if (req.location.cgi.SCRIPT_NAME != std::string("None") && file_exists(req.location.cgi.SCRIPT_NAME))
 	//    std::cout<<req.location.cgi.SCRIPT_NAME<<std::endl;
 	// if (req.location.cgi.SCRIPT_NAME.size() && is_exist(req.location.cgi.SCRIPT_NAME))
