@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/10 14:43:04 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/13 19:21:30 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		get_body_index(t_req &req)
 	size_t i = 0;
 	size_t size = req.full_req.size();
 
-	if (size == 0)
+	if (/*size < 2*/  size == 0)
 		return (-1);
 	while (i < size)
 	{
@@ -179,12 +179,14 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
+		std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
 	split = split_in_list(line, " ");
 	if (split.size() != 3)
 	{
+		std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
@@ -283,6 +285,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
 		conf.serv.req[client->first].done = true;
+		// conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
