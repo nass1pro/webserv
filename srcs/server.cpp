@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/19 19:34:24 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/13 12:48:17 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 #include "../include/server.hpp"
+#include "../include/utils.hpp"
 
 
 void setup_server(t_config &conf)
@@ -44,7 +45,7 @@ void setup_server(t_config &conf)
     conf.serv.address.sin_addr.s_addr = inet_addr(conf.host.c_str());
     try
     {
-        conf.serv.address.sin_port = htons(std::stoi(conf.port.front()));
+        conf.serv.address.sin_port = htons(/*std::atoi(conf.port.front().c_str())*/std::stoi(conf.port.front()));
     }
     catch(std::exception &e)
     {
@@ -103,17 +104,34 @@ void    client_restart(t_server &server, unsigned int i)
 }
 
 
+// void set_socket(t_server &server, t_active &active)
+// {
+//     FD_SET(server.socket_server, &active.read);
+//     FD_SET(server.socket_server, &active.write);
+
+//     for(unsigned int i = 0; i < server.fd_max; i++)
+//     {
+//         FD_SET(server.client[i], &active.read);
+//         if(server.res.find(server.client[i]) != server.res.end())
+//         {
+//             FD_SET(server.client[i], &active.write);
+//         }
+//     }
+// }
+
 void set_socket(t_server &server, t_active &active)
 {
     FD_SET(server.socket_server, &active.read);
     FD_SET(server.socket_server, &active.write);
-
     for(unsigned int i = 0; i < server.fd_max; i++)
     {
-        FD_SET(server.client[i], &active.read);
-        if(server.res.find(server.client[i]) != server.res.end())
+        if (server.client[i] > 0)
         {
-            FD_SET(server.client[i], &active.write);
+            FD_SET(server.client[i], &active.read);
+            if(server.res.find(server.client[i]) != server.res.end())
+            {
+                FD_SET(server.client[i], &active.write);
+            }
         }
     }
 }
@@ -173,7 +191,7 @@ void accept_connection(t_server &server)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SETFL, SO_NOSIGPIPE);
+    fcntl(server.socket_connection, F_SETFL, /*MSG_NOSIGNAL*/SO_NOSIGPIPE);
     for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)

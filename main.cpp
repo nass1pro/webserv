@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/28 17:56:44 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:36:44 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     server_init_socket(conf, active);
     if ((error = select(FD_SETSIZE, &active.read, &active.write, NULL,&timeout)) == -1)
     {
-        std::cout << "Error: select failed" << std::endl;
+        // std::cout << "Error: select failed" << std::endl;
         detecte_connection( conf, active);
     }
     if (error == 0)
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -72,9 +72,11 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            parse_request(request->second, conf);
+            // std::cout << "---------> " << request->second.full_req << std::endl;
+            parse_request( request ,request->second, conf);
             if (request->second.done == true)
             {
+                    // std::cout << "---------> " << request->second.full_req << std::endl;        
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
             }
            	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 11:17:38 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/25 14:01:11 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:28:02 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "config.hpp"
 # include "utils.hpp"
-
+# include <sys/wait.h>
 
 void        set_env(std::string var, std::string equal_to, std::vector<std::string> &env);
 void        set_env_vector(t_cgi const& cgi, std::vector<std::string> &env);

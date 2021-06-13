@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/28 19:00:28 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/10 12:27:05 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,27 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 {
 	dest.location_match = copy.location_match;
 	dest.optional_modifier = copy.optional_modifier;
-	dest.http_methods = copy.http_methods;
+	dest.http_methods.clear();
+	std::list<std::string>::iterator itme = copy.http_methods.begin();
+	while (itme != copy.http_methods.end())
+	{
+		dest.http_methods.push_back(*itme);
+		++itme;
+	}
 	dest.body_size_limit = copy.body_size_limit;
 	dest.directory_files_search = copy.directory_files_search;
 	dest.directory_listing = copy.directory_listing;
 	dest.default_file_directory_request = copy.default_file_directory_request;
 	dest.upload_files_location = copy.upload_files_location;
+	
+	dest.index.clear();
 	std::list<std::string>::iterator it = copy.index.begin();
 	while (it != copy.index.end())
 	{
 		dest.index.push_back(*it);
 		++it;
 	}
+	dest.cgi.active = copy.cgi.active;
 	dest.cgi.AUTH_TYPE = copy.cgi.AUTH_TYPE;
 	dest.cgi.CONTENT_LENGTH = copy.cgi.CONTENT_LENGTH;
 	dest.cgi.CONTENT_TYPE = copy.cgi.CONTENT_TYPE;
@@ -117,7 +126,6 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 					req.url.append("/");
 					if (check_and_add_index(new_list, req))
 						return (true);
-					P(req.url); // TEEEESSTTEEEE
 				}
 			}
 			++it;
@@ -141,7 +149,7 @@ bool	find_dir(t_req &req)
 	std::string				no_file_path = req.url;
 	struct dirent			*file;
 	DIR						*directory;
-	if (no_file_path.empty() || (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] == '/')) //if no file specified and no index return 404
+	if (no_file_path.empty() || (!no_file_path.empty() && no_file_path[no_file_path.size() - 1] == '/'))
 	{
 		if (req.location.index.empty())
 		{
@@ -165,8 +173,8 @@ bool	find_dir(t_req &req)
 		return (false);
 	}
 	return (true);
-	/////////////////REGARDER SI LES POINTEURS FILES ETS CA SE MALLOC ET LES FREE ??
 }
+
 /*
 ** Create a local path with root etc
 */
@@ -214,6 +222,68 @@ bool	find_directory(std::string &path, std::string &dir)
 	}
 	return (false);
 }
+
+/*
+**  Find if the path have a specific extention location
+*/
+bool	find_extention(std::string &url_path, std::string &extention_to_find, std::list<std::string> &methods, std::string &req_method)
+{
+	std::string tmp;
+	std::list<std::string>::iterator it;
+
+	if (url_path.size() >= extention_to_find.size())
+	{
+		tmp = url_path.substr(url_path.size() - extention_to_find.size(), url_path.size());
+		if (tmp == extention_to_find)
+		{
+			it = methods.begin();
+			while (it != methods.end())
+			{
+				if (req_method == *it)
+					return (true);
+				++it;
+			}
+			
+		}
+	}
+	return (false);
+}
+
+/*
+** check in all the location if the end of the req.url is the same as the extension location
+** If we found a correct extension we check if the method is correct.
+** then we copy the loctation and put the path for create a local url
+*/
+bool	get_ext_loc(t_req &req, t_config &conf, int found)
+{
+	std::list<t_loc>::iterator	it;
+	t_loc						req_loc;
+
+	it = conf.location.begin();
+	while (it != conf.location.end() && found < 2)
+	{
+		if (!(it->optional_modifier.empty()))
+		{
+			if (find_extention(req.url, it->location_match, it->http_methods, req.method))
+			{
+				found += 1;
+				break ;
+			}
+		}
+		++it;
+	}
+	if (found == 2)
+	{
+		copy_loc(req_loc, *it);
+		req_loc.location_match = req.location.location_match;
+		if (req_loc.directory_files_search.empty())
+			req_loc.directory_files_search = req.location.directory_files_search;
+		req.location = req_loc;
+		return (true);
+	}
+	return (false);
+}
+
 /*
 ** find the location asked by de request
 */
@@ -228,22 +298,33 @@ void	get_req_location(t_req &req, t_config &conf)
 	while (it != conf.location.end() && !found)
 	{
 		if (find_directory(req.url, it->location_match))
-		{
-			std::cout << "FOUND" << std::endl; //TEEESSTSSS
 			found = 1;
-		}
 		if (!found)
 			++it;
 	}
 	if (!found)
 	{
-		req.error = 404;
-		P("Directory not found"); //Indications TETS
-		return ; // check retourner code erreur ou jsp
+		it = conf.location.begin();
+		while (it != conf.location.end() && it->location_match != "/")
+			++it;
+		if (it == conf.location.end())
+		{
+			req.error = 404;
+			P("Directory not found");
+			return ;
+		}
 	}
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
+	get_ext_loc(req, conf, found);
+	if (req.method == "PUT")
+		return ;
 	req.url = create_local_path(req, req.location, conf);
 	if (!find_dir(req))
-		P("File not found");
+	{
+		if (req.method == "POST")
+			req.error = 0;
+		else
+			P("File not found");
+	}
 }

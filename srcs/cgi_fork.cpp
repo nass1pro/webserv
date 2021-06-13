@@ -87,8 +87,8 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         {
             tab_execve[i] = (char*)parameter[i].c_str();
         }
-        tab_env[env.size()] = nullptr;
-		tab_execve[parameter.size()] = nullptr;
+        tab_env[env.size()] = null;
+		tab_execve[parameter.size()] = null;
 
         if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 		{

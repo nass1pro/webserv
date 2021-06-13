@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 17:12:13 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/05/27 16:48:09 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:33:57 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 void head_request(t_res &res, t_config &config, t_req &req)
 {
 
-	std::cout << " REQ URL : " << req.url << std::endl;
+	//std::cout << " REQ URL : " << req.url << std::endl;
 	if (req.url == "frontend/index.html")
 	{
 		std::ifstream ifs("error_pages/405.html");
@@ -238,7 +238,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
 	}
 	else //if (req.location->cgi.active == false)
     {
-        std::ifstream ifs(req.url); //get the input file stream with the requested url
+        std::ifstream ifs(req.url.c_str()); //get the input file stream with the requested url
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
    		set_response_data(res, config, req, 200);
 	}
@@ -246,7 +246,7 @@ void get_request(t_res &res, t_config &config, t_req &req)
 
 void file_create_or_replace(t_req &req)
 {
-	std::ofstream replace(req.url);
+	std::ofstream replace(req.url.c_str());
 	std::string buffer;
 	replace << buffer << "\n";
 	replace.close();
@@ -299,7 +299,7 @@ void post_request( t_res &res, t_config &config, t_req &req)
 	{
 		std::string potential_file_path = std::string(it->location_match);
 		potential_file_path.append(req.url);
-		std::ifstream potential_file(potential_file_path);
+		std::ifstream potential_file(potential_file_path.c_str());
 		if (potential_file.is_open() == false)
 		{
 			std::cout << " REQ>URL " << req.url << std::endl;
@@ -403,7 +403,7 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server)
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
 {
 	t_res res;
-	// std::cout << "METHOD : " << req.method << std::endl;
+	
 
 	// std::cout << " BODY CONTENT : " << req.body_content << std::endl;
    	if (req.error == 413)

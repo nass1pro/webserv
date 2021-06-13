@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/05/26 16:28:56 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/07 17:35:36 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 # include <ctype.h>
 # include <unistd.h> // pour utiliser sleep() -> debug, a virer plus tard peut être
 # include <fstream>
-#include <sys/types.h>
-#include <dirent.h>
+# include <sys/types.h>
+# include <dirent.h>
+# include <stdlib.h>
 # include "config.hpp"
 
 /*
@@ -56,12 +57,15 @@ int						split_fields_str(std::string &field, std::string &line, std::string con
 bool					find_field_name(std::string &line, std::string const &name);
 void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
+char					*ft_itoa(int nbr);
+bool                    is_white_space(char c);
+std::list<std::string>  split_body(std::string &str);
 
 /*
 ** Request
 */
 std::string ft_itoa(int n, std::string zebi);
-int		parse_request(t_req &req, t_config &conf);
+int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
 
 /*
 ** Parse url
