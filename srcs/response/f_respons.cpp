@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 16:42:44 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/13 16:52:46 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		}
 		if (req.error == 404)
         {
-			std::ifstream ifs(req.error_path);
+			std::ifstream ifs(req.error_path.c_str());
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 404);
     		concatenate_header(res, req);
@@ -375,7 +375,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         {
 			req.error_path = std::string("error_pages/405.html");
 			req.error = 400;
-			std::ifstream ifs(req.error_path);
+			std::ifstream ifs(req.error_path.c_str());
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
      		set_response_data(res, config, req, 405);
     		concatenate_header(res, req);
@@ -387,7 +387,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         {
 
             // std::cout << "ERROR PATH 413 :\n" << req.error_path << "|||| 404 :\n" << std::endl;
-			std::ifstream ifs(req.error_path);
+			std::ifstream ifs(req.error_path.c_str());
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 413);
     		concatenate_header(res, req);
