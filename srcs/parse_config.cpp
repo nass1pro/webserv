@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/11 17:02:03 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/14 15:10:29 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,14 +194,16 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			conf_get_str(loc.directory_listing, tmp);
 		else if (find_config_elem(tmp, "default_file_directory_request"))
 			conf_get_str(loc.default_file_directory_request, tmp);
-		else if (find_config_elem(tmp, "upload_files_location"))
+		else if (find_config_elem(tmp, "file_upload_location"))
 			conf_get_str(loc.upload_files_location, tmp);
 		else if (find_config_elem(tmp, "fastcgi_param"))
 			parse_cgi(loc, tmp);
 		else
 		{
 			if (!find_comment(tmp))
+			{
 				return (ERROR);
+			}
 		}
 	}
 	if (brackets != 0)
@@ -291,7 +293,9 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		else if (find_location(reader))
 		{
 			if (parse_location(fd, c, reader))
+			{
 				return (ERROR);
+			}
 		}
 		else if (find_config_elem(tmp, "root"))
 			conf_get_str(c.root, tmp);
@@ -310,11 +314,15 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		else
 		{
 			if (!find_comment(tmp))
+			{
 				return (ERROR);
+			}
 		}
 	}
 	if (open_brackets != 0)
+	{
 		return (ERROR);
+	}
 	conf.insert(conf.end(), c);
 	if (!conf.empty())
 		conf.front().default_server = true;
