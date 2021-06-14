@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 16:56:05 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/14 14:22:26 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,126 +182,122 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 	fd.close();
 }
 
-bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const &env)
-{
-	pid_t pid;
-	int pp[2];
-	if (pipe(pp) == -1)
-	{
-		std::cout<< "ERROR: pipe"<<std::endl;
-		//500
-	}
-
-	if ((pid = fork()) == -1)
-	{
-		std::cout<< "ERROR: fork"<<std::endl;
-		return false;
-	}
-	if(!pid)
-	{
-		close(pp[1]);
-		dup2(pp[0], STDIN_FILENO);
-		dup2(fd_upload, STDOUT_FILENO);
-
-		std::vector<std::string> parameter;
-		init_execve_cgi(req, parameter);
-		char *tab_env[env.size() + 1];
-		char *tab_execve[parameter.size() + 1];
-
-		for (size_t i = 0; i < env.size(); i++)
-		{
-			tab_env[i] = (char*)env[i].c_str();
-		}
-		for (size_t i = 0; i < parameter.size() + 1; i++)
-		{
-			std::string e1 = "ubuntu_cgi_tester";
-			std::string e2 = "./frontend/YoupiBanane/youpi.bla";
-			tab_execve[0] = (char*)e1.c_str();
-			tab_execve[1] = (char*)e2.c_str();
-			tab_execve[2] = (char*)parameter[2].c_str();
-		}
-		tab_env[env.size()] = NULL;
-		tab_execve[parameter.size()] = NULL;
-
-		if (execve(tab_execve[0], tab_execve, tab_env) == -1)
-		{
-			std::cout<<"Error: execve cgi php"<< std::endl;
-			close(pp[0]);
-			exit(1);
-		}
-	}
-	else
-	{
-		close(pp[0]);
-		write(pp[1], req.body_content.c_str(), req.body_content.size());
-		close(pp[1]);
-		waitpid(pid, 0, 0);
-	}
-
-	return true;
-}
-
 // bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const &env)
 // {
-//     pid_t pid;
-//     int pp[2];
+// 	pid_t pid;
+// 	int pp[2];
+// 	if (pipe(pp) == -1)
+// 	{
+// 		std::cout<< "ERROR: pipe"<<std::endl;
+// 		//500
+// 	}
 
-//     if (pipe(pp) == -1)
-//     {
-//         std::cout<< "ERROR: pipe"<<std::endl;
-//         //500
-//     }
+// 	if ((pid = fork()) == -1)
+// 	{
+// 		std::cout<< "ERROR: fork"<<std::endl;
+// 		return false;
+// 	}
+// 	if(!pid)
+// 	{
+// 		close(pp[1]);
+// 		dup2(pp[0], STDIN_FILENO);
+// 		dup2(fd_upload, STDOUT_FILENO);
 
-//     if ((pid = fork()) == -1)
-//     {
-//         std::cout<< "ERROR: fork"<<std::endl;
-//         return false;
-//     }
+// 		std::vector<std::string> parameter;
+// 		init_execve_cgi(req, parameter);
+// 		char *tab_env[env.size() + 1];
+// 		char *tab_execve[parameter.size() + 1];
 
-//     if(!pid)
-//     {
-//         close(pp[1]);
-//         dup2(pp[0], STDIN_FILENO);
-//         dup2(fd_upload, STDOUT_FILENO);
-
-//         std::vector<std::string> parameter;
-//         init_execve_cgi(req, parameter);
-//         char *tab_env[env.size() + 1];
-//         char *tab_execve[parameter.size() + 1];
-//         for (size_t i = 0; i < env.size(); i++)
-//         {
-//             tab_env[i] = (char*)env[i].c_str();
-//         }
-//         for (size_t i = 0; i < parameter.size() + 1; i++)
-//         {
-//         	if (i == 1)
-// 			{
-// 				parameter[i].insert(0, "./");
-// 			}
-// 		    tab_execve[i] = (char*)parameter[i].c_str();
-
-// 			std::cout << " %%%%%%%%%%%%%%  TAB EXECVE : |" << tab_execve[i] << "|" << std::endl;
+// 		for (size_t i = 0; i < env.size(); i++)
+// 		{
+// 			tab_env[i] = (char*)env[i].c_str();
 // 		}
-//         tab_env[env.size()] = NULL;
+// 		for (size_t i = 0; i < parameter.size() + 1; i++)
+// 		{
+// 			std::string e1 = "cgi_tester";
+// 			std::string e2 = "./frontend/YoupiBanane/youpi.bla";
+// 			tab_execve[0] = (char*)e1.c_str();
+// 			tab_execve[1] = (char*)e2.c_str();
+// 			tab_execve[2] = (char*)parameter[2].c_str();
+// 		}
+// 		tab_env[env.size()] = NULL;
 // 		tab_execve[parameter.size()] = NULL;
 
-//         if (execve(tab_execve[0], tab_execve, tab_env) == -1)
+// 		if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 // 		{
 // 			std::cout<<"Error: execve cgi php"<< std::endl;
-// 			///
 // 			close(pp[0]);
 // 			exit(1);
 // 		}
-//     }
-//     else
-//     {
-//         close(pp[0]);
-//         write(pp[1], req.body_content.c_str(), req.body_content.size());
-//         close(pp[1]);
-//         waitpid(pid, 0, 0);
-//     }
-//     return true;
+// 	}
+// 	else
+// 	{
+// 		close(pp[0]);
+// 		write(pp[1], req.body_content.c_str(), req.body_content.size());
+// 		close(pp[1]);
+// 		waitpid(pid, 0, 0);
+// 	}
+
+// 	return true;
 // }
+
+bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const &env)
+{
+    pid_t pid;
+    int pp[2];
+
+    if (pipe(pp) == -1)
+    {
+        std::cout<< "ERROR: pipe"<<std::endl;
+        //500
+    }
+
+    if ((pid = fork()) == -1)
+    {
+        std::cout<< "ERROR: fork"<<std::endl;
+        return false;
+    }
+
+    if(!pid)
+    {
+        close(pp[1]);
+        dup2(pp[0], STDIN_FILENO);
+        dup2(fd_upload, STDOUT_FILENO);
+
+        std::vector<std::string> parameter;
+        init_execve_cgi(req, parameter);
+        char *tab_env[env.size() + 1];
+        char *tab_execve[parameter.size() + 1];
+        for (size_t i = 0; i < env.size(); i++)
+        {
+            tab_env[i] = (char*)env[i].c_str();
+        }
+        for (size_t i = 0; i < parameter.size() + 1; i++)
+        {
+		    tab_execve[i] = (char*)parameter[i].c_str();
+
+			// std::cout << " %%%%%%%%%%%%%%  TAB EXECVE : |" << tab_execve[i] << "|" << std::endl;
+		}
+        tab_env[env.size()] = NULL;
+		tab_execve[parameter.size()] = NULL;
+
+        if (execve(tab_execve[0], tab_execve, tab_env) == -1)
+		{
+			std::cout<<"Error: execve cgi php"<< std::endl;
+			///
+			close(pp[0]);
+			exit(1);
+		}
+    }
+    else
+    {
+        close(pp[0]);
+        write(pp[1], req.body_content.c_str(), req.body_content.size());
+        close(pp[1]);
+        waitpid(pid, 0, 0);
+    }
+    return true;
+}
 
 
 std::string start_cgi(t_req &req, t_config &conf)
@@ -310,7 +306,8 @@ std::string start_cgi(t_req &req, t_config &conf)
 	std::vector<std::string> env;
 	std::string ret;
 
-
+	// req.location.cgi.SCRIPT_NAME = “./” + req.location.cgi.SCRIPT_NAME;
+	req.location.cgi.SCRIPT_NAME.insert(0, "./");
 	// std::cout << "On passe aux CGI" << std::endl;
 	set_header_cgi(req.location.cgi, req, conf, env);
 	ret = req.url;
