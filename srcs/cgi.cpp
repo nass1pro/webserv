@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/14 14:58:13 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/14 15:00:34 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,8 +220,8 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
 			tab_execve[1] = (char*)e2.c_str();
 			tab_execve[2] = (char*)parameter[2].c_str();
 		}
-		tab_env[env.size()] = NULL;
-		tab_execve[parameter.size()] = NULL;
+		tab_env[env.size()] = nullptr;
+		tab_execve[parameter.size()] = nullptr;
 
 		if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 		{
