@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/11 11:15:36 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/06/11 17:02:03 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,12 +362,18 @@ int		parse_conf(std::string path, std::list<t_config> &conf)
 		if (!(ret = find_server(reader)))
 		{
 			if (parse_serv(fd, conf))
+			{
+				fd.close();
 				return (ERROR);
+			}
 		}
 		else
 		{
 			if (ret == -1)
+			{
+				fd.close();
 				return (ERROR);
+			}
 		}
 	}
 	fd.close();
