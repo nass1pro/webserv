@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/13 19:21:30 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/01 15:33:07 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,14 +179,14 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
-		std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
+		// std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
 	split = split_in_list(line, " ");
 	if (split.size() != 3)
 	{
-		std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
+		// std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}

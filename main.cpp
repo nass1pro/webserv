@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 19:17:31 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/02 17:17:51 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ void write_socket(t_server &server, t_active &active)
 {
     int message_len;
 
-    for (unsigned int  i = 0; i < server.fd_max; i++)
+    for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
+  	    	// std::cout << "\nRESPONSE IN WRITE |||||||||||||||||||||||||||\n" << server.res[server.client[i]] << "\n/|||||||||||||||||||||| RESPONSE IN WRITE" << std::endl;
             if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
             {
                 P("ERROR : send failed");
@@ -53,6 +54,8 @@ void write_socket(t_server &server, t_active &active)
             else if((size_t)message_len < server.res[server.client[i]].size())
             {
                 server.res[server.client[i]] = server.res[server.client[i]].substr(message_len, server.res[server.client[i]].size());
+                server.res[server.client[i]] = server.res[server.client[i]].substr(message_len, server.res[server.client[i]].size());
+            
             }
             else
             {
@@ -78,9 +81,10 @@ void read_socket(t_config &conf, t_active &active)
             {
                     // std::cout << "---------> " << request->second.full_req << std::endl;        
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
+    	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << conf.serv.res[request->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
             }
            	else
-			   request++;
+			    request++;
         }
     }
 }
@@ -100,7 +104,8 @@ void            launche_server(std::list<t_config> &conf)
                 while(server != conf.end())
                 {
                     read_socket(*server, active);
-                    write_socket((*server).serv, active);
+    	    	    // std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << conf.serv.res[request->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
+    	    	    write_socket((*server).serv, active);
                     server++;
                 }
                 server = conf.begin();

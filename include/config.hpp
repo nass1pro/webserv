@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/10 18:34:51 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/02 19:05:42 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <dirent.h>
 # include <unistd.h>
 # include <sys/socket.h>
+# include <sys/stat.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
 # include <sys/time.h>
