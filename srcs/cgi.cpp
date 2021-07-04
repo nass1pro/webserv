@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 19:43:45 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/04 14:27:20 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,12 @@ void set_env_vector(t_cgi const& cgi, std::vector<std::string> &env)
 
 void set_header_cgi(t_cgi &cgi, t_req &req, t_config &conf,std::vector<std::string> &env)
 {
-	cgi.CONTENT_LENGTH  = std::to_string(req.body_content.size());
+	cgi.CONTENT_LENGTH  = ft_to_string(req.body_content.size());
 	//std::cout<< req.body_content.size() << "req.body_content.size() "<< std::endl; //TEEEEEEEEEEESSSSSSTTTTTTTT
 	cgi.CONTENT_TYPE    = req.header.Content_Type;
 	cgi.PATH_INFO       = req.url;
 	cgi.PATH_TRANSLATED = req.url;
-	cgi.REMOTE_ADDR     = std::to_string(conf.serv.address.sin_addr.s_addr); // VIRER TO STRIng CPP 11 MAIS BLC poUR lES tESTS
+	cgi.REMOTE_ADDR     = ft_to_string(conf.serv.address.sin_addr.s_addr); // VIRER TO STRIng CPP 11 MAIS BLC poUR lES tESTS
 	cgi.REMOTE_USER     = req.header.Host.front();
 	cgi.REQUEST_METHOD  = req.method;
 	cgi.REQUEST_URI     = req.url;
