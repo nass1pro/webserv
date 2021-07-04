@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/02 17:17:51 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/04 14:51:49 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,18 @@ void            launche_server(std::list<t_config> &conf)
     }
 }
 
+void		handler(int sign)
+{
+	if (sign == SIGINT)
+		exit(0);
+}
+
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
-
+    
+    signal(SIGINT, handler);
+    
     if (ac < 2)
     {
         std::cout << "ERROR : file config needed"<< std::endl;
@@ -148,5 +156,6 @@ int main(int ac, char **av)
         setup_server(*l);
     }
     launche_server(conf);
+    exit(0);
     return 0;
 }

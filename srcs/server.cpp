@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/13 12:48:17 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/04 14:40:29 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void setup_server(t_config &conf)
     conf.serv.address.sin_addr.s_addr = inet_addr(conf.host.c_str());
     try
     {
-        conf.serv.address.sin_port = htons(/*std::atoi(conf.port.front().c_str())*/std::stoi(conf.port.front()));
+        conf.serv.address.sin_port = htons(std::atoi(conf.port.front().c_str()));
     }
     catch(std::exception &e)
     {
