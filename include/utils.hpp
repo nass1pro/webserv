@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 17:35:36 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/04 12:28:23 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 ** Parse url
 */
 void	get_req_location(t_req &req, t_config &conf);
+void	copy_loc(t_loc &dest, t_loc &copy);
 
 /*
 ** Config

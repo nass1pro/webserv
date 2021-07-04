@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/02 14:23:13 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/13 12:48:17 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,34 @@ void    client_restart(t_server &server, unsigned int i)
 }
 
 
+// void set_socket(t_server &server, t_active &active)
+// {
+//     FD_SET(server.socket_server, &active.read);
+//     FD_SET(server.socket_server, &active.write);
+
+//     for(unsigned int i = 0; i < server.fd_max; i++)
+//     {
+//         FD_SET(server.client[i], &active.read);
+//         if(server.res.find(server.client[i]) != server.res.end())
+//         {
+//             FD_SET(server.client[i], &active.write);
+//         }
+//     }
+// }
+
 void set_socket(t_server &server, t_active &active)
 {
     FD_SET(server.socket_server, &active.read);
     FD_SET(server.socket_server, &active.write);
-
     for(unsigned int i = 0; i < server.fd_max; i++)
     {
-        FD_SET(server.client[i], &active.read);
-        if(server.res.find(server.client[i]) != server.res.end())
+        if (server.client[i] > 0)
         {
-            FD_SET(server.client[i], &active.write);
+            FD_SET(server.client[i], &active.read);
+            if(server.res.find(server.client[i]) != server.res.end())
+            {
+                FD_SET(server.client[i], &active.write);
+            }
         }
     }
 }
