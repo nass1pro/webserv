@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/04 12:28:37 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/04 13:47:19 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -512,7 +512,7 @@ int		find_location(std::string &line)
 */
 void	init_config(t_config &conf)
 {
-	conf.host = "127.0.0.1";
+	// conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
 	conf.root = "frontend/";
 	conf.body_size_limit = 0;
