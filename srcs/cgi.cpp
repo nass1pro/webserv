@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/14 15:00:34 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/06/14 15:27:52 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
 		}
 		for (size_t i = 0; i < parameter.size() + 1; i++)
 		{
-			std::string e1 = "ubuntu_cgi_tester";
+			std::string e1 = "cgi_tester";
 			std::string e2 = "./frontend/YoupiBanane/youpi.bla";
 			tab_execve[0] = (char*)e1.c_str();
 			tab_execve[1] = (char*)e2.c_str();
