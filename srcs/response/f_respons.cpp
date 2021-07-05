@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/05 15:13:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/05 16:54:12 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,22 +267,19 @@ void request_get(t_res &res, t_config &config, t_req &req)
 {
 	std::cout << "REQ BODY-CONTENT IN POST : " << req.body_content << "|" <<std::endl;
     std::ifstream ifs(req.url.c_str());
-	// if (req.error == 404 )
-	// {
-	// 	std::ifstream ifs("error_pages/404.html");
-	// 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-	// 	set_response_data(res, config, req, 404);
-	// }
+
     if (req.location.cgi.active)
     {
         req.url = start_cgi(req, config);
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     	set_response_data(res, config, req, 200);
+		ifs.close();
     }
 	else
     {
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     	set_response_data(res, config, req, 200);
+		ifs.close();
 	}
 }
 
@@ -293,20 +290,22 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 		std::ifstream ifs("error_pages/405.html");
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 405);
+		ifs.close();
 	}
 	else
 	{
 		std::ifstream ifs(req.url.c_str());
 	    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	    set_response_data(res, config, req, 200);
+		ifs.close();
 	}
 }
 
 void request_post(t_res &res, t_config &config, t_req &req)
 {
 
-	std::cout << "REQ URL IN POST : " << req.url << std::endl;
-	std::cout << "REQ BODY-CONTENT IN POST : " << req.body_content[2] << std::endl;
+	// std::cout << "REQ URL IN POST : " << req.url << std::endl;
+	// std::cout << "REQ BODY-CONTENT IN POST : " << req.body_content[2] << std::endl;
     if (req.location.cgi.active)
     {
 	    req.url = start_cgi(req, config);
@@ -323,15 +322,16 @@ void request_post(t_res &res, t_config &config, t_req &req)
 	{
 		set_response_data(res, config, req, 200);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content << std::endl;
+		// newfile << req.body_content << std::endl;
+		newfile << req.body_content;
 		newfile.close();
-		
 	}
 	else 
 	{
 		set_response_data(res, config, req, 201);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content << std::endl;
+		// newfile << req.body_content << std::endl;
+		newfile << req.body_content;
 		newfile.close();
 	}	
 }
@@ -343,14 +343,16 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	{
 		set_response_data(res, config, req, 200);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content << std::endl;
+		// newfile << req.body_content << std::endl;
+		newfile << req.body_content;
 		newfile.close();
 	}
 	else 
 	{
 		set_response_data(res, config, req, 201);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content << std::endl;
+		// newfile << req.body_content << std::endl;
+		newfile << req.body_content;
 		newfile.close();
 	}	
 }
@@ -374,8 +376,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY :" << zbe++ << std::endl;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ERROR : [" << req.error << "]" << std::endl;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PATHHH : [" << req.url << "]" << std::endl;
-    
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PATHHH : [" << req.url << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BODY IN RESPONSE : [" << req.body_content << "] END OF BODY IN RESPNSE ~~~~~~~~~~~" << std::endl;    
 	// if (is_exist(req.url))
 	// {
 	// 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PATHHH : [" << req.url << "]" << std::endl;
