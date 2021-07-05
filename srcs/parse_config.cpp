@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/04 13:47:19 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/05 14:19:56 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -447,7 +447,6 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 	t_loc					loc;
 	std::list<std::string>	tmp;
 	int						brackets = 1;
-
 	init_location(c, loc);
 	tmp = split_in_list(line, " \t");
 	tmp.pop_front();
@@ -476,7 +475,11 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 		else if (find_config_elem(tmp, "default_file_directory_request"))
 			conf_get_str(loc.default_file_directory_request, tmp);
 		else if (find_config_elem(tmp, "file_upload_location"))
+		{
 			conf_get_str(loc.upload_files_location, tmp);
+			if (!(directory_path_exist(loc.upload_files_location, c.root)))
+				return (ERROR);
+		}
 		else if (find_config_elem(tmp, "fastcgi_param"))
 			parse_cgi(loc, tmp);
 		else
