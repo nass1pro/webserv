@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/11 10:38:14 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/05 11:26:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,13 @@ bool                    is_white_space(char c);
 std::list<std::string>  split_body(std::string &str);
 void                    copy_loc(t_loc &dest, t_loc &copy);
 
+    template <typename T>
+    std::string ft_to_string(T n)
+    {
+        std::ostringstream ss;
+        ss << n;
+        return (ss.str());
+    }
 /*
 ** Request
 */
@@ -72,6 +79,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 ** Parse url
 */
 void	get_req_location(t_req &req, t_config &conf);
+void	copy_loc(t_loc &dest, t_loc &copy);
 
 /*
 ** Config

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/02 16:46:27 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/05 11:25:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,14 +188,22 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setContentLocation(req, statusCode);
 	setContentType(req);
 	setDate(req);
-	setLastModified(req);
+	// std::cout << " \n**************************** ERROR : [" << req.error << "]" << std::endl;
+	// std::cout << " \n**************************** METHOD : [" << req.method << "]" << std::endl;
+	if ((req.method == "POST" || req.method == "PUT") && (statusCode == 200 || statusCode == 201))
+	{	
+		// std::cout << " HEHEHEHEHEHEHEHEHEHEHE" << std::endl;
+		setLastModified(req);
+	}
+	else 
+		req.header.Last_modified = std::string("Last-Modified: Sat, 21 Apr 2021 15:19:42 GMT");	
 	setLocation(req, statusCode);
 	setRetryAfter(req, statusCode);
 	setServer(config, req);
 	setTransferEncoding(req);
 	setWWWAuthenticate(req, statusCode);
 	res.statusCode = statusCode;
-	// std::cout << "\n ~~~~~~~~ STATUS CODEEEEEEE : " << res.statusCode << "~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+	
 
 }
 
@@ -341,8 +349,13 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-	// std::cout << "ERROR ||||||||||||||||||||\n" << req.error << std::endl;
-	
+	// static int zbe = 0;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY :" << zbe++ << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ERROR : [" << req.error << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
+	config.serv.res[client->first].erase();
+	// config.serv.res[client->first].payload.erase();
     if (req.error != 0)
     {
 		if (config.error_page.empty())
@@ -369,12 +382,15 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		}
         else if (req.error == 405 || req.error == 400)
         {
+			req.error_path = std::string("error_pages/405.html");
+			req.error = 400;
 			std::ifstream ifs(req.error_path);
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
      		set_response_data(res, config, req, 405);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-			config.serv.res[client->first].append(res.payload);		   
+			if (req.method != "HEAD")
+				config.serv.res[client->first].append(res.payload);		   
 				// std::cout << "PAYLOAD 405 :\n" << res.payload << std::endl;
         }
         else if (req.error == 413)
@@ -389,7 +405,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
      		config.serv.res[client->first].append(res.payload);
         				// std::cout << "PAYLOAD 413 :\n" << res.payload << std::endl;
 		}
-			// std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
+			// std::cout << "\nRESPONSE  ERROR //////////////////////\n" << config.serv.res[client->first] << "\n//////////////////// ERROR RESPONSE" << std::endl;
 	}
     else
     {
@@ -398,7 +414,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             request_get(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-    		config.serv.res[client->first].append(res.payload);
+	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << config.serv.res[client->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
+    		
+			config.serv.res[client->first].append(res.payload);
     		// std::cout << "\nRESPONSE GETTTTTT||||||\n" << config.serv.res[client->first] << "\n|||||| GETTTT RESPONSE\n" << std::endl;
 	
 		}
@@ -408,13 +426,18 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             res.payload = std::string("\0");
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-    		config.serv.res[client->first].append(res.payload);
+	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << config.serv.res[client->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
+    		
+			if (req.method == "POST")
+				config.serv.res[client->first].append(res.payload);
+    		// std::cout << "\nRESPONSE HEAD ||||||||\n" << config.serv.res[client->first] << "\n|||||| HEAD RESPONSE\n" << std::endl;
 		}
         else if (req.method == "POST")
         {
             request_post(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
+	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << config.serv.res[client->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
     		config.serv.res[client->first].append(res.payload);
         }
         else if (req.method == "PUT")
@@ -422,10 +445,13 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             request_put(res, config, req);
             concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
-        	config.serv.res[client->first].append(res.payload);
+	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << config.serv.res[client->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
+        	
+			config.serv.res[client->first].append(res.payload);
+	    	// std::cout << "\nRESPONSE PUT |||||||||\n" << config.serv.res[client->first] << "\n||||||| PUT RESPONSE\n" << std::endl;
         }
-    	// std::cout << "\nRESPONSE ||||||||||||||\n" << config.serv.res[client->first] << "\n||||||||| RESPONSE\n" << std::endl;
 	}
+   	std::cout << "\nRESPONSE HEADER |||||||||||||||||||||||||||\n" << res.response_header << "\n/|||||||||||||||||||| RESPONSE HEADER" << std::endl;
 
 	erras_req_client(client, config.serv, res);
 }
