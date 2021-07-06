@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 14:20:26 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 16:59:28 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,6 @@ std::string ft_itoa(int n, std::string zebi)
 		u_nbr /= 10;
 		len++;
 	}
-	// if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
-	// 	return (NULL);
-	// str[len] = '\0';
 	u_nbr = n < 0 ? -n : n;
 	if (n < 0)
 		zebi[0] = '-';
@@ -100,26 +97,6 @@ std::string ft_itoa(int n, std::string zebi)
 
 std::list<std::string> split_body(std::string &str)
 {
-	/*std::list<std::string>	ret;
-	std::string				line;
-	size_t					start = 0;
-	size_t					end = 0;
-
-	
-	while (str[start] && charset.find(str[start]) != std::string::npos)
-			++start;
-	//std::cout << "Start --> " << str.size() << std::endl; // TEEEEEEETSSSSSS
-	while (start < str.size())
-	{
-		end = start;
-		while (str[end] && charset.find(str[end]) == std::string::npos)
-			++end;
-		line = str.substr(start, end - start);
-		ret.push_back(line);
-		start = end;
-		while (str[start] && charset.find(str[start]) != std::string::npos)
-			++start;
-	}*/
 	std::list<std::string>		line_of_body;
 	std::string					line;
 	const size_t				size_body = str.size();

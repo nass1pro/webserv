@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/06 13:48:43 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/06 16:53:05 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate: ");
 		else if (find_field_name(lines.front(), "x-secret"))
 		{
-			std::cout << "ON A TROUVE UN SECret DANS lA REQqqq" << std::endl;
 			req.header.Secret_req.push_back(lines.front());
 		}
 		lines.pop_front();
@@ -152,15 +151,12 @@ int		check_method(t_req &req)
 		std::list<std::string>::iterator it = req.location.http_methods.begin();
 		while (it != req.location.http_methods.end())
 		{
-			std::cout << "Method : " << *it << std::endl; ////?FWPOHFIOWGFIWGFIWH
 			if (req.method == *it)
 			{
-				std::cout << "ON PASSE ABSOLUMENT DANS LE IF " << std::endl;
 				return (0);
 			}
 			++it;
 		}
-		std::cout << "ON PASSE PAS DANS LE IF " << std::endl; ////?FWPOHFIOWGFIWGFIWH
 		return ((req.error = 405));
 		
 	}
@@ -184,14 +180,12 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
-		// std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
 	split = split_in_list(line, " ");
 	if (split.size() != 3)
 	{
-		// std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
@@ -290,7 +284,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
 	{
 		conf.serv.req[client->first].done = true;
-		// conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
@@ -298,13 +291,9 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		P("ON RENTRE DANS CETTE CONDITION");
 		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
-		// conf.serv.req[client->first].error = 204;
-		// conf.serv.req[client->first].done = true;
-		// return (SUCCESS);
 	}
 	else if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{
@@ -332,7 +321,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 	}
 
 	parse_body(conf.serv.req[client->first].body_content);
-	// conf.serv.req[client->first].body_content.erase(conf.serv.req[client->first].body_content.size() - 1);
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)

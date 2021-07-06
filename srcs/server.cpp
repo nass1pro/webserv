@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/04 14:40:29 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 16:52:31 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,22 +102,6 @@ void    client_restart(t_server &server, unsigned int i)
     server.res.erase(server.client[i]);
     server.req.erase(server.client[i]);
 }
-
-
-// void set_socket(t_server &server, t_active &active)
-// {
-//     FD_SET(server.socket_server, &active.read);
-//     FD_SET(server.socket_server, &active.write);
-
-//     for(unsigned int i = 0; i < server.fd_max; i++)
-//     {
-//         FD_SET(server.client[i], &active.read);
-//         if(server.res.find(server.client[i]) != server.res.end())
-//         {
-//             FD_SET(server.client[i], &active.write);
-//         }
-//     }
-// }
 
 void set_socket(t_server &server, t_active &active)
 {

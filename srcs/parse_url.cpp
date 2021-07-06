@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 16:24:54 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 16:58:49 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 	std::list<std::string>::iterator it;
 	if (url_path.size() >= extention_to_find.size())
 	{
-		tmp = url_path.substr(url_path.size() - extention_to_find.size(), extention_to_find.size() /*url_path.size()*/); //std::cout << "TEEMPORIRE :: " << tmp << std::endl;
+		tmp = url_path.substr(url_path.size() - extention_to_find.size(), extention_to_find.size() /*url_path.size()*/);
 		if (tmp == extention_to_find)
 		{
 			it = methods.begin();
@@ -328,8 +328,6 @@ void	get_req_location(t_req &req, t_config &conf)
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
 	get_ext_loc(req, conf, found);
-	// if (req.method == "PUT")
-	// 	return;
 	if ((req.method == "PUT" || req.method == "POST") && !req.location.upload_files_location.empty())
 	{
 		get_upload_location(req);
