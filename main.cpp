@@ -23,7 +23,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     server_init_socket(conf, active);
     if ((error = select(FD_SETSIZE, &active.read, &active.write, NULL,&timeout)) == -1)
     {
-        // std::cout << "Error: select failed" << std::endl;
+        std::cout << "Error: select failed" << std::endl;
         detecte_connection( conf, active);
     }
     if (error == 0)
@@ -45,7 +45,6 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-  	    	// std::cout << "\nRESPONSE IN WRITE |||||||||||||||||||||||||||\n" << server.res[server.client[i]] << "\n/|||||||||||||||||||||| RESPONSE IN WRITE" << std::endl;
             if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
             {
                 P("ERROR : send failed");
@@ -75,13 +74,10 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            // std::cout << "-------------------->>>>>>>>>>>>>>>> " << request->second.full_req << std::endl;
             parse_request( request ,request->second, conf);
             if (request->second.done == true && !request->second.method.empty())
             {
-                    // std::cout << "---------> " << request->second.full_req << std::endl;        
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
-    	    	// std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << conf.serv.res[request->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
             }
            	else
 			    request++;
@@ -104,7 +100,6 @@ void            launche_server(std::list<t_config> &conf)
                 while(server != conf.end())
                 {
                     read_socket(*server, active);
-    	    	    // std::cout << "\nRESPONSE GOOD |||||||||||||||||||||||||||\n" << conf.serv.res[request->first] << "\n/|||||||||||||||||||||| GOOD RESPONSE" << std::endl;
     	    	    write_socket((*server).serv, active);
                     server++;
                 }
@@ -136,30 +131,6 @@ void		handler(int sign)
 		exit(0);
 }
 
-// int main(int ac, char **av)
-// {
-//     std::list<t_config> conf;
-    
-//     signal(SIGINT, handler);
-    
-//     if (ac < 2)
-//     {
-//         std::cout << "ERROR : file config needed"<< std::endl;
-//         exit(1);
-//     }
-//     if (parse_conf(av[1], conf) == -1)
-//         return 1;
-// 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
-//     {
-//         // l->serv.req.resize(200);
-//         // l->serv.res.resize(200);
-//         setup_server(*l);
-//     }
-//     launche_server(conf);
-//     exit(0);
-//     return 0;
-// }
-
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
@@ -180,8 +151,6 @@ int main(int ac, char **av)
     }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
-        // l->serv.req.resize(200);
-        // l->serv.res.resize(200);
         setup_server(*l);
     }
     launche_server(conf);
