@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 16:45:18 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 13:48:43 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,10 +152,15 @@ int		check_method(t_req &req)
 		std::list<std::string>::iterator it = req.location.http_methods.begin();
 		while (it != req.location.http_methods.end())
 		{
+			std::cout << "Method : " << *it << std::endl; ////?FWPOHFIOWGFIWGFIWH
 			if (req.method == *it)
+			{
+				std::cout << "ON PASSE ABSOLUMENT DANS LE IF " << std::endl;
 				return (0);
+			}
 			++it;
 		}
+		std::cout << "ON PASSE PAS DANS LE IF " << std::endl; ////?FWPOHFIOWGFIWGFIWH
 		return ((req.error = 405));
 		
 	}
@@ -293,9 +298,13 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		/*req*/conf.serv.req[client->first].error = 405;
+		P("ON RENTRE DANS CETTE CONDITION");
+		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
+		// conf.serv.req[client->first].error = 204;
+		// conf.serv.req[client->first].done = true;
+		// return (SUCCESS);
 	}
 	else if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{

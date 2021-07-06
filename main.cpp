@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/06 11:21:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 13:24:15 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,15 @@ void		handler(int sign)
 //     return 0;
 // }
 
+// int    print_error_config(int code, int line)
+// {
+//     if (code == 2)
+//         std::cout << "Error: bad config file path." << std::endl;
+//     else if (code == 3)
+//         std::cout << "Error: wrong syntax in config file." << std::endl;
+//     return (code);
+// }
+
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
@@ -170,13 +179,17 @@ int main(int ac, char **av)
         std::cout << "ERROR : file config needed"<< std::endl;
         exit(1);
     }
+    // if ((ret = parse_conf(av[1], conf)))
+    //     exit(ret);
     if ((ret = parse_conf(av[1], conf)))
     {
         if (ret == 2)
             std::cout << "Error: bad config file path." << std::endl;
         else if (ret == ERROR)
             std::cout << "Error: wrong syntax in config file." << std::endl;
-        return 1;
+        else if (ret == 4)
+            std::cout << "Bad https_methods." << std::endl;
+        exit(ret);
     }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
