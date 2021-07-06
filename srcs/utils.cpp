@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 17:42:10 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/05 14:20:26 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,4 +197,20 @@ bool	is_in_charset(char c, std::string charset)
 		++i;
 	}
 	return (false);
+}
+
+bool	directory_path_exist(std::string &path, std::string &root)
+{
+	DIR	*directory;
+	std::string path_test = root;
+	if (!path.empty() && path[0] == '/')
+		path_test += path.substr(1, path.size() - 1);
+	else
+		path_test += path;
+	if (path_test[path_test.size() - 1] != '/')
+		path_test += "/";
+	if ((directory = opendir(path_test.c_str())) == NULL)
+		return (false);
+	closedir(directory);
+	return (true);
 }

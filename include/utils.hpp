@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/04 12:28:23 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/05 14:19:47 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,16 @@ void					cut_path(std::string &path, std::string &root);
 bool					is_exist(std::string &url);
 char					*ft_itoa(int nbr);
 bool                    is_white_space(char c);
+bool	directory_path_exist(std::string &path, std::string &root);
 std::list<std::string>  split_body(std::string &str);
 
+    template <typename T>
+    std::string ft_to_string(T n)
+    {
+        std::ostringstream ss;
+        ss << n;
+        return (ss.str());
+    }
 /*
 ** Request
 */

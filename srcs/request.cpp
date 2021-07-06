@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/01 15:33:07 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/05 16:45:18 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ void	parse_body(std::string &body)
 			{
 				body += (*it).erase((*it).size() - 1);
 			}
-		}	
+		}
 }
 
 /*
@@ -319,8 +319,11 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
+
 	}
+
 	parse_body(conf.serv.req[client->first].body_content);
+	// conf.serv.req[client->first].body_content.erase(conf.serv.req[client->first].body_content.size() - 1);
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
