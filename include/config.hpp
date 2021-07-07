@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/04 14:46:56 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:13:45 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # include <sys/types.h>
 # include <stdexcept>
 # include <fcntl.h>
+# include <signal.h>
 // # include <csignal>
 
 // # include "server.hpp"
