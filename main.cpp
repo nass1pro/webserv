@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 18:09:33 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/07 20:02:44 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,12 @@ void read_socket(t_config &conf, t_active &active)
         {
            // std::cout << "JUSTE AVANT LE PARSING DE LA REQQQQ" << std::endl;
             parse_request( request /*,request->second*/, conf);
-            std::cout << "ON A FINI APRES LE PARSING DE LA REQQQQ" << std::endl;
+            //std::cout << "ON A FINI APRES LE PARSING DE LA REQQQQ" << std::endl;
             if (request->second.done == true && !request->second.method.empty())
             {
-                std::cout << "AVANT FONCTION WHERE I RECVEID" << std::endl;
+                //std::cout << "AVANT FONCTION WHERE I RECVEID" << std::endl;
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
-                std::cout << "ON SORTY DE FUNCTION WHERE I RECEVEID" << std::endl;
+                //std::cout << "ON SORTY DE FUNCTION WHERE I RECEVEID" << std::endl;
             }
            	else
 			    request++;
@@ -101,7 +101,7 @@ void            launche_server(std::list<t_config> &conf)
         {
             try
             {
-                std::cout << "ON ENTRE DANS TRY ET ON VEUT DETECTER LA CO MA GUEULE" << std::endl;
+                //std::cout << "ON ENTRE DANS TRY ET ON VEUT DETECTER LA CO MA GUEULE" << std::endl;
                 detecte_connection(conf, active);
                 //std::cout << "ON A DETECTE LA CONNECTON" << std::endl;
                 while(server != conf.end())
@@ -113,7 +113,7 @@ void            launche_server(std::list<t_config> &conf)
                     //std::cout << "ON A WRITEE LE SOCKETTTT" << std::endl;
                     server++;
                 }
-                std::cout << "ON SORT DE LA BOUCLE DE READ SOCKET" << std::endl;
+                //std::cout << "ON SORT DE LA BOUCLE DE READ SOCKET" << std::endl;
                 server = conf.begin();
             }
             catch (const std::out_of_range &e)
@@ -126,7 +126,7 @@ void            launche_server(std::list<t_config> &conf)
             }
             catch (const std::exception &e)
             {
-                std::cout << "ON ENTRE DANS LEXCEPTION WHAATTT" << std::endl;
+                //std::cout << "ON ENTRE DANS LEXCEPTION WHAATTT" << std::endl;
                 std::cout << e.what() << std::endl;
                 customer_restart((*server).serv);
                 server = conf.begin();
