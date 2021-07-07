@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 14:26:30 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:28:06 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,8 +354,11 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, 
 	res.response_header.erase();
 	res.payload.erase();
     server.req.erase(cl);
-	if (passe >= 13)
+	if (passe > 13)
+	{
 		std::cout << "icicicicicicicicicicicic"<<std::endl;
+		exit(1);
+	}
 }
 
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
