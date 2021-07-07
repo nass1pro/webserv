@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 14:28:06 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:31:31 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,9 +354,9 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, 
 	res.response_header.erase();
 	res.payload.erase();
     server.req.erase(cl);
-	if (passe > 13)
+	if (passe == 14)
 	{
-		std::cout << "icicicicicicicicicicicic"<<std::endl;
+		std::cout << "icicicicicicicicicicicic"<<passe <<std::endl;
 		exit(1);
 	}
 }
