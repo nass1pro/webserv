@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 15:31:28 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 16:18:20 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void            launche_server(std::list<t_config> &conf)
 
     std::list<t_config>::iterator server = conf.begin();
     t_active active;
-	conf.begin()->serv.pass = 0;
+	// conf.begin()->serv.pass = 0;
     try
     {
         while(true)
