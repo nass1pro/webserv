@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 12:13:45 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:55:43 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ typedef struct s_server
     unsigned int                fd_max;
     std::map<int, t_req>        req;
     std::map<int, std::string>  res;
-
+	int pass;
 }               t_server;
 
 
