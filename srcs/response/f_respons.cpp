@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 14:25:30 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:26:30 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,7 +345,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	}	
 }
 
-void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, static int passe)
+void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, int passe)
 {
 	
     int cl;
