@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 12:27:00 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:29:34 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,14 +330,16 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	{
 		set_response_data(res, config, req, 200);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content;
+		if (!req.body_content.empty())
+			newfile << req.body_content;
 		newfile.close();
 	}
 	else 
 	{
 		set_response_data(res, config, req, 201);
 		std::ofstream newfile(req.url.c_str());
-		newfile << req.body_content;
+		if (!req.body_content.empty())
+			newfile << req.body_content;
 		newfile.close();
 	}	
 }
