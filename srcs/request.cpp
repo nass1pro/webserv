@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/06 16:53:05 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:21:54 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,6 +272,7 @@ void	parse_body(std::string &body)
 */
 int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &conf)
 {
+
 	std::list<std::string> list_lines;
 	(void)req;
 	init_request(conf.serv.req[client->first]);
