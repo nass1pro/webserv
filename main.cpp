@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 15:03:07 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 15:07:27 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void            launche_server(std::list<t_config> &conf)
 					if (conf.begin()->serv.pass == 15)
 					{
 						std::cout << "EXIT IN REQUEST " << std::endl;
+						exit(1);
 					}	
                     server++;
                 }
