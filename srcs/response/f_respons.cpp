@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 14:08:46 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:12:41 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -451,9 +451,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 			std::cout << "***************PASS out PUT [ " << pass << "]**********" << std::endl;
             concatenate_header(res, req);
-			exit(1);
 
             config.serv.res[client->first].append(res.response_header);
+			exit(1);
 			config.serv.res[client->first].append(res.payload);
         }
 	}
