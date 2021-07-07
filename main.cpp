@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/06 16:52:23 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:08:38 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL/*SO_NOSIGPIPE*/)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);

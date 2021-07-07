@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/06 16:52:31 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:09:20 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void accept_connection(t_server &server)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SETFL, /*MSG_NOSIGNAL*/SO_NOSIGPIPE);
+    fcntl(server.socket_connection, F_SETFL, MSG_NOSIGNAL/*SO_NOSIGPIPE*/);
     for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)
