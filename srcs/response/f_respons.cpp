@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 12:03:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 12:04:51 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,7 +379,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         {
 			std::ifstream	ifs;
 
-			ifs.open(req.error_path);
+			ifs.open(req.error_path.c_str());
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 404);
     		concatenate_header(res, req);
