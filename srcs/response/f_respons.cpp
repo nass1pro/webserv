@@ -6,7 +6,7 @@
 /*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 14:21:28 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 14:24:10 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,7 +345,7 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	}	
 }
 
-void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, static int pass)
+void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, static int passe)
 {
 	
     int cl;
@@ -354,7 +354,7 @@ void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, 
 	res.response_header.erase();
 	res.payload.erase();
     server.req.erase(cl);
-	if (pass == 1)
+	if (passe >= 13)
 		std::cout << "icicicicicicicicicicicic"<<std::endl;
 }
 
@@ -447,7 +447,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         }
         else if (req.method == "PUT")
         {
-            static int pass = 0;
+            
 			pass++;
 			std::cout << "***************PASS INSIDE PUT [ " << pass << "]**********" << std::endl;
 			
@@ -463,5 +463,5 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	}
    	std::cout << "\nRESPONSE HEADER |||||||||||||||||||||||||||\n" << res.response_header << "\n/|||||||||||||||||||| RESPONSE HEADER" << std::endl;
 
-	erras_req_client(client, config.serv, res, pass);
+	erras_req_client(client, config.serv, res, zbe);
 }
