@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_url.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/10 12:27:05 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/06 16:58:49 by ehafidi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.directory_listing = copy.directory_listing;
 	dest.default_file_directory_request = copy.default_file_directory_request;
 	dest.upload_files_location = copy.upload_files_location;
-	
 	dest.index.clear();
 	std::list<std::string>::iterator it = copy.index.begin();
 	while (it != copy.index.end())
@@ -58,7 +57,6 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.cgi.SERVER_PROTOCOL = copy.cgi.SERVER_PROTOCOL;
 	dest.cgi.SERVER_SOFTWARE = copy.cgi.SERVER_SOFTWARE;
 }
-
 /*
 ** Check if the index is in the directory and add index filename in req.url
 */
@@ -82,7 +80,6 @@ bool	check_and_add_index(std::list<std::string> &files_list, t_req &req)
 	}
 	return (false);
 }
-
 /*
 ** Check if the filename is a directory
 */
@@ -90,7 +87,6 @@ bool	url_is_dir(std::string &filename, std::list<std::string> &files_list)
 {
 	DIR						*directory;
 	struct dirent			*file;
-
 	if ((directory = opendir(filename.c_str())) == 0)
 		return (false);
 	while ((file = readdir(directory)) != 0)
@@ -101,7 +97,6 @@ bool	url_is_dir(std::string &filename, std::list<std::string> &files_list)
 	closedir(directory);
 	return (true);
 }
-
 /*
 ** Return the path without the file
 */
@@ -110,7 +105,6 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 	std::string							file;
 	std::list<std::string>::iterator	it;
 	std::list<std::string>				new_list;
-
 	if (no_file_path != req.url)
 	{
 		file = req.url.substr(no_file_path.size());
@@ -139,7 +133,6 @@ bool	check_files_in_directory(std::list<std::string> &files_list, t_req &req, st
 		return (false);
 	}
 }
-
 /*
 ** Put an error code in req->error if we can't find the file
 */
@@ -174,7 +167,6 @@ bool	find_dir(t_req &req)
 	}
 	return (true);
 }
-
 /*
 ** Create a local path with root etc
 */
@@ -193,7 +185,6 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 	new_url.insert(0, conf.root);
 	return (new_url);
 }
-
 /*
 ** find a directory location
 */
@@ -222,7 +213,6 @@ bool	find_directory(std::string &path, std::string &dir)
 	}
 	return (false);
 }
-
 /*
 **  Find if the path have a specific extention location
 */
@@ -230,10 +220,9 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 {
 	std::string tmp;
 	std::list<std::string>::iterator it;
-
 	if (url_path.size() >= extention_to_find.size())
 	{
-		tmp = url_path.substr(url_path.size() - extention_to_find.size(), url_path.size());
+		tmp = url_path.substr(url_path.size() - extention_to_find.size(), extention_to_find.size() /*url_path.size()*/);
 		if (tmp == extention_to_find)
 		{
 			it = methods.begin();
@@ -243,12 +232,10 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 					return (true);
 				++it;
 			}
-			
 		}
 	}
 	return (false);
 }
-
 /*
 ** check in all the location if the end of the req.url is the same as the extension location
 ** If we found a correct extension we check if the method is correct.
@@ -258,7 +245,6 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 {
 	std::list<t_loc>::iterator	it;
 	t_loc						req_loc;
-
 	it = conf.location.begin();
 	while (it != conf.location.end() && found < 2)
 	{
@@ -283,7 +269,32 @@ bool	get_ext_loc(t_req &req, t_config &conf, int found)
 	}
 	return (false);
 }
-
+/*
+** Create url for put and post if upload_files_location if define in req.location
+*/
+bool	get_upload_location(t_req &req)
+{
+	std::string	new_url = "frontend/";  //url == frontend/
+	std::string upload = req.location.upload_files_location;
+	std::string	file;
+	size_t		end;
+	if (!upload.empty() && upload[0] == '/')  //url == frontent/upload_file_location
+		upload.erase(0, 1);
+	if (upload[upload.size() - 1] != '/')
+		upload += '/';
+	new_url += upload;
+	end = req.url.find_last_of("/");  //url == frontent/upload_file_location/file
+	if (end == std::string::npos)
+		file = req.url;
+	else if (end != req.url.size() - 1)
+	{
+		++end;
+		file = req.url.substr(end, req.url.size() - end);
+	}
+	new_url += file;
+	req.url = new_url;
+	return (true);
+}
 /*
 ** find the location asked by de request
 */
@@ -317,8 +328,11 @@ void	get_req_location(t_req &req, t_config &conf)
 	copy_loc(req_loc, *it);
 	req.location = req_loc;
 	get_ext_loc(req, conf, found);
-	if (req.method == "PUT")
+	if ((req.method == "PUT" || req.method == "POST") && !req.location.upload_files_location.empty())
+	{
+		get_upload_location(req);
 		return ;
+	}
 	req.url = create_local_path(req, req.location, conf);
 	if (!find_dir(req))
 	{

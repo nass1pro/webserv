@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
 /*   Updated: 2021/06/14 15:27:13 by nahaddac         ###   ########.fr       */
+=======
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
+/*   Updated: 2021/07/07 20:02:44 by judecuyp         ###   ########.fr       */
+>>>>>>> jules2
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +30,7 @@ void            detecte_connection(std::list<t_config> &conf, t_active &active)
     server_init_socket(conf, active);
     if ((error = select(FD_SETSIZE, &active.read, &active.write, NULL,&timeout)) == -1)
     {
-        // std::cout << "Error: select failed" << std::endl;
+        std::cout << "Error: select failed" << std::endl;
         detecte_connection( conf, active);
     }
     if (error == 0)
@@ -41,11 +48,11 @@ void write_socket(t_server &server, t_active &active)
 {
     int message_len;
 
-    for (unsigned int  i = 0; i < server.fd_max; i++)
+    for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL/*SO_NOSIGPIPE*/)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -66,22 +73,35 @@ void read_socket(t_config &conf, t_active &active)
 {
     std::map<int, t_req>::iterator request;
 
+    //std::cout << "JUSTE AVANT DE GET LA REQUEST HEHEEHEHE" << std::endl;
     get_request(conf.serv, active);
+    //std::cout << "ON A GETTE LA REQUEST" << std::endl;
     if(conf.serv.req.size() != 0)
     {
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
+<<<<<<< HEAD
             // std::cout << "-------------------->>>>>>>>>>>>>>>> " << request->second.full_req << std::endl;
             parse_request( request ,request->second, conf);
             if (request->second.done == true && !request->second.method.empty())
             {
                     // std::cout << "---------> " << request->second.full_req << std::endl;
+=======
+           // std::cout << "JUSTE AVANT LE PARSING DE LA REQQQQ" << std::endl;
+            parse_request( request /*,request->second*/, conf);
+            //std::cout << "ON A FINI APRES LE PARSING DE LA REQQQQ" << std::endl;
+            if (request->second.done == true && !request->second.method.empty())
+            {
+                //std::cout << "AVANT FONCTION WHERE I RECVEID" << std::endl;
+>>>>>>> jules2
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
+                //std::cout << "ON SORTY DE FUNCTION WHERE I RECEVEID" << std::endl;
             }
            	else
-			   request++;
+			    request++;
         }
+       // std::cout << "ON SORT DE LA COUCLE DE CONF.SERV" << std::endl;
     }
 }
 
@@ -96,23 +116,35 @@ void            launche_server(std::list<t_config> &conf)
         {
             try
             {
+                //std::cout << "ON ENTRE DANS TRY ET ON VEUT DETECTER LA CO MA GUEULE" << std::endl;
                 detecte_connection(conf, active);
+                //std::cout << "ON A DETECTE LA CONNECTON" << std::endl;
                 while(server != conf.end())
                 {
+                    //std::cout << "JUSTE AVANT DE READ SOCKET" << std::endl;
                     read_socket(*server, active);
-                    write_socket((*server).serv, active);
+                   // std::cout << "ON SORT DE READ SOCKETTTT" << std::endl;
+    	    	    write_socket((*server).serv, active);
+                    //std::cout << "ON A WRITEE LE SOCKETTTT" << std::endl;
                     server++;
                 }
+                //std::cout << "ON SORT DE LA BOUCLE DE READ SOCKET" << std::endl;
                 server = conf.begin();
             }
             catch (const std::out_of_range &e)
             {
-                P(e.what());
+                //std::cout << "ON SORT DE READ SOCKETTTT" << std::endl;
+                 //std::cout << "ON ENTRE DANS LEXCEPTION OUUUTT OF RAAANGE" << std::endl;
+                std::cout << e.what() << std::endl;
                 customer_restart((*server).serv);
+                server = conf.begin();
             }
             catch (const std::exception &e)
             {
-                P(e.what());
+                //std::cout << "ON ENTRE DANS LEXCEPTION WHAATTT" << std::endl;
+                std::cout << e.what() << std::endl;
+                customer_restart((*server).serv);
+                server = conf.begin();
                 //erreur 500
             }
         }
@@ -125,23 +157,37 @@ void            launche_server(std::list<t_config> &conf)
     }
 }
 
+void		handler(int sign)
+{
+	if (sign == SIGINT)
+		exit(0);
+}
+
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
-
+    int ret;
+    signal(SIGINT, handler);    
     if (ac < 2)
     {
         std::cout << "ERROR : file config needed"<< std::endl;
         exit(1);
     }
-    if (parse_conf(av[1], conf) == -1)
-        return 1;
+    if ((ret = parse_conf(av[1], conf)))
+    {
+        if (ret == 2)
+            std::cout << "Error: bad config file path." << std::endl;
+        else if (ret == ERROR)
+            std::cout << "Error: wrong syntax in config file." << std::endl;
+        else if (ret == 4)
+            std::cout << "Bad https_methods." << std::endl;
+        exit(ret);
+    }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
-        // l->serv.req.resize(200);
-        // l->serv.res.resize(200);
         setup_server(*l);
     }
     launche_server(conf);
+    exit(0);
     return 0;
 }

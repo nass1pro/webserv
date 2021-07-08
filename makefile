@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+         #
+#    By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/21 16:24:48 by ehafidi           #+#    #+#              #
-#    Updated: 2021/06/01 12:48:15 by judecuyp         ###   ########.fr        #
+#    Updated: 2021/07/04 14:12:13 by ehafidi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRC = main.cpp srcs/parse_config.cpp srcs/request.cpp srcs/server.cpp srcs/utils
 		srcs/ft_itoa.cpp
 
 CC = clang++
-CCFLAGS = -Wall -Wextra -Werror -std=c++11
+CCFLAGS = -g -Wall -Wextra -Werror -std=c++98
 
 NAME = webserv
 RM = rm -rf

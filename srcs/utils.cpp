@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/07 17:42:10 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/07 15:59:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,6 @@ std::string ft_itoa(int n, std::string zebi)
 		u_nbr /= 10;
 		len++;
 	}
-	// if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
-	// 	return (NULL);
-	// str[len] = '\0';
 	u_nbr = n < 0 ? -n : n;
 	if (n < 0)
 		zebi[0] = '-';
@@ -100,26 +97,6 @@ std::string ft_itoa(int n, std::string zebi)
 
 std::list<std::string> split_body(std::string &str)
 {
-	/*std::list<std::string>	ret;
-	std::string				line;
-	size_t					start = 0;
-	size_t					end = 0;
-
-	
-	while (str[start] && charset.find(str[start]) != std::string::npos)
-			++start;
-	//std::cout << "Start --> " << str.size() << std::endl; // TEEEEEEETSSSSSS
-	while (start < str.size())
-	{
-		end = start;
-		while (str[end] && charset.find(str[end]) == std::string::npos)
-			++end;
-		line = str.substr(start, end - start);
-		ret.push_back(line);
-		start = end;
-		while (str[start] && charset.find(str[start]) != std::string::npos)
-			++start;
-	}*/
 	std::list<std::string>		line_of_body;
 	std::string					line;
 	const size_t				size_body = str.size();
@@ -163,10 +140,16 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 		while (charset.find(str[pos]) != std::string::npos/* && pos < str.size()*/)
 			++pos;
 		start = pos;
-		pos = str.find_first_of(charset, start);
+		if (pos != std::string::npos)
+			pos = str.find_first_of(charset, start);
+		else
+			pos = str.find_first_of(charset, str.size() - 1);
+		
 	}
 	if (start < str.size())
 	{
+		if (pos == std::string::npos)
+			pos = str.size();
 		cut = str.substr(start, pos - start);
 		ret.push_back(cut);
 	}
@@ -197,4 +180,20 @@ bool	is_in_charset(char c, std::string charset)
 		++i;
 	}
 	return (false);
+}
+
+bool	directory_path_exist(std::string &path, std::string &root)
+{
+	DIR	*directory;
+	std::string path_test = root;
+	if (!path.empty() && path[0] == '/')
+		path_test += path.substr(1, path.size() - 1);
+	else
+		path_test += path;
+	if (path_test[path_test.size() - 1] != '/')
+		path_test += "/";
+	if ((directory = opendir(path_test.c_str())) == NULL)
+		return (false);
+	closedir(directory);
+	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/06/10 18:26:06 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/06 13:52:29 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,36 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 void	init_location(t_config &conf, t_loc &loc)
 {
 	loc.body_size_limit = conf.body_size_limit;
+	// loc.cgi.active = false;
+}
+
+/*
+** Find if the line is a comment
+*/
+bool	find_comment(std::list<std::string> &line)
+{
+	if (line.empty())
+		return (true);
+	if (line.front().size() > 0)
+	{
+		if (line.front()[0] == '#')
+			return (true);
+	}
+	return (false);
+}
+
+bool	test_methods(std::list<std::string> &list_methods)
+{
+	std::list<std::string>::iterator it = list_methods.begin();
+
+
+	while (it != list_methods.end())
+	{
+		if (*it != "GET" && *it != "PUT" && *it != "POST" && *it != "HEAD")
+			return (false);
+		++it;
+	}
+	return (true);
 }
 
 /*
@@ -151,7 +181,6 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 	t_loc					loc;
 	std::list<std::string>	tmp;
 	int						brackets = 1;
-
 	init_location(c, loc);
 	tmp = split_in_list(line, " \t");
 	tmp.pop_front();
@@ -168,7 +197,13 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			break;
 		}
 		else if (find_config_elem(tmp, "http_methods"))
+		{
 			conf_get_list(loc.http_methods, tmp);
+			if (!test_methods(loc.http_methods))
+			{
+				return (4);
+			}
+		}
 		else if (find_config_elem(tmp, "index"))
 			conf_get_list(loc.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
@@ -179,10 +214,21 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			conf_get_str(loc.directory_listing, tmp);
 		else if (find_config_elem(tmp, "default_file_directory_request"))
 			conf_get_str(loc.default_file_directory_request, tmp);
-		else if (find_config_elem(tmp, "upload_files_location"))
+		else if (find_config_elem(tmp, "file_upload_location"))
+		{
 			conf_get_str(loc.upload_files_location, tmp);
+			if (!(directory_path_exist(loc.upload_files_location, c.root)))
+				return (ERROR);
+		}
 		else if (find_config_elem(tmp, "fastcgi_param"))
 			parse_cgi(loc, tmp);
+		else
+		{
+			if (!find_comment(tmp))
+			{
+				return (ERROR);
+			}
+		}
 	}
 	if (brackets != 0)
 		return (ERROR);
@@ -209,11 +255,44 @@ int		find_location(std::string &line)
 */
 void	init_config(t_config &conf)
 {
-	conf.host = "127.0.0.1";
+	// conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
 	conf.root = "frontend/";
 	conf.body_size_limit = 0;
 	conf.default_server = false;
+}
+
+/*
+** Copy a and return the copied conf
+*/
+void	copy_conf(std::list<t_config> &conf, t_config &srcs, size_t len)
+{
+	t_config new_conf;
+	size_t i = 0;
+
+	new_conf.host = srcs.host;
+	new_conf.root = srcs.root;
+	new_conf.name_server = srcs.name_server;
+	new_conf.error_page = srcs.error_page;
+	std::list<t_loc>::iterator it_loc = srcs.location.begin();
+	while (it_loc != srcs.location.end())
+	{
+		t_loc	new_loc;
+		copy_loc(new_loc, *it_loc);
+		new_conf.location.push_back(new_loc);
+		++it_loc;
+	}
+	new_conf.port = srcs.port;
+	while (i < len)
+	{
+		new_conf.port.pop_front();
+		++i;
+	}
+	new_conf.index = srcs.index;
+	new_conf.error_page = srcs.error_page;
+	new_conf.body_size_limit = srcs.body_size_limit;
+	new_conf.default_server = false;
+	conf.insert(conf.end(), new_conf);
 }
 
 /*
@@ -225,6 +304,7 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 	std::string				reader;
 	int						open_brackets = 1;
 	t_config				c;
+	int						ret;
 
 	init_config(c);
 	while (std::getline(fd, reader))
@@ -236,7 +316,12 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 			break;
 		}
 		else if (find_location(reader))
-			parse_location(fd, c, reader);
+		{
+			if ((ret = parse_location(fd, c, reader)))
+			{
+				return (ret);
+			}
+		}
 		else if (find_config_elem(tmp, "root"))
 			conf_get_str(c.root, tmp);
 		else if (find_config_elem(tmp, "name_server"))
@@ -251,44 +336,78 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 			conf_get_list(c.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
 			conf_get_num(c.body_size_limit, tmp);
+		else
+		{
+			if (!find_comment(tmp))
+			{
+				return (ERROR);
+			}
+		}
 	}
 	if (open_brackets != 0)
+	{
 		return (ERROR);
+	}
 	conf.insert(conf.end(), c);
 	if (!conf.empty())
 		conf.front().default_server = true;
+	if (c.port.size() > 1)
+	{
+		size_t len = 1;
+		while (len < c.port.size())
+		{
+			copy_conf(conf, c, len);
+			++len;
+		}
+	}
 	return (SUCCESS);
 }
 
-bool	find_server(std::string &line)
+int	find_server(std::string &line)
 {
 	std::list<std::string>  spliter;
 	size_t					size;
 
 	spliter = split_in_list(line, " \t");
 	size = spliter.size();
-	if (size < 1 || size > 2)
-		return (false);
+	if (size < 1)
+		return (1);
 	if (size == 2 && spliter.front() == "server" && spliter.back() == "{")
-		return (true);
-	return (false);
+		return (0);
+	if (find_comment(spliter))
+		return (1);
+	return (ERROR);
 }
 
 int		parse_conf(std::string path, std::list<t_config> &conf)
 {
 	std::ifstream	fd(path.c_str());
 	std::string		reader;
+	int				ret;
 
 	if (!fd)
 	{
 		fd.close();
-		std::cout << "No such file or directory." << std::endl;
-		return (ERROR);
+		return (2);
 	}
 	while (std::getline(fd, reader))
 	{
-		if (find_server(reader))
-			parse_serv(fd, conf);
+		if (!(ret = find_server(reader)))
+		{
+			if ((ret = parse_serv(fd, conf)))
+			{
+				fd.close();
+				return (ret);
+			}
+		}
+		else
+		{
+			if (ret == -1)
+			{
+				fd.close();
+				return (ERROR);
+			}
+		}
 	}
 	fd.close();
 	return (SUCCESS);
