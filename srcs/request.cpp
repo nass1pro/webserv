@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 11:03:33 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/07/08 11:05:59 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,7 +386,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "LE BODY SEMBLE AVOIR PARSE OKKK" << std::endl;
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
-		if (pass == 18)
+		if (conf.serv.pass == 18)
 			std::cout << "RETURNES LOS FAMOS " << std::endl;
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
 		{
