@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 11:38:02 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 12:00:17 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int		get_body_index(t_req &req)
 
 	if (/*size < 2*/  size == 0)
 		return (-1);
+	while (req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f')
+		i++;
 	while (i < size)
 	{
 		if (req.full_req[i] == '\n')
@@ -315,6 +317,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 {
 	std::list<std::string> list_lines;
 	int ret = 0;
+	// int start = 0;
 	//(void)req;
 
 	std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
@@ -332,7 +335,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "APRES LIST LINES : " << std::endl;
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
-		std::cout << "ERROR PARSE FIRTS LINE ?" << std::endl;
+		std::cout << "ERROR PARSE FIRTS LINE ? ret == " << ret << std::endl;
 		if (ret == -2)
 			conf.serv.req[client->first].done = false;
 		else
