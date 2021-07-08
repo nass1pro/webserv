@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/06/14 15:27:13 by nahaddac         ###   ########.fr       */
-=======
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 20:02:44 by judecuyp         ###   ########.fr       */
->>>>>>> jules2
+/*   Updated: 2021/07/08 10:34:25 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +74,12 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-<<<<<<< HEAD
-            // std::cout << "-------------------->>>>>>>>>>>>>>>> " << request->second.full_req << std::endl;
-            parse_request( request ,request->second, conf);
-            if (request->second.done == true && !request->second.method.empty())
-            {
-                    // std::cout << "---------> " << request->second.full_req << std::endl;
-=======
            // std::cout << "JUSTE AVANT LE PARSING DE LA REQQQQ" << std::endl;
             parse_request( request /*,request->second*/, conf);
             //std::cout << "ON A FINI APRES LE PARSING DE LA REQQQQ" << std::endl;
             if (request->second.done == true && !request->second.method.empty())
             {
                 //std::cout << "AVANT FONCTION WHERE I RECVEID" << std::endl;
->>>>>>> jules2
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
                 //std::cout << "ON SORTY DE FUNCTION WHERE I RECEVEID" << std::endl;
             }
@@ -167,7 +152,7 @@ int main(int ac, char **av)
 {
     std::list<t_config> conf;
     int ret;
-    signal(SIGINT, handler);    
+    signal(SIGINT, handler);
     if (ac < 2)
     {
         std::cout << "ERROR : file config needed"<< std::endl;
