@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 20:00:54 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 13:13:51 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 {
 	std::string executable = "/usr/bin/php";
 
-	if (req.location.cgi.SCRIPT_NAME != std::string("None"))
+	if (!req.location.cgi.SCRIPT_NAME.empty()  /*!= std::string("None")*/)
 		executable = req.location.cgi.SCRIPT_NAME;
 	parameter.push_back(executable);
 	parameter.push_back(req.url);
