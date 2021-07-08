@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/08 10:15:18 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/07/08 12:57:57 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void get_request(t_server &s, t_active &active)
             if((message_len = recv(s.client[i], buff, 1000000, 0)) == -1)
             {
                 std::cout<<"error"<< std::endl;
-                clien_disconnection(s, i);
+                client_restart(s, i);
             }
             if(message_len == 0)
             {
