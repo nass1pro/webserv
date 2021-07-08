@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 14:38:20 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 15:37:34 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		get_body_index(t_req &req)
 	size_t i = 0;
 	size_t size = req.full_req.size();
 
-	if (/*size < 2*/  size == 0)
+	if (size == 0)
 		return (-1);
 	while ((req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f') && i < size)
 		i++;
@@ -177,19 +177,15 @@ int		check_method(t_req &req)
 */
 int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 {
-	//std::string 			line(lines.front());
 	std::list<std::string>	split;
 	std::string 			line;
 
 	if (lines.empty())
 	{
-		//std::cout << "Full req empty :\n|\n" << req.full_req << "\n|" << std::endl;
 		return (-2);
 	}
 	
-	line = lines.front();
-	//std::cout << "ON ENTRE DANS PARSE FIRST LINEU" << std::endl; //A VIRER
-	
+	line = lines.front();	
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
 		req.error = 400;
@@ -223,40 +219,9 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 */
 void	init_request(t_req &req)
 {
-	// req.full_req = "";
-	// req.method = "";
-	// req.url = "";
-	// req.version = "";
-	
 	req.body_index = 0;
 	req.done = false;
 	req.error = 0;
-
-	// req.body_content = "";
-	// req.error_path = "";
-
-	// req.header.Accept_Charsets = "";
-
-	// req.header.Allow = "";
-
-	// req.header.Content_Language = "";
-	// req.header.Content_Length = "";
-	// req.header.Content_Location = "";
-
-	// req.header.Content_Type = "";
-	// req.header.Date = "";
-
-	// req.header.Last_modified = "";
-	// req.header.Location = "";
-
-	// req.header.retry_after = "";
-	// req.header.Server = "";
-	// req.header.Transfer_Encoding = "";
-
-	// req.header.WWW_Authenticate = "";
-
-	// req.header.body_entire = "";
-
 }
 
 /*
@@ -311,48 +276,32 @@ void	parse_body(std::string &body)
 /*
 ** main function for the parsing of the request
 ** (take the _req struct as parameter with full_request field filled)
-** for the moment return a negative number in case of weird behavior (!!) modifier retours erreurs etc
 */
 int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_config &conf)
 {
 	std::list<std::string> list_lines;
 	int ret = 0;
-	// int start = 0;
-	//(void)req;
 
-	//std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
 	init_request(conf.serv.req[client->first]);
-	//std::cout << "JUSTE APRESSS INIT REQUEST" << std::endl;
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
-		//std::cout << "ERROR GET BODY INDEX" << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
-	//std::cout << "JUSTE APRESSS GET_BODY_INDEX" << std::endl;
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, conf.serv.req[client->first].body_index/*req.body_index*/), "\t\n\r\v\f");
-	//std::cout << "JUSTE APRESSS SPLIT ET AVANT PARSE FIRST LINE" << std::endl;
-	//std::cout << "APRES LIST LINES : " << std::endl;
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
-		//std::cout << "ERROR PARSE FIRTS LINE ? ret == " << ret << std::endl;
-		//if (!list_lines.empty())
-			//std::cout << "FIRST LINE -->>>>|" << list_lines.front() << "|" << std::endl; 
 		if (ret == -2)
 			conf.serv.req[client->first].done = false;
 		else
 			conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
-	//std::cout << "JUSTE APRESSS PARSE FIRST LINE ET AVT PARSE HEADER" << std::endl;
 	parse_header(conf.serv.req[client->first], list_lines);
 
-	//std::cout << "JUSTE APRESSS PARSE HEADER ET AVT GET BODY" << std::endl;
 	get_body(conf.serv.req[client->first], conf);
-	//std::cout << "JUSTE APRESSS GET BODYY" << std::endl;	
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		//std::cout << "ERROR EMPTY CONTENT CHUNKD" << std::endl;
 		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
@@ -363,7 +312,6 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		
 		if (conf.serv.req[client->first].body_content.empty())
 		{
-			//std::cout << "BODY CONTENT EMPTY OMG" << std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
@@ -375,31 +323,23 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		}
 		if ((i >= 1 && conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n') || (i == 0 && conf.serv.req[client->first].body_content[i] == '0'))
 		{
-			//std::cout << "WSH C ICI" << std::endl;
 			conf.serv.req[client->first].done = true;
 		}
 		else
 		{
-			//std::cout << "L'AUTRE RETURN CHELOU ???" << std::endl;
-			//std::cout << "C'EST TJS FAUX --> FULL REQ --> |\n" << conf.serv.req[client->first].full_req << "\n|" << std::endl;
-			
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
 
 	}
-	//std::cout << "JUSTE AVANT PARSE BODYYY" << std::endl;
 	parse_body(conf.serv.req[client->first].body_content);
-	//std::cout << "LE BODY SEMBLE AVOIR PARSE OKKK" << std::endl;
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
 		{
-			std::cout << "RETURN LE FAMOSO 413" << std::endl;
 			conf.serv.req[client->first].error = 413;
 			return (ERROR);
 		}
 	}
-	std::cout << "RETURN SUCCESS ??" << std::endl;
 	return (SUCCESS);
 }
