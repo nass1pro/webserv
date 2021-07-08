@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 12:12:42 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/07/08 13:23:14 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		get_body_index(t_req &req)
 
 	if (/*size < 2*/  size == 0)
 		return (-1);
-	while (req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f')
+	while ((req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f') && i < size)
 		i++;
 	while (i < size)
 	{
@@ -183,23 +183,23 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 
 	if (lines.empty())
 	{
-		std::cout << "Full req empty :\n|\n" << req.full_req << "\n|" << std::endl;
+		// std::cout << "Full req empty :\n|\n" << req.full_req << "\n|" << std::endl;
 		return (-2);
 	}
 
 	line = lines.front();
-	std::cout << "ON ENTRE DANS PARSE FIRST LINEU" << std::endl; //A VIRER
+	// std::cout << "ON ENTRE DANS PARSE FIRST LINEU" << std::endl; //A VIRER
 
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
-		std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
+		// std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
 	split = split_in_list(line, " ");
 	if (split.size() != 3)
 	{
-		std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
+		// std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
@@ -322,12 +322,12 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	// int start = 0;
 	//(void)req;
 
-	std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
+	//std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
 	init_request(conf.serv.req[client->first]);
 	//std::cout << "JUSTE APRESSS INIT REQUEST" << std::endl;
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
-		std::cout << "ERROR GET BODY INDEX" << std::endl;
+		// std::cout << "ERROR GET BODY INDEX" << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
@@ -337,7 +337,9 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "APRES LIST LINES : " << std::endl;
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
-		std::cout << "ERROR PARSE FIRTS LINE ? ret == " << ret << std::endl;
+		// std::cout << "ERROR PARSE FIRTS LINE ? ret == " << ret << std::endl;
+		if (!list_lines.empty())
+			std::cout << "FIRST LINE -->>>>|" << list_lines.front() << "|" << std::endl;
 		if (ret == -2)
 			conf.serv.req[client->first].done = false;
 		else
@@ -352,7 +354,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "JUSTE APRESSS GET BODYY" << std::endl;
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		std::cout << "ERROR EMPTY CONTENT CHUNKD" << std::endl;
+		// std::cout << "ERROR EMPTY CONTENT CHUNKD" << std::endl;
 		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
@@ -363,7 +365,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 
 		if (conf.serv.req[client->first].body_content.empty())
 		{
-			std::cout << "BODY CONTENT EMPTY OMG" << std::endl;
+			// std::cout << "BODY CONTENT EMPTY OMG" << std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
@@ -375,12 +377,12 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		}
 		if ((i >= 1 && conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n') || (i == 0 && conf.serv.req[client->first].body_content[i] == '0'))
 		{
-			std::cout << "WSH C ICI" << std::endl;
+			// std::cout << "WSH C ICI" << std::endl;
 			conf.serv.req[client->first].done = true;
 		}
 		else
 		{
-			std::cout << "L'AUTRE RETURN CHELOU ???" << std::endl;
+			// std::cout << "L'AUTRE RETURN CHELOU ???" << std::endl;
 			//std::cout << "C'EST TJS FAUX --> FULL REQ --> |\n" << conf.serv.req[client->first].full_req << "\n|" << std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
@@ -392,15 +394,13 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "LE BODY SEMBLE AVOIR PARSE OKKK" << std::endl;
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
-		if (conf.serv.pas == 18)
-			std::cout << "RETURNES LOS FAMOS " << std::endl;
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
 		{
-			std::cout << "RETURN LE FAMOSO 413" << std::endl;
+			// std::cout << "RETURN LE FAMOSO 413" << std::endl;
 			conf.serv.req[client->first].error = 413;
 			return (ERROR);
 		}
 	}
-	std::cout << "RETURN SUCCESS ??" << std::endl;
+	// std::cout << "RETURN SUCCESS ??" << std::endl;
 	return (SUCCESS);
 }
