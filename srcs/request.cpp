@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 12:00:17 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 12:33:37 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		get_body_index(t_req &req)
 
 	if (/*size < 2*/  size == 0)
 		return (-1);
-	while (req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f')
+	while (req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f' && i < size())
 		i++;
 	while (i < size)
 	{
@@ -320,7 +320,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	// int start = 0;
 	//(void)req;
 
-	std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
+	//std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
 	init_request(conf.serv.req[client->first]);
 	//std::cout << "JUSTE APRESSS INIT REQUEST" << std::endl;
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
@@ -336,6 +336,8 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
 		std::cout << "ERROR PARSE FIRTS LINE ? ret == " << ret << std::endl;
+		if (!list_lines.empty())
+			std::cout << "FIRST LINE -->>>>|" << list_lines.front() << "|" << std::endl; 
 		if (ret == -2)
 			conf.serv.req[client->first].done = false;
 		else
