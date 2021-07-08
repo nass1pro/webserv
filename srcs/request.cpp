@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/07 20:01:36 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 11:38:02 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,10 +180,13 @@ int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 	std::string 			line;
 
 	if (lines.empty())
+	{
+		std::cout << "Full req empty :\n|\n" << req.full_req << "\n|" << std::endl;
 		return (-2);
+	}
 	
 	line = lines.front();
-	//std::cout << "ON ENTRE DANS PARSE FIRST LINEU" << std::endl; //A VIRER
+	std::cout << "ON ENTRE DANS PARSE FIRST LINEU" << std::endl; //A VIRER
 	
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
@@ -314,12 +317,12 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	int ret = 0;
 	//(void)req;
 
-	//std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
+	std::cout << "JUSTE AVT INIT REQUEST" << std::endl;
 	init_request(conf.serv.req[client->first]);
 	//std::cout << "JUSTE APRESSS INIT REQUEST" << std::endl;
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
-		//std::cout << "ERROR GET BODY INDEX" << std::endl;
+		std::cout << "ERROR GET BODY INDEX" << std::endl;
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
@@ -329,7 +332,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "APRES LIST LINES : " << std::endl;
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
-		//std::cout << "ERROR PARSE FIRTS LINE ?" << std::endl;
+		std::cout << "ERROR PARSE FIRTS LINE ?" << std::endl;
 		if (ret == -2)
 			conf.serv.req[client->first].done = false;
 		else
@@ -344,7 +347,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	//std::cout << "JUSTE APRESSS GET BODYY" << std::endl;	
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		//std::cout << "ERROR EMPTY CONTENT CHUNKD" << std::endl;
+		std::cout << "ERROR EMPTY CONTENT CHUNKD" << std::endl;
 		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
@@ -355,7 +358,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		
 		if (conf.serv.req[client->first].body_content.empty())
 		{
-			//std::cout << "BODY CONTENT EMPTY OMG" << std::endl;
+			std::cout << "BODY CONTENT EMPTY OMG" << std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
@@ -367,12 +370,12 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		}
 		if ((i >= 1 && conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n') || (i == 0 && conf.serv.req[client->first].body_content[i] == '0'))
 		{
-			//std::cout << "WSH C ICI" << std::endl;
+			std::cout << "WSH C ICI" << std::endl;
 			conf.serv.req[client->first].done = true;
 		}
 		else
 		{
-			//std::cout << "L'AUTRE RETURN CHELOU ???" << std::endl;
+			std::cout << "L'AUTRE RETURN CHELOU ???" << std::endl;
 			//std::cout << "C'EST TJS FAUX --> FULL REQ --> |\n" << conf.serv.req[client->first].full_req << "\n|" << std::endl;
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
@@ -386,11 +389,11 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
 		{
-			//std::cout << "RETURN LE FAMOSO 413" << std::endl;
+			std::cout << "RETURN LE FAMOSO 413" << std::endl;
 			conf.serv.req[client->first].error = 413;
 			return (ERROR);
 		}
 	}
-	//std::cout << "RETURN SUCCESS ??" << std::endl;
+	std::cout << "RETURN SUCCESS ??" << std::endl;
 	return (SUCCESS);
 }
