@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/08 12:23:56 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 14:37:16 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,8 @@ void get_request(t_server &s, t_active &active)
                 buff[message_len] = '\0';
                 if (s.req[s.client[i]].full_req.size() == 0)
                 {
-                    s.req[s.client[i]].full_req.reserve(1000000100);
+                    s.req[s.client[i]].full_req.clear(); //ajout
+                    s.req[s.client[i]].full_req.reserve(100001000);
                 }
                 s.req[s.client[i]].full_req += buff;
 

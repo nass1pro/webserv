@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 18:08:48 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/08 14:42:24 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,13 +366,14 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     t_res res;
 
 	static int zbe = 0;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
 	//std::cout << " \n~~~~ FULL REQUEST : [" << req.full_req << "] END OF FULL REQ" << std::endl;
 
 
 	config.serv.res[client->first].erase();
+	config.serv.req[client->first].full_req.clear(); //ajout
     if (req.error != 0)
     {
 		if (config.error_page.empty())
