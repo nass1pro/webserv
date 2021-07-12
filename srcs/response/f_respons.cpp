@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/08 14:42:24 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:22:37 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 {
 	if (req.url == "frontend/index.html")
 	{
-		std::ifstream ifs("error_pages/405.html");
+		std::ifstream ifs(config.err_405.c_str()/*"error_pages/405.html"*/);
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 405);
 		ifs.close();
@@ -379,11 +379,11 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		if (config.error_page.empty())
 		{
 			if (req.error == 404)
-				req.error_path = std::string("error_pages/404.html");
+				req.error_path = config.err_404;//std::string("error_pages/404.html");
 			else if (req.error == 405)
-				req.error_path = std::string("error_pages/405.html");
+				req.error_path = config.err_405; //std::string("error_pages/405.html");
 			else if (req.error == 413)
-				req.error_path = std::string("error_pages/413.html");								
+				req.error_path = config.err_413; //std::string("error_pages/413.html");								
 		}	
 		else
 		{
@@ -402,7 +402,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		}
         else if (req.error == 405 || req.error == 400)
         {
-			req.error_path = std::string("error_pages/405.html");
+			//req.error_path = //std::string("error_pages/405.html");
 			req.error = 400;
 			std::ifstream	ifs;
 

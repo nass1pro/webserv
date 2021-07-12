@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/07 16:48:46 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:06:44 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@
 */
 # define SUCCESS 0
 # define ERROR -1
+
+# define ERR_FILERR -3
+# define ERR_CODERR -4
+# define ERR_MTDERR 4
+# define ERR_UPFILEERR -5
 
 /*
 ** Utils defines

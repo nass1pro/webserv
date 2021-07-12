@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/06 13:52:29 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:19:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,32 @@ int		conf_get_str(std::string &dest, std::list<std::string> &reader)
 	}
 	return (ERROR);
 
+}
+
+int		conf_get_error_page(t_config &c, std::list<std::string> &reader)
+{
+	if (reader.size() == 2)
+	{
+		std::string err_code = reader.back();
+		std::string url = reader.front();
+
+		if (!is_exist(url))
+			return (ERR_FILERR);
+		if (err_code == "400")
+			c.err_400 = url;
+		else if (err_code == "404")
+			c.err_404 = url;
+		else if (err_code == "405")
+			c.err_405 = url;
+		else if (err_code == "413")
+			c.err_413 = url;
+		else if (err_code == "500")
+			c.err_500 = url;
+		else
+			return (ERR_CODERR);
+		return (SUCCESS);
+	}
+	return (ERROR);
 }
 
 /*
@@ -181,6 +207,7 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 	t_loc					loc;
 	std::list<std::string>	tmp;
 	int						brackets = 1;
+
 	init_location(c, loc);
 	tmp = split_in_list(line, " \t");
 	tmp.pop_front();
@@ -201,7 +228,7 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			conf_get_list(loc.http_methods, tmp);
 			if (!test_methods(loc.http_methods))
 			{
-				return (4);
+				return (ERR_MTDERR);
 			}
 		}
 		else if (find_config_elem(tmp, "index"))
@@ -218,7 +245,7 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 		{
 			conf_get_str(loc.upload_files_location, tmp);
 			if (!(directory_path_exist(loc.upload_files_location, c.root)))
-				return (ERROR);
+				return (ERR_UPFILEERR);
 		}
 		else if (find_config_elem(tmp, "fastcgi_param"))
 			parse_cgi(loc, tmp);
@@ -260,6 +287,12 @@ void	init_config(t_config &conf)
 	conf.root = "frontend/";
 	conf.body_size_limit = 0;
 	conf.default_server = false;
+
+	conf.err_400 = "error_pages/400.html";
+	conf.err_404 = "error_pages/404.html";
+	conf.err_405 = "error_pages/405.html";
+	conf.err_413 = "error_pages/413.html";
+	conf.err_500 = "error_pages/500.html";
 }
 
 /*
@@ -329,7 +362,10 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		else if (find_config_elem(tmp, "host"))
 			conf_get_str(c.host, tmp);
 		else if (find_config_elem(tmp, "error_page"))
-			conf_get_str(c.error_page, tmp);
+		{
+			if ((ret = conf_get_error_page(c, tmp)) < 0)
+				return (ret);
+		}
 		else if (find_config_elem(tmp, "port"))
 			conf_get_list(c.port, tmp);
 		else if (find_config_elem(tmp, "index"))

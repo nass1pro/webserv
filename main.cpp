@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/08 15:21:53 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:07:10 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,22 @@ void		handler(int sign)
 		exit(0);
 }
 
+void    printerr(int code)
+{
+    if (code == 2)
+        std::cout << "Error: bad config file path." << std::endl;
+    else if (code == ERROR)
+        std::cout << "Error: wrong syntax in config file." << std::endl;
+    else if (code == ERR_MTDERR)
+        std::cout << "Error : Bad https_methods." << std::endl;
+    else if (code == ERR_CODERR)
+        std::cout << "Error : Bad error code." << std::endl;
+    else if (code == ERR_FILERR)
+        std::cout << "Error: Bad error page file path." << std::endl;
+     else if (code == ERR_UPFILEERR)
+        std::cout << "Error: Bad file upload path." << std::endl;
+}
+
 int main(int ac, char **av)
 {
     std::list<t_config> conf;
@@ -144,12 +160,7 @@ int main(int ac, char **av)
     }
     if ((ret = parse_conf(av[1], conf)))
     {
-        if (ret == 2)
-            std::cout << "Error: bad config file path." << std::endl;
-        else if (ret == ERROR)
-            std::cout << "Error: wrong syntax in config file." << std::endl;
-        else if (ret == 4)
-            std::cout << "Bad https_methods." << std::endl;
+        printerr(ret);
         exit(ret);
     }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
