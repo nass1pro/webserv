@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/07 15:24:23 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 16:52:02 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include <netinet/in.h>
 # include <sys/time.h>
 # include <fcntl.h>
-# include <sys/stat.h>
 # include <vector>
 # include <map>
 # include <fstream>
@@ -167,6 +166,12 @@ typedef struct s_config
     size_t                  body_size_limit;
 	bool					default_server;
     t_server                serv;
+
+	std::string				err_400;
+	std::string				err_404;
+	std::string				err_405;
+	std::string				err_413;
+	std::string				err_500;
 
 }                           t_config;
 
