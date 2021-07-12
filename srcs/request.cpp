@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 15:37:34 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 11:39:59 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,11 +227,14 @@ void	init_request(t_req &req)
 /*
 ** Put all the body into req->body_content
 */
-void	get_body(t_req &req, t_config &conf)
+void	get_body(t_req &req/*, t_config &conf*/)
 {
-	(void)conf;
+	//(void)conf;
 	if (req.body_index != req.full_req.size())
+	{
+		req.body_content.clear();
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
+	}
 	
 }
 
@@ -282,6 +285,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	std::list<std::string> list_lines;
 	int ret = 0;
 
+	//std::cout << conf.serv.req[client->first].full_req << std::endl;
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
@@ -299,7 +303,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 
-	get_body(conf.serv.req[client->first], conf);
+	get_body(conf.serv.req[client->first]/*, conf*/);
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
 		conf.serv.req[client->first].error = 405;
@@ -330,9 +334,9 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
-
 	}
-	parse_body(conf.serv.req[client->first].body_content);
+	if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
+		parse_body(conf.serv.req[client->first].body_content);
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)
