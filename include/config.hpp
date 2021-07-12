@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:52:41 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 13:40:06 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 16:52:02 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include <netinet/in.h>
 # include <sys/time.h>
 # include <fcntl.h>
-# include <sys/stat.h>
 # include <vector>
 # include <map>
 # include <fstream>

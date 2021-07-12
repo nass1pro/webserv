@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/08 15:26:58 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 17:07:13 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 
 	if (!loc.directory_files_search.empty())
 	{
-		new_url = req.url.substr(loc.location_match.size());
+		new_url = req.url.substr(loc.location_match.size()); //CHEEECKCKKKKKKKKKKK ?.?????
 		new_url.insert(0, loc.directory_files_search);
 	}
 	else
@@ -313,6 +313,78 @@ bool	get_upload_location(t_req &req)
 	return (true);
 }
 
+std::string		getLink(std::string &dirEntry, std::string const &dirName, std::string const &host, std::string port) {
+    std::stringstream   ss;
+
+    ss << "\t\t<p><a href=\"http://" + host + ":" <<\
+        port << dirName + dirEntry + "\">" + dirEntry + "</a></p>\n";
+    return ss.str();
+}
+
+bool	check_is_dir(std::string &url, std::string &entry)
+{
+	std::string complete_url = url + entry;
+	struct stat s;
+	if (stat(complete_url.c_str(), &s) == 0)
+	{
+		if (s.st_mode & S_IFDIR)
+		{
+			if (complete_url.size() > 1 && complete_url[complete_url.size() - 1] == '/')
+				return (false);
+			return (true);
+		}
+	}
+	return (false);
+}
+
+/*
+** If the listing is "on" generate an index html
+*/
+void	generate_listing(t_req &req, t_loc &loc, t_config &conf)
+{
+	DIR			*directory;
+	std::string	dir_url;
+	std::string page;
+	std::string entry_url;
+
+	dir_url = req.url;
+	req.url = create_local_path(req, loc, conf);
+	if ((directory = opendir(req.url.c_str())) == 0)
+	{
+		req.error = 404;
+		return ;
+	}
+	page = "<!DOCTYPE html>\n\
+    <html>\n\
+    <head>\n\
+            <title>" + dir_url + "</title>\n\
+    </head>\n\
+    <body>\n\
+    <h1>INDEX</h1>\n\
+    <p>\n";
+
+	for (struct dirent *dirEntry = readdir(directory); dirEntry; dirEntry = readdir(directory))
+	{
+		entry_url.clear();
+		entry_url = std::string((char *)dirEntry->d_name);
+		if (check_is_dir(req.url, entry_url))
+			entry_url += '/';
+		page += getLink(entry_url, dir_url, conf.host, conf.port.front());
+		//page += getLink(std::string(dirEntry->d_name), dir_url, conf.host, conf.port.front());
+    }
+	page +="\
+    </p>\n\
+    </body>\n\
+    </html>\n";
+	closedir(directory);
+
+	req.url.append(loc.index.front().c_str());
+
+	std::ofstream file(req.url.c_str());
+	file << page;
+	file.close();
+}
+
 /*
 ** find the location asked by de request
 */
@@ -350,6 +422,11 @@ void	get_req_location(t_req &req, t_config &conf)
 	if ((req.method == "PUT" || req.method == "POST") && !req.location.upload_files_location.empty())
 	{
 		get_upload_location(req);
+		return ;
+	}
+	if (req.location.directory_listing == "on" && req.url.size() > 0 && req.url[req.url.size() - 1] == '/')
+	{
+		generate_listing(req, req.location, conf);
 		return ;
 	}
 	req.url = create_local_path(req, req.location, conf);

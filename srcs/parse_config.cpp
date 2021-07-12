@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 14:19:12 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 16:16:15 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ int		parse_cgi(t_loc &l, std::list<std::string> line)
 void	init_location(t_config &conf, t_loc &loc)
 {
 	loc.body_size_limit = conf.body_size_limit;
+	loc.index.push_front("index.html");
+	loc.directory_listing = "off";
 	// loc.cgi.active = false;
 }
 

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 11:39:59 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 14:59:55 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int		check_method(t_req &req)
 	}
 	else
 	{
-		if (req.method != "PUT" && req.method != "GET" && req.method != "POST" && req.method != "HEAD" && req.method != "DELETE")
+		if (req.method != "PUT" && req.method != "GET" && req.method != "POST" && req.method != "HEAD" /*&& req.method != "DELETE"*/)
 			return ((req.error = 405));
 	}
 	return (0);
