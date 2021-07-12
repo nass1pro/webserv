@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 16:45:18 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/12 11:39:59 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ int		get_body_index(t_req &req)
 	size_t i = 0;
 	size_t size = req.full_req.size();
 
-	if (/*size < 2*/  size == 0)
+	if (size == 0)
 		return (-1);
+	while ((req.full_req[i] == '\t' || req.full_req[i] == '\n' || req.full_req[i] == '\r' || req.full_req[i] == '\v' || req.full_req[i] == '\f') && i < size)
+		i++;
 	while (i < size)
 	{
 		if (req.full_req[i] == '\n')
@@ -135,7 +137,6 @@ void	parse_header(t_req &req, std::list<std::string> &lines)
 			split_fields_str(req.header.WWW_Authenticate, lines.front(), "www-authenticate: ");
 		else if (find_field_name(lines.front(), "x-secret"))
 		{
-			std::cout << "ON A TROUVE UN SECret DANS lA REQqqq" << std::endl;
 			req.header.Secret_req.push_back(lines.front());
 		}
 		lines.pop_front();
@@ -153,7 +154,9 @@ int		check_method(t_req &req)
 		while (it != req.location.http_methods.end())
 		{
 			if (req.method == *it)
+			{
 				return (0);
+			}
 			++it;
 		}
 		return ((req.error = 405));
@@ -174,19 +177,23 @@ int		check_method(t_req &req)
 */
 int		parse_first_line(t_req &req, std::list<std::string> &lines, t_config &conf)
 {
-	std::string 			line(lines.front());
 	std::list<std::string>	split;
+	std::string 			line;
 
+	if (lines.empty())
+	{
+		return (-2);
+	}
+	
+	line = lines.front();	
 	if (line.find("HTTP/1.1", 0) == std::string::npos || line.find(" ", 0) == 0)
 	{
-		// std::cout << "\n ICICICICICICICICICICICICICIC " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
 	split = split_in_list(line, " ");
 	if (split.size() != 3)
 	{
-		// std::cout << "\n LALALALALALALALALALALALALALA " << std::endl;
 		req.error = 400;
 		return (ERROR);
 	}
@@ -220,11 +227,14 @@ void	init_request(t_req &req)
 /*
 ** Put all the body into req->body_content
 */
-void	get_body(t_req &req, t_config &conf)
+void	get_body(t_req &req/*, t_config &conf*/)
 {
-	(void)conf;
+	//(void)conf;
 	if (req.body_index != req.full_req.size())
+	{
+		req.body_content.clear();
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
+	}
 	
 }
 
@@ -254,7 +264,7 @@ void	parse_body(std::string &body)
 		std::vector<std::string>::iterator it = line_of_body.begin();
 		size_line_of_body = line_of_body.size();
 		body.clear();
-		body.reserve(1000000100);
+		body.reserve(100000010);
 		for ( ; it != line_of_body.end(); it++)
 		{
 			if (*it == "0")
@@ -269,12 +279,13 @@ void	parse_body(std::string &body)
 /*
 ** main function for the parsing of the request
 ** (take the _req struct as parameter with full_request field filled)
-** for the moment return a negative number in case of weird behavior (!!) modifier retours erreurs etc
 */
-int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &conf)
+int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_config &conf)
 {
 	std::list<std::string> list_lines;
-	(void)req;
+	int ret = 0;
+
+	//std::cout << conf.serv.req[client->first].full_req << std::endl;
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{
@@ -282,35 +293,39 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 		return (ERROR);
 	}
 	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, conf.serv.req[client->first].body_index/*req.body_index*/), "\t\n\r\v\f");
-	if (parse_first_line(conf.serv.req[client->first], list_lines, conf) < 0)
+	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
-		conf.serv.req[client->first].done = true;
-		// conf.serv.req[client->first].done = false;
+		if (ret == -2)
+			conf.serv.req[client->first].done = false;
+		else
+			conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
-	get_body(conf.serv.req[client->first], conf);
 
+	get_body(conf.serv.req[client->first]/*, conf*/);
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
-		/*req*/conf.serv.req[client->first].error = 405;
+		conf.serv.req[client->first].error = 405;
 		conf.serv.req[client->first].done = true;
 		return (ERROR);
 	}
 	else if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
 	{
 		int i = 0;
-		i = conf.serv.req[client->first].body_content.size() - 1;
+		
 		if (conf.serv.req[client->first].body_content.empty())
 		{
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
-		while(is_white_space(conf.serv.req[client->first].body_content[i]))
+
+		i = conf.serv.req[client->first].body_content.size() - 1;
+		while(is_white_space(conf.serv.req[client->first].body_content[i]) && i >= 0)
 		{
 			i--;
 		}
-		if (conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n')
+		if ((i >= 1 && conf.serv.req[client->first].body_content[i] == '0' && conf.serv.req[client->first].body_content[i - 1] == '\n') || (i == 0 && conf.serv.req[client->first].body_content[i] == '0'))
 		{
 			conf.serv.req[client->first].done = true;
 		}
@@ -319,11 +334,9 @@ int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config 
 			conf.serv.req[client->first].done = false;
 			return (ERROR);
 		}
-
 	}
-
-	parse_body(conf.serv.req[client->first].body_content);
-	// conf.serv.req[client->first].body_content.erase(conf.serv.req[client->first].body_content.size() - 1);
+	if (conf.serv.req[client->first].header.Transfer_Encoding == "chunked")
+		parse_body(conf.serv.req[client->first].body_content);
 	if (conf.serv.req[client->first].location.body_size_limit > 0)
 	{
 		if (conf.serv.req[client->first].body_content.size() > conf.serv.req[client->first].location.body_size_limit)

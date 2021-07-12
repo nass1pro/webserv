@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 16:55:24 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/06 13:52:29 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,20 @@ bool	find_comment(std::list<std::string> &line)
 	return (false);
 }
 
+bool	test_methods(std::list<std::string> &list_methods)
+{
+	std::list<std::string>::iterator it = list_methods.begin();
+
+
+	while (it != list_methods.end())
+	{
+		if (*it != "GET" && *it != "PUT" && *it != "POST" && *it != "HEAD")
+			return (false);
+		++it;
+	}
+	return (true);
+}
+
 /*
 ** parse the location in config file
 */
@@ -183,7 +197,13 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			break;
 		}
 		else if (find_config_elem(tmp, "http_methods"))
+		{
 			conf_get_list(loc.http_methods, tmp);
+			if (!test_methods(loc.http_methods))
+			{
+				return (4);
+			}
+		}
 		else if (find_config_elem(tmp, "index"))
 			conf_get_list(loc.index, tmp);
 		else if (find_config_elem(tmp, "body_size_limit"))
@@ -284,6 +304,7 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 	std::string				reader;
 	int						open_brackets = 1;
 	t_config				c;
+	int						ret;
 
 	init_config(c);
 	while (std::getline(fd, reader))
@@ -296,9 +317,9 @@ int		parse_serv(std::ifstream &fd, std::list<t_config> &conf)
 		}
 		else if (find_location(reader))
 		{
-			if (parse_location(fd, c, reader))
+			if ((ret = parse_location(fd, c, reader)))
 			{
-				return (ERROR);
+				return (ret);
 			}
 		}
 		else if (find_config_elem(tmp, "root"))
@@ -373,10 +394,10 @@ int		parse_conf(std::string path, std::list<t_config> &conf)
 	{
 		if (!(ret = find_server(reader)))
 		{
-			if (parse_serv(fd, conf))
+			if ((ret = parse_serv(fd, conf)))
 			{
 				fd.close();
-				return (ERROR);
+				return (ret);
 			}
 		}
 		else

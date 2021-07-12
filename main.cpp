@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/06 11:21:43 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/12 12:54:37 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL/*SO_NOSIGPIPE*/)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -53,8 +53,6 @@ void write_socket(t_server &server, t_active &active)
             else if((size_t)message_len < server.res[server.client[i]].size())
             {
                 server.res[server.client[i]] = server.res[server.client[i]].substr(message_len, server.res[server.client[i]].size());
-                server.res[server.client[i]] = server.res[server.client[i]].substr(message_len, server.res[server.client[i]].size());
-            
             }
             else
             {
@@ -74,7 +72,7 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            parse_request( request ,request->second, conf);
+            parse_request( request /*,request->second*/, conf);
             if (request->second.done == true && !request->second.method.empty())
             {
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
@@ -107,12 +105,15 @@ void            launche_server(std::list<t_config> &conf)
             }
             catch (const std::out_of_range &e)
             {
-                P(e.what());
+                std::cout << e.what() << std::endl;
                 customer_restart((*server).serv);
+                server = conf.begin();
             }
             catch (const std::exception &e)
             {
-                P(e.what());
+                std::cout << e.what() << std::endl;
+                customer_restart((*server).serv);
+                server = conf.begin();
                 //erreur 500
             }
         }
@@ -147,7 +148,9 @@ int main(int ac, char **av)
             std::cout << "Error: bad config file path." << std::endl;
         else if (ret == ERROR)
             std::cout << "Error: wrong syntax in config file." << std::endl;
-        return 1;
+        else if (ret == 4)
+            std::cout << "Bad https_methods." << std::endl;
+        exit(ret);
     }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {

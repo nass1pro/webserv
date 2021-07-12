@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/04 14:40:29 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/08 14:37:16 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,22 +103,6 @@ void    client_restart(t_server &server, unsigned int i)
     server.req.erase(server.client[i]);
 }
 
-
-// void set_socket(t_server &server, t_active &active)
-// {
-//     FD_SET(server.socket_server, &active.read);
-//     FD_SET(server.socket_server, &active.write);
-
-//     for(unsigned int i = 0; i < server.fd_max; i++)
-//     {
-//         FD_SET(server.client[i], &active.read);
-//         if(server.res.find(server.client[i]) != server.res.end())
-//         {
-//             FD_SET(server.client[i], &active.write);
-//         }
-//     }
-// }
-
 void set_socket(t_server &server, t_active &active)
 {
     FD_SET(server.socket_server, &active.read);
@@ -159,7 +143,7 @@ void get_request(t_server &s, t_active &active)
             if((message_len = recv(s.client[i], buff, 1000000, 0)) == -1)
             {
                 std::cout<<"error"<< std::endl;
-                clien_disconnection(s, i);
+                client_restart(s, i);
             }
             if(message_len == 0)
             {
@@ -171,7 +155,8 @@ void get_request(t_server &s, t_active &active)
                 buff[message_len] = '\0';
                 if (s.req[s.client[i]].full_req.size() == 0)
                 {
-                    s.req[s.client[i]].full_req.reserve(1000000100);
+                    s.req[s.client[i]].full_req.clear(); //ajout
+                    s.req[s.client[i]].full_req.reserve(100001000);
                 }
                 s.req[s.client[i]].full_req += buff;
 
@@ -191,7 +176,7 @@ void accept_connection(t_server &server)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SETFL, /*MSG_NOSIGNAL*/SO_NOSIGPIPE);
+    fcntl(server.socket_connection, F_SETFL, MSG_NOSIGNAL/*SO_NOSIGPIPE*/);
     for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)
