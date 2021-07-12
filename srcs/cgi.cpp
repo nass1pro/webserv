@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/07/06 16:56:51 by ehafidi          ###   ########.fr       */
+=======
+/*   Updated: 2021/07/08 13:13:51 by judecuyp         ###   ########.fr       */
+>>>>>>> jules2
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +98,7 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 {
 	std::string executable = "/usr/bin/php";
 
-	if (req.location.cgi.SCRIPT_NAME != std::string("None"))
+	if (!req.location.cgi.SCRIPT_NAME.empty()  /*!= std::string("None")*/)
 		executable = req.location.cgi.SCRIPT_NAME;
 	parameter.push_back(executable);
 	parameter.push_back(req.url);

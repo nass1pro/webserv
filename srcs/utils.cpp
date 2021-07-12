@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/07/06 16:59:28 by ehafidi          ###   ########.fr       */
+=======
+/*   Updated: 2021/07/07 15:59:12 by judecuyp         ###   ########.fr       */
+>>>>>>> jules2
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +144,16 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 		while (charset.find(str[pos]) != std::string::npos/* && pos < str.size()*/)
 			++pos;
 		start = pos;
-		pos = str.find_first_of(charset, start);
+		if (pos != std::string::npos)
+			pos = str.find_first_of(charset, start);
+		else
+			pos = str.find_first_of(charset, str.size() - 1);
+		
 	}
 	if (start < str.size())
 	{
+		if (pos == std::string::npos)
+			pos = str.size();
 		cut = str.substr(start, pos - start);
 		ret.push_back(cut);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehafidi <ehafidi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/05 14:19:47 by ehafidi          ###   ########.fr       */
+/*   Updated: 2021/07/07 16:48:46 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ std::list<std::string>  split_body(std::string &str);
 ** Request
 */
 std::string ft_itoa(int n, std::string zebi);
-int		parse_request(std::map<int, t_req>::iterator &client, t_req &req, t_config &config);
+int		parse_request(std::map<int, t_req>::iterator &client, /* t_req &req,*/ t_config &config);
 
 /*
 ** Parse url

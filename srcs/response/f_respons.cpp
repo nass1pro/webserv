@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/08 15:12:20 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 10:43:10 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,14 +345,20 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	}	
 }
 
-void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res)
+void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, int passe)
 {
+	
     int cl;
     cl = client->first;
     client++;
 	res.response_header.erase();
 	res.payload.erase();
     server.req.erase(cl);
+	if (passe == 15)
+	{
+		std::cout << "icicicicicicicicicicicic"<<passe <<std::endl;
+		//exit(1);
+	}
 }
 
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
@@ -361,9 +367,9 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 
 	// static int zbe = 0;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << config.serv.pass++ << "]" << std::endl;
+	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
-	std::cout << " \n~~~~ FULL REQUEST : [" << req.full_req << "] END OF FULL REQ" << std::endl;
+	//std::cout << " \n~~~~ FULL REQUEST : [" << req.full_req << "] END OF FULL REQ" << std::endl;
 
 
 	config.serv.res[client->first].erase();
@@ -452,5 +458,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 	}
    	std::cout << "\nRESPONSE HEADER |||||||||||||||||||||||||||\n" << res.response_header << "\n/|||||||||||||||||||| RESPONSE HEADER" << std::endl;
 
-	erras_req_client(client, config.serv, res);
+	erras_req_client(client, config.serv, res, zbe);
+
+	//std::cout << "Erase_req_client -----------------" << std::endl;
 }
