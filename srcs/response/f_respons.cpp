@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 10:43:10 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 11:24:42 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -365,7 +365,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 {
     t_res res;
 
-	// static int zbe = 0;
+	static int zbe = 0;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
 	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
