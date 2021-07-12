@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 11:25:54 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 17:24:28 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL/*SO_NOSIGPIPE*/)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -74,6 +74,7 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
+<<<<<<< HEAD
            // std::cout << "JUSTE AVANT LE PARSING DE LA REQQQQ" << std::endl;
             parse_request( request /*,request->second*/, conf);
             //std::cout << "ON A FINI APRES LE PARSING DE LA REQQQQ" << std::endl;
@@ -82,6 +83,12 @@ void read_socket(t_config &conf, t_active &active)
                 //std::cout << "AVANT FONCTION WHERE I RECVEID" << std::endl;
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
                 //std::cout << "ON SORTY DE FUNCTION WHERE I RECEVEID" << std::endl;
+=======
+            parse_request( request ,request->second, conf);
+            if (request->second.done == true && !request->second.method.empty())
+            {
+                function_where_i_receive_request_data_and_return_response(request, request->second, conf);
+>>>>>>> main
             }
            	else
 			    request++;
@@ -109,7 +116,10 @@ void            launche_server(std::list<t_config> &conf)
                 {
                     //std::cout << "JUSTE AVANT DE READ SOCKET" << std::endl;
                     read_socket(*server, active);
+<<<<<<< HEAD
                    // std::cout << "ON SORT DE READ SOCKETTTT" << std::endl;
+=======
+>>>>>>> main
     	    	    write_socket((*server).serv, active);
                     //std::cout << "ON A WRITEE LE SOCKETTTT" << std::endl;
                     server++;

@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 11:24:42 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 17:24:12 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,17 +189,20 @@ void set_response_data( t_res &res, t_config &config, t_req &req, int statusCode
 	setContentType(req);
 	setDate(req);
 	if ((req.method == "POST" || req.method == "PUT") && (statusCode == 200 || statusCode == 201))
-	{	
+	{
+		// std::cout << " HEHEHEHEHEHEHEHEHEHEHE" << std::endl;
 		setLastModified(req);
 	}
-	else 
-		req.header.Last_modified = std::string("Last-Modified: Sat, 21 Apr 2021 15:19:42 GMT");	
+	else
+		req.header.Last_modified = std::string("Last-Modified: Sat, 21 Apr 2021 15:19:42 GMT");
 	setLocation(req, statusCode);
 	setRetryAfter(req, statusCode);
 	setServer(config, req);
 	setTransferEncoding(req);
 	setWWWAuthenticate(req, statusCode);
 	res.statusCode = statusCode;
+
+
 }
 
 void concatenate_header( t_res &res, t_req &req)
@@ -382,8 +385,8 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 			else if (req.error == 405)
 				req.error_path = std::string("error_pages/405.html");
 			else if (req.error == 413)
-				req.error_path = std::string("error_pages/413.html");								
-		}	
+				req.error_path = std::string("error_pages/413.html");
+		}
 		else
 		{
 			req.error_path = config.error_page;
