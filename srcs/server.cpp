@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 11:26:10 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 17:32:09 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,8 @@ void get_request(t_server &s, t_active &active)
                 buff[message_len] = '\0';
                 if (s.req[s.client[i]].full_req.size() == 0)
                 {
-                    s.req[s.client[i]].full_req.reserve(1000000100);
+                    s.req[s.client[i]].full_req.clear(); //ajout
+                    s.req[s.client[i]].full_req.reserve(100001000);
                 }
                 s.req[s.client[i]].full_req += buff;
 

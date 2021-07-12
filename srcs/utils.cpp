@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 11:26:26 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 17:32:02 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ std::list<std::string> split_body(std::string &str)
 	std::string					line;
 	const size_t				size_body = str.size();
 
-	std::cout << "ON PASSE ICI !!! " << std::endl;
 	for (size_t j = 0; j < size_body; j++)
 	{
 		if (j == 0 && str[j] == '\n')
@@ -158,7 +157,7 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 
 bool is_white_space(char c)
 {
-	if (c == '\n' || c == ' ' || c == '\r' || c == '\v' || c == '\f')
+	if (c == '\n' || c == ' ' || c == '\r' || c == '\v' || c == '\f' || c == '\t')
 		return true;
 	return false;
 }

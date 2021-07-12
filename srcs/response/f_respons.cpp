@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 17:24:12 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 19:51:45 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void setLocation(t_req &req, int statusCode)
 	if (statusCode == 201)
 	{
 		req.header.Location = std::string("Location: ");
-		req.header.Location.append("/frontend/index.html");
+		req.header.Location.append(req.url);
 	}
 	else
 		req.header.Location = std::string("\0");
@@ -146,33 +146,45 @@ void setWWWAuthenticate(t_req &req, int statusCode)
 
 void setContentLocation(t_req &req, int statusCode)
 {
-	if (statusCode == 200 || statusCode == 201)
+	// std::cout << "REQ URL : " << req.url << std::endl;
+    // for (std::string::size_type i = req.url.size(); i > 0; i--)
+    // {
+    //     std::cout << s[i] << ' ';
+    //     if (s)
+    // }
+
+    if (statusCode == 200 || statusCode == 201)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		if (req.url == "/")
+		// if (req.url == "/")
 		{
-			req.header.Content_Location.append("/frontend/index.html");
+			req.header.Content_Location.append(req.url);
 		}
 	}
 	else if (statusCode == 405)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		req.header.Content_Location.append("/error_pages/405.html");
+		req.header.Content_Location.append(req.error_path);
 	}
 	else if (statusCode == 400)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		req.header.Content_Location.append("/error_pages/400.html");
+		req.header.Content_Location.append(req.error_path);
 	}
 	else if (statusCode == 404)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		req.header.Content_Location.append("/error_pages/404.html");
+		req.header.Content_Location.append(req.error_path);
 	}
 	else if (statusCode == 413)
 	{
 		req.header.Content_Location = std::string("Content-Location: ");
-		req.header.Content_Location.append("/error_pages/413.html");
+		req.header.Content_Location.append(req.error_path);
+	}
+    else if (statusCode == 500)
+	{
+		req.header.Content_Location = std::string("Content-Location: ");
+		req.header.Content_Location.append(req.error_path);
 	}
 	else
 	{
@@ -225,6 +237,8 @@ void concatenate_header( t_res &res, t_req &req)
 			res.response_header.append("HTTP/1.1 404 Not Found");
 		else if (res.statusCode == 413)
 			res.response_header.append("HTTP/1.1 413 ");
+		else if (res.statusCode == 500)
+			res.response_header.append("HTTP/1.1 500 ");            
 		res.response_header.append("\r\n");
 	}
 	if (req.header.Content_Length != "\0")
@@ -259,6 +273,13 @@ void concatenate_header( t_res &res, t_req &req)
 	}
 }
 
+void error_500(t_res &res, t_config &config, t_req &req)
+{
+    std::ifstream	ifs;
+    ifs.open(config.err_500.c_str());
+    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    set_response_data(res, config, req, 500);
+}
 
 void request_get(t_res &res, t_config &config, t_req &req)
 {
@@ -266,7 +287,11 @@ void request_get(t_res &res, t_config &config, t_req &req)
 
     if (req.location.cgi.active)
     {
-        req.url = start_cgi(req, config);
+	    if ((req.url = start_cgi(req, config)) == "None")
+        {
+            error_500(res, config, req);
+            return;
+        }
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     	set_response_data(res, config, req, 200);
 		ifs.close();
@@ -283,7 +308,7 @@ void request_heads(t_res &res, t_config &config, t_req &req)
 {
 	if (req.url == "frontend/index.html")
 	{
-		std::ifstream ifs("error_pages/405.html");
+		std::ifstream ifs(config.err_405.c_str()/*"error_pages/405.html"*/);
 		res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 		set_response_data(res, config, req, 405);
 		ifs.close();
@@ -302,7 +327,11 @@ void request_post(t_res &res, t_config &config, t_req &req)
 
     if (req.location.cgi.active)
     {
-	    req.url = start_cgi(req, config);
+	    if ((req.url = start_cgi(req, config)) == "None")
+        {
+            error_500(res, config, req);
+            return;
+        }
 		res.payload.append(req.body_content);
 		if (is_exist(req.url))
 		{
@@ -350,18 +379,18 @@ void request_put(t_res &res, t_config &config, t_req &req)
 
 void erras_req_client(std::map<int, t_req>::iterator &client, t_server &server, t_res res, int passe)
 {
-	
+	(void)passe;
     int cl;
     cl = client->first;
     client++;
 	res.response_header.erase();
 	res.payload.erase();
     server.req.erase(cl);
-	if (passe == 15)
-	{
-		std::cout << "icicicicicicicicicicicic"<<passe <<std::endl;
-		//exit(1);
-	}
+	// if (passe == 15)
+	// {
+	// 	std::cout << "icicicicicicicicicicicic"<<passe <<std::endl;
+	// 	//exit(1);
+	// }
 }
 
 void function_where_i_receive_request_data_and_return_response( std::map<int, t_req>::iterator &client, t_req &req, t_config &config)
@@ -369,24 +398,27 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
     t_res res;
 
 	static int zbe = 0;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
-	std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~ TIME PASSING BY : [" << zbe++ << "]" << std::endl;
+	// std::cout << " \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHOD : [" << req.method << "]" << std::endl;
 	//std::cout << " \n~~~~ FULL REQUEST : [" << req.full_req << "] END OF FULL REQ" << std::endl;
 
 
 	config.serv.res[client->first].erase();
+	config.serv.req[client->first].full_req.clear(); //ajout
     if (req.error != 0)
     {
 		if (config.error_page.empty())
 		{
 			if (req.error == 404)
-				req.error_path = std::string("error_pages/404.html");
+				req.error_path = config.err_404;//std::string("error_pages/404.html");
 			else if (req.error == 405)
-				req.error_path = std::string("error_pages/405.html");
+				req.error_path = config.err_405; //std::string("error_pages/405.html");
 			else if (req.error == 413)
-				req.error_path = std::string("error_pages/413.html");
-		}
+				req.error_path = config.err_413; //std::string("error_pages/413.html");
+            else if (req.error == 500)
+				req.error_path = config.err_500; //std::string("error_pages/413.html");	    								
+		}	
 		else
 		{
 			req.error_path = config.error_page;
@@ -404,7 +436,7 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		}
         else if (req.error == 405 || req.error == 400)
         {
-			req.error_path = std::string("error_pages/405.html");
+			//req.error_path = //std::string("error_pages/405.html");
 			req.error = 400;
 			std::ifstream	ifs;
 
@@ -427,6 +459,17 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
             config.serv.res[client->first].append(res.response_header);
      		config.serv.res[client->first].append(res.payload);
 		}
+        else if (req.error == 500)
+        {
+			std::ifstream	ifs;
+
+			ifs.open(req.error_path.c_str());
+	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+			set_response_data(res, config, req, 500);
+    		concatenate_header(res, req);
+            config.serv.res[client->first].append(res.response_header);
+     		config.serv.res[client->first].append(res.payload);
+		}        
 	}
     else
     {
