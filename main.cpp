@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 13:44:17 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 15:01:42 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,14 @@ void            launche_server(std::list<t_config> &conf)
             try
             {
                 detecte_connection(conf, active);
-                while(server != conf.end())
+                // while(server != conf.end())
+                // {
+                //     read_socket(*server, active);
+    	    	//     write_socket((*server).serv, active);
+                //     server++;
+                // }
                 {
-                    read_socket(*server, active);
-    	    	    write_socket((*server).serv, active);
+                    internal_server_error((*server).serv);
                     server++;
                 }
                 server = conf.begin();
@@ -113,6 +117,7 @@ void            launche_server(std::list<t_config> &conf)
             catch (const std::exception &e)
             {
                 std::cout << e.what() << std::endl;
+                internal_server_error((*server).serv);
                 customer_restart((*server).serv);
                 server = conf.begin();
                 //erreur 500

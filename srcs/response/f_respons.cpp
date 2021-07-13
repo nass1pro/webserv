@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 10:26:27 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 14:04:22 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ void concatenate_header( t_res &res, t_req &req)
 	}
 }
 
-void error_500(t_res &res, t_config &config, t_req &req)
+void error_500_resp(t_res &res, t_config &config, t_req &req)
 {
     std::ifstream	ifs;
     ifs.open(config.err_500.c_str());
@@ -258,7 +258,8 @@ void request_get(t_res &res, t_config &config, t_req &req)
     {
 	    if ((req.url = start_cgi(req, config)) == "None")
         {
-            error_500(res, config, req);
+            error_500_resp(res, config, req);
+            throw error();
             ifs.close();
             return;
         }
@@ -283,7 +284,7 @@ void request_post(t_res &res, t_config &config, t_req &req)
     {
 	    if ((req.url = start_cgi(req, config)) == "None")
         {
-            error_500(res, config, req);
+            error_500_resp(res, config, req);
             return;
         }
 		res.payload.append(req.body_content);

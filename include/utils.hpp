@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/13 12:22:14 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 15:00:22 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,16 +94,8 @@ int		parse_conf(std::string path, std::list<t_config> &conf);
 
 //error 500 handling
 
-class error : public std::exception
-{
-    public:
-        virtual const char* what() const throw()
-        {
-            return ("Grade must be inferior or equal to 150");
-        }
-};
-
-
+class error : public std::exception {};
+void internal_server_error(t_server &s);
 
 
 

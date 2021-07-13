@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 11:24:58 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 13:52:30 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void        parse_cgi_file(t_req &req, std::string const &ouput_file)
 	{
 		fd.close();
 		P("Stoi Error: " << e.what());
-		// throw server error 500;
+		throw error();
 	}
 	std::string			file((std::istreambuf_iterator<char>(fd)), std::istreambuf_iterator<char>());
 	req.body_content = file.erase(0, find_first_two_line_returns(file) + 1);
@@ -171,7 +171,7 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
     if (pipe(pp) == -1)
     {
         std::cout<< "ERROR: pipe"<<std::endl;
-        //500
+        throw error();
     }
 
     if ((pid = fork()) == -1)
@@ -233,11 +233,12 @@ std::string start_cgi(t_req &req, t_config &conf)
 	{
 		close(fd_upload);
 		std::cout<<"Error : file upload location error"<<std::endl;
-		// trow 500
+		throw error();
 	}
 	if (fork_cgi(fd_upload, req, env) == false)
 	{
 		close(fd_upload);
+		throw error();
 		return "None";
 	}
 	
