@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:43:52 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 22:10:14 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/13 12:22:14 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,20 @@ void	copy_loc(t_loc &dest, t_loc &copy);
 ** Config
 */
 int		parse_conf(std::string path, std::list<t_config> &conf);
+
+//error 500 handling
+
+class error : public std::exception
+{
+    public:
+        virtual const char* what() const throw()
+        {
+            return ("Grade must be inferior or equal to 150");
+        }
+};
+
+
+
+
+
 #endif

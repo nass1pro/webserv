@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 17:32:09 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 13:36:26 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,13 +170,13 @@ void accept_connection(t_server &server)
     if((server.socket_connection = accept(server.socket_server, (struct sockaddr *)&server.address, (socklen_t *)&server.len_address)) == -1)
     {
         ;
-        //error
+        //error accept connex
     }
     if ((unsigned int) server.socket_connection > server.fd_max)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SETFL, MSG_NOSIGNAL/*SO_NOSIGPIPE*/);
+    fcntl(server.socket_connection, F_SETFL, O_NONBLOCK/*SO_NOSIGPIPE*/);
     for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)
