@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 22:25:28 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/13 16:19:31 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,6 +381,11 @@ void	generate_listing(t_req &req, t_loc &loc, t_config &conf)
 	req.url.append(loc.index.front().c_str());
 	std::cout << "Req.url" << req.url << std::endl;
 	std::ofstream file(req.url.c_str());
+	if (!file.is_open())
+	{
+		file.close();
+		throw error();
+	}
 	file << page;
 	file.close();
 }
