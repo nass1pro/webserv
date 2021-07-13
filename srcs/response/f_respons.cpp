@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 14:04:22 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 16:06:38 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,23 +244,36 @@ void concatenate_header( t_res &res, t_req &req)
 
 void error_500_resp(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream	ifs;
-    ifs.open(config.err_500.c_str());
+	std::ifstream	ifs;
+
+    ifs.open(req.url.c_str());
+    if (!(ifs.is_open()))
+    {
+        ifs.close();
+        throw error();
+    }
     res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     set_response_data(res, config, req, 500);
+    ifs.close();
 }
 
 void request_get(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream ifs(req.url.c_str());
+	std::ifstream	ifs;
 
+    ifs.open(req.url.c_str());
+    if (!(ifs.is_open()))
+    {
+        ifs.close();
+        throw error();
+    }
     if (req.location.cgi.active)
     {
 	    if ((req.url = start_cgi(req, config)) == "None")
         {
             error_500_resp(res, config, req);
-            throw error();
             ifs.close();
+            throw error();
             return;
         }
     }
@@ -271,7 +284,14 @@ void request_get(t_res &res, t_config &config, t_req &req)
 
 void request_heads(t_res &res, t_config &config, t_req &req)
 {
-    std::ifstream ifs(req.url.c_str());
+	std::ifstream	ifs;
+
+    ifs.open(req.url.c_str());
+    if (!(ifs.is_open()))
+    {
+        ifs.close();
+        throw error();
+    }
 	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 	set_response_data(res, config, req, 200);
 	ifs.close();
@@ -299,14 +319,28 @@ void request_post(t_res &res, t_config &config, t_req &req)
 	if (is_exist(req.url))
 	{
 		set_response_data(res, config, req, 200);
-		std::ofstream newfile(req.url.c_str());
+       	std::ofstream newfile;
+
+        newfile.open(req.url.c_str());
+        if (!(newfile.is_open()))
+        {
+            newfile.close();
+            throw error();
+        }
 		newfile << req.body_content;
 		newfile.close();
 	}
 	else 
 	{
 		set_response_data(res, config, req, 201);
-		std::ofstream newfile(req.url.c_str());
+       	std::ofstream newfile;
+
+        newfile.open(req.url.c_str());
+        if (!(newfile.is_open()))
+        {
+            newfile.close();
+            throw error();
+        }
 		newfile << req.body_content;
 		newfile.close();
 	}	
@@ -317,7 +351,14 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	if (is_exist(req.url))
 	{
 		set_response_data(res, config, req, 200);
-		std::ofstream newfile(req.url.c_str());
+       	std::ofstream newfile;
+
+        newfile.open(req.url.c_str());
+        if (!(newfile.is_open()))
+        {
+            newfile.close();
+            throw error();
+        }
 		if (!req.body_content.empty())
 			newfile << req.body_content;
 		newfile.close();
@@ -325,7 +366,14 @@ void request_put(t_res &res, t_config &config, t_req &req)
 	else 
 	{
 		set_response_data(res, config, req, 201);
-		std::ofstream newfile(req.url.c_str());
+       	std::ofstream newfile;
+
+        newfile.open(req.url.c_str());
+        if (!(newfile.is_open()))
+        {
+            newfile.close();
+            throw error();
+        }
 		if (!req.body_content.empty())
 			newfile << req.body_content;
 		newfile.close();
@@ -369,7 +417,12 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         {
 			std::ifstream	ifs;
 
-			ifs.open(req.error_path.c_str());
+            ifs.open(req.error_path.c_str());
+            if (!(ifs.is_open()))
+            {
+                ifs.close();
+                throw error();
+            }
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 404);
     		concatenate_header(res, req);
@@ -381,7 +434,12 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 			req.error = 400;
 			std::ifstream	ifs;
 
-			ifs.open(req.error_path.c_str());
+            ifs.open(req.error_path.c_str());
+            if (!(ifs.is_open()))
+            {
+                ifs.close();
+                throw error();
+            }
 			res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
      		set_response_data(res, config, req, 405);
     		concatenate_header(res, req);
@@ -393,23 +451,35 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
         {
 			std::ifstream	ifs;
 
-			ifs.open(req.error_path.c_str());
+            ifs.open(req.error_path.c_str());
+            if (!(ifs.is_open()))
+            {
+                ifs.close();
+                throw error();
+            }
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 413);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
      		config.serv.res[client->first].append(res.payload);
-		}
+		
+        }
         else if (req.error == 500)
         {
 			std::ifstream	ifs;
 
-			ifs.open(req.error_path.c_str());
+            ifs.open(req.error_path.c_str());
+            if (!(ifs.is_open()))
+            {
+                ifs.close();
+                throw error();
+            }
 	    	res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 			set_response_data(res, config, req, 500);
     		concatenate_header(res, req);
             config.serv.res[client->first].append(res.response_header);
      		config.serv.res[client->first].append(res.payload);
+            ifs.close(); 
 		}        
 	}
     else

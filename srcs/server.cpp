@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 15:06:04 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 15:53:21 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,6 @@
 #include <sys/select.h>
 #include "../include/server.hpp"
 #include "../include/utils.hpp"
-
-std::string error_500_server(t_res &res, t_config &config, t_req &req)
-{
-    std::string er_500;
-    std::ifstream	ifs;
-    ifs.open(config.err_500.c_str());
-    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-    set_response_data(res, config, req, 500);
-    concatenate_header(res, req);
-  
-    er_500.append(res.response_header);
-    er_500.append(res.payload);
-    std::cout << "ERROR 500" << er_500 << "\nendof err" << std::endl;
-    return er_500;
-}
-
-void internal_server_error(t_server &s)
-{
-	t_config config; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
-	t_res res; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
-	t_req req; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
-	
-    for (unsigned int i = 0 ; i < s.fd_max ; i++)
-	{
-		if(s.client[i] > 0)
-		{
-			s.res[s.client[i]] = error_500_server(res, config, req); //method does not matter
-			s.req[s.client[i]].done = true;
-		}
-	}
-}
 
 void setup_server(t_config &conf)
 {
@@ -179,7 +148,6 @@ void get_request(t_server &s, t_active &active)
             {
                 clien_disconnection(s, i);
             }
-
             else
             {
                 buff[message_len] = '\0';
@@ -206,7 +174,7 @@ void accept_connection(t_server &server)
     {
         server.fd_max = server.socket_connection;
     }
-    fcntl(server.socket_connection, F_SETFL, O_NONBLOCK/*SO_NOSIGPIPE*/);
+    fcntl(server.socket_connection, F_SETFL, O_NONBLOCK);
     for (unsigned int i = 0; i < server.fd_max; i++)
     {
         if (server.client[i] == 0)
@@ -229,4 +197,38 @@ void ft_server(std::list<t_config> &conf, t_active &active, void (*f)(t_server &
 {
     for (std::list<t_config>::iterator i = conf.begin(); i != conf.end(); i++)
 		f((*i).serv, active);
+}
+
+std::string error_500_server(t_res &res, t_config &config, t_req &req)
+{
+    std::string er_500;
+    std::ifstream	ifs;
+    
+    ifs.open("error_pages/500.html");
+    if (!(ifs.is_open()))
+        throw error();
+    res.payload.assign((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    set_response_data(res, config, req, 500);
+    concatenate_header(res, req);
+  
+    er_500.append(res.response_header);
+    er_500.append(res.payload);
+    ifs.close();
+    std::cout << "ERROR 500 ||||||||||||||||\n" << er_500 << "\n |||||||||||endof err\n" << std::endl;
+    return er_500;
+}
+
+void internal_server_error(t_config &config)
+{
+    t_res res; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
+	t_req req; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
+	
+    for (unsigned int i = 0 ; i < config.serv.fd_max ; i++)
+	{
+		if(config.serv.client[i] > 0)
+		{
+			config.serv.res[config.serv.client[i]] = error_500_server(res, config, req); //method does not matter
+			config.serv.req[config.serv.client[i]].done = true;
+		}
+	}
 }
