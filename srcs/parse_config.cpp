@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 16:16:15 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/12 22:12:50 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,13 @@ int		parse_location(std::ifstream &fd, t_config &c, std::string &line)
 			}
 		}
 		else if (find_config_elem(tmp, "index"))
+		{
+			if (tmp.empty())
+				return (ERR_EFIELD);
+			if (!loc.index.empty() && loc.index.front() == "index.html")
+				loc.index.pop_front();
 			conf_get_list(loc.index, tmp);
+		}
 		else if (find_config_elem(tmp, "body_size_limit"))
 			conf_get_num(loc.body_size_limit, tmp);
 		else if (find_config_elem(tmp, "directory_files_search"))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 17:37:33 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/12 22:10:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,12 @@ void    printerr(int code)
         std::cout << "Error : Bad error code." << std::endl;
     else if (code == ERR_FILERR)
         std::cout << "Error: Bad error page file path." << std::endl;
-     else if (code == ERR_UPFILEERR)
+    else if (code == ERR_UPFILEERR)
         std::cout << "Error: Bad file upload path." << std::endl;
+    else if (code == ERR_EFIELD)
+        std::cout << "Error: Field without value." << std::endl;
+
+
 }
 
 int main(int ac, char **av)
