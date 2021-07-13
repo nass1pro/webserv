@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/12 22:10:12 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/13 12:12:53 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,12 @@ void            launche_server(std::list<t_config> &conf)
     	    	    write_socket((*server).serv, active);
                     server++;
                 }
+                server = conf.begin();
+            }
+            catch (const std::out_of_range &e)
+            {
+                std::cout << e.what() << std::endl;
+                customer_restart((*server).serv);
                 server = conf.begin();
             }
             catch (const std::exception &e)
