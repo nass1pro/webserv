@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 12:12:53 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/13 13:44:17 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,13 +160,21 @@ int main(int ac, char **av)
     signal(SIGINT, handler);    
     if (ac < 2)
     {
-        std::cout << "ERROR : file config needed"<< std::endl;
-        exit(1);
+        //std::cout << "ERROR : file config needed"<< std::endl;
+        //exit(1);
+         if ((ret = parse_conf("config/00.conf", conf)))
+        {
+            printerr(ret);
+            exit(ret);
+        }
     }
-    if ((ret = parse_conf(av[1], conf)))
+    else
     {
-        printerr(ret);
-        exit(ret);
+        if ((ret = parse_conf(av[1], conf)))
+        {
+            printerr(ret);
+            exit(ret);
+        }
     }
 	for(std::list<t_config>::iterator l = conf.begin(); l != conf.end(); l++)
     {
