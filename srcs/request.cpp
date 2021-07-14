@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/14 10:27:47 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 11:16:52 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,7 +289,10 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	int ret = 0;
 
 	//std::cout << conf.serv.req[client->first].full_req << std::endl;
-	
+	// std::cout << "_______________" << std::endl;
+	// std::cout << conf.port.front() << std::endl;
+	// std::cout << conf.host << std::endl;
+
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
 	{

@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/13 17:35:42 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 11:16:56 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	copy_loc(t_loc &dest, t_loc &copy)
 	dest.cgi.SERVER_PORT = copy.cgi.SERVER_PORT;
 	dest.cgi.SERVER_PROTOCOL = copy.cgi.SERVER_PROTOCOL;
 	dest.cgi.SERVER_SOFTWARE = copy.cgi.SERVER_SOFTWARE;
+
 }
 
 /*
