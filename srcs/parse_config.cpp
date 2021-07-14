@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/13 17:51:52 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 11:18:12 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,12 @@ void	copy_conf(std::list<t_config> &conf, t_config &srcs, size_t len)
 	new_conf.error_page = srcs.error_page;
 	new_conf.body_size_limit = srcs.body_size_limit;
 	new_conf.default_server = false;
+	new_conf.err_400 = srcs.err_400;
+	new_conf.err_404 = srcs.err_404;
+	new_conf.err_405 = srcs.err_405;
+	new_conf.err_413 = srcs.err_413;
+	new_conf.err_500 = srcs.err_500;
+
 	conf.insert(conf.end(), new_conf);
 }
 
