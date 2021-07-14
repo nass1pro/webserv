@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 15:53:21 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/14 10:27:49 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ std::string error_500_server(t_res &res, t_config &config, t_req &req)
     er_500.append(res.response_header);
     er_500.append(res.payload);
     ifs.close();
-    std::cout << "ERROR 500 ||||||||||||||||\n" << er_500 << "\n |||||||||||endof err\n" << std::endl;
+    //std::cout << "ERROR 500 ||||||||||||||||\n" << er_500 << "\n |||||||||||endof err\n" << std::endl;
     return er_500;
 }
 

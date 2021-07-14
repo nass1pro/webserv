@@ -6,7 +6,7 @@
 /*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/13 16:19:31 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/13 17:35:42 by judecuyp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,6 +384,7 @@ void	generate_listing(t_req &req, t_loc &loc, t_config &conf)
 	if (!file.is_open())
 	{
 		file.close();
+		std::cout << "Ifci on envoie l'eror" << std::endl;
 		throw error();
 	}
 	file << page;
@@ -440,6 +441,9 @@ void	get_req_location(t_req &req, t_config &conf)
 		if (req.method == "POST")
 			req.error = 0;
 		else
+		{
+			std::cout << req.full_req << std::endl;
 			P("File not found");
+		}
 	}
 }
