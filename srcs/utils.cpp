@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 11:25:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/12 17:32:02 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:30:42 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	cut_path(std::string &path, std::string &root)
 
 std::string ft_itoa(int n, std::string zebi)
 {
-	// char			str[4];
 	int				len;
 	unsigned int	u_nbr;
 
@@ -136,7 +135,7 @@ std::list<std::string> split_in_list(std::string str, std::string charset)
 
 		cut = str.substr(start, pos - start);
 		ret.push_back(cut);
-		while (charset.find(str[pos]) != std::string::npos/* && pos < str.size()*/)
+		while (charset.find(str[pos]) != std::string::npos)
 			++pos;
 		start = pos;
 		if (pos != std::string::npos)

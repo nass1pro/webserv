@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 09:56:39 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/13 13:52:30 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:38:41 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void init_execve_cgi(t_req const& req, std::vector<std::string> &parameter)
 {
 	std::string executable = "/usr/bin/php";
 
-	if (!req.location.cgi.SCRIPT_NAME.empty()  /*!= std::string("None")*/)
+	if (!req.location.cgi.SCRIPT_NAME.empty())
 		executable = req.location.cgi.SCRIPT_NAME;
 	parameter.push_back(executable);
 	parameter.push_back(req.url);
@@ -204,7 +204,6 @@ bool        fork_cgi(int &fd_upload, t_req &req, std::vector<std::string> const 
         if (execve(tab_execve[0], tab_execve, tab_env) == -1)
 		{
 			std::cout<<"Error: execve cgi php"<< std::endl;
-			///
 			close(pp[0]);
 			exit(1);
 		}

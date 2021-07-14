@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 16:44:30 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/14 11:16:52 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:33:56 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int		check_method(t_req &req)
 	}
 	else
 	{
-		if (req.method != "PUT" && req.method != "GET" && req.method != "POST" && req.method != "HEAD" /*&& req.method != "DELETE"*/)
+		if (req.method != "PUT" && req.method != "GET" && req.method != "POST" && req.method != "HEAD")
 			return ((req.error = 405));
 	}
 	return (0);
@@ -227,14 +227,11 @@ void	init_request(t_req &req)
 /*
 ** Put all the body into req->body_content
 */
-void	get_body(t_req &req/*, t_config &conf*/)
+void	get_body(t_req &req)
 {
-	//(void)conf;
-	//std::cout << req.full_req.size() << " | " << req.body_index << std::endl;
 	if (req.body_index != req.full_req.size())
 	{
 		req.body_content.clear();
-		//std::cout << req.full_req.size() << " | " << req.body_index << std::endl;
 		req.body_content = req.full_req.substr(req.body_index, req.full_req.size() - req.body_index);
 	}
 	
@@ -282,16 +279,11 @@ void	parse_body(std::string &body)
 ** main function for the parsing of the request
 ** (take the _req struct as parameter with full_request field filled)
 */
-int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_config &conf)
+int		parse_request(std::map<int, t_req>::iterator &client, t_config &conf)
 {
 
 	std::list<std::string> list_lines;
 	int ret = 0;
-
-	//std::cout << conf.serv.req[client->first].full_req << std::endl;
-	// std::cout << "_______________" << std::endl;
-	// std::cout << conf.port.front() << std::endl;
-	// std::cout << conf.host << std::endl;
 
 	init_request(conf.serv.req[client->first]);
 	if ((conf.serv.req[client->first].body_index = get_body_index(conf.serv.req[client->first])) == -1)
@@ -299,7 +291,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 		conf.serv.req[client->first].done = false;
 		return (ERROR);
 	}
-	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, conf.serv.req[client->first].body_index/*req.body_index*/), "\t\n\r\v\f");
+	list_lines = split_in_list(conf.serv.req[client->first].full_req.substr(0, conf.serv.req[client->first].body_index), "\t\n\r\v\f");
 	if ((ret = parse_first_line(conf.serv.req[client->first], list_lines, conf)) < 0)
 	{
 		if (ret == -2)
@@ -310,7 +302,7 @@ int		parse_request(std::map<int, t_req>::iterator &client, /*t_req &req,*/ t_con
 	}
 	parse_header(conf.serv.req[client->first], list_lines);
 
-	get_body(conf.serv.req[client->first]/*, conf*/);
+	get_body(conf.serv.req[client->first]);
 	if (conf.serv.req[client->first].header.Content_Length.empty() == true && conf.serv.req[client->first].header.Transfer_Encoding.empty() == true && conf.serv.req[client->first].method == "POST")
 	{
 		conf.serv.req[client->first].error = 405;

@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/14 12:23:24 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:40:16 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void setAllow(t_req &req, int statusCode)
 		req.header.Allow = std::string("Allow: ");
         for(std::list<std::string>::iterator i = req.location.http_methods.begin(); i != req.location.http_methods.end(); ++i)
         {
-            // std::cout << "METHODS :" << *i << std::endl;    
             req.header.Allow.append(*i);
             req.header.Allow.append(" ");
         }
@@ -397,13 +396,13 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
 		if (config.error_page.empty())
 		{
 			if (req.error == 404)
-				req.error_path = config.err_404;//std::string("error_pages/404.html");
+				req.error_path = config.err_404; 
 			else if (req.error == 405)
-				req.error_path = config.err_405; //std::string("error_pages/405.html");
+				req.error_path = config.err_405; 
 			else if (req.error == 413)
-				req.error_path = config.err_413; //std::string("error_pages/413.html");
+				req.error_path = config.err_413; 
             else if (req.error == 500)
-				req.error_path = config.err_500; //std::string("error_pages/413.html");	    								
+				req.error_path = config.err_500;    								
 		}	
 		else
 		{
@@ -512,6 +511,4 @@ void function_where_i_receive_request_data_and_return_response( std::map<int, t_
    	std::cout << "\nRESPONSE HEADER |||||||||||||||||||||||||||\n" << res.response_header << "\n/|||||||||||||||||||| RESPONSE HEADER" << std::endl;
 
 	erras_req_client(client, config.serv, res);
-
-	//std::cout << "Erase_req_client -----------------" << std::endl;
 }

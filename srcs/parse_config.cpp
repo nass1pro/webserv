@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_config.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 00:12:51 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/14 11:18:12 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:37:43 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,6 @@ void	init_location(t_config &conf, t_loc &loc)
 	loc.body_size_limit = conf.body_size_limit;
 	loc.index.push_front("index.html");
 	loc.directory_listing = "off";
-	// loc.cgi.active = false;
 }
 
 /*
@@ -290,7 +289,6 @@ int		find_location(std::string &line)
 */
 void	init_config(t_config &conf)
 {
-	// conf.host = "127.0.0.1";
 	conf.name_server = "Webserv";
 	conf.root = "frontend/";
 	conf.body_size_limit = 0;

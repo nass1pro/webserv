@@ -17,7 +17,6 @@ static int		ft_memory(unsigned int nb)
 
 char			*ft_putnbr_char(unsigned int nb, char *tab_nbr, int cmpt_memory)
 {
-	//char	*base;
 	std::string base;
 
 	base = "0123456789";

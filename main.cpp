@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:29 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/14 14:03:35 by nahaddac         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:22:21 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void write_socket(t_server &server, t_active &active)
     {
         if(FD_ISSET(server.client[i], &active.write))
         {
-            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), /*MSG_NOSIGNAL*/SO_NOSIGPIPE)) == -1)
+            if((message_len = send(server.client[i], server.res[server.client[i]].c_str(), server.res[server.client[i]].size(), MSG_NOSIGNAL/*SO_NOSIGPIPE*/)) == -1)
             {
                 P("ERROR : send failed");
                 clien_disconnection(server, i);
@@ -72,7 +72,7 @@ void read_socket(t_config &conf, t_active &active)
         request = conf.serv.req.begin();
         while(request != conf.serv.req.end())
         {
-            parse_request( request /*,request->second*/, conf);
+            parse_request( request, conf);
             if (request->second.done == true && !request->second.method.empty())
             {
                 function_where_i_receive_request_data_and_return_response(request, request->second, conf);
@@ -88,7 +88,6 @@ void            launche_server(std::list<t_config> &conf)
 
     std::list<t_config>::iterator server = conf.begin();
     t_active active;
-	// conf.begin()->serv.pass = 0;
     try
     {
         while(true)
@@ -160,8 +159,6 @@ int main(int ac, char **av)
     signal(SIGINT, handler);
     if (ac < 2)
     {
-        //std::cout << "ERROR : file config needed"<< std::endl;
-        //exit(1);
          if ((ret = parse_conf("config/00.conf", conf)))
         {
             printerr(ret);

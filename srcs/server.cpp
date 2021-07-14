@@ -6,7 +6,7 @@
 /*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:31:16 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/14 10:34:23 by stuntman         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:31:29 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,14 +214,13 @@ std::string error_500_server(t_res &res, t_config &config, t_req &req)
     er_500.append(res.response_header);
     er_500.append(res.payload);
     ifs.close();
-    //std::cout << "ERROR 500 ||||||||||||||||\n" << er_500 << "\n |||||||||||endof err\n" << std::endl;
     return er_500;
 }
 
 void internal_server_error(t_config &config)
 {
-    t_res res; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
-	t_req req; //Empty conf just for error page parameter will have no effect, 500 error will be returned independently of default_error_page
+    t_res res; 
+	t_req req; 
 	
     for (unsigned int i = 0 ; i < config.serv.fd_max ; i++)
 	{

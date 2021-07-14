@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_url.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 13:05:49 by judecuyp          #+#    #+#             */
-/*   Updated: 2021/07/14 11:16:56 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 18:36:28 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ std::string		create_local_path(t_req &req, t_loc &loc, t_config &conf)
 
 	if (!loc.directory_files_search.empty())
 	{
-		new_url = req.url.substr(loc.location_match.size()); //CHEEECKCKKKKKKKKKKK ?.?????
+		new_url = req.url.substr(loc.location_match.size()); 
 		new_url.insert(0, loc.directory_files_search);
 	}
 	else
@@ -237,7 +237,7 @@ bool	find_extention(std::string &url_path, std::string &extention_to_find, std::
 
 	if (url_path.size() >= extention_to_find.size())
 	{
-		tmp = url_path.substr(url_path.size() - extention_to_find.size(), extention_to_find.size() /*url_path.size()*/);
+		tmp = url_path.substr(url_path.size() - extention_to_find.size(), extention_to_find.size());
 		if (tmp == extention_to_find)
 		{
 			it = methods.begin();
@@ -371,8 +371,7 @@ void	generate_listing(t_req &req, t_loc &loc, t_config &conf)
 		if (check_is_dir(req.url, entry_url))
 			entry_url += '/';
 		page += getLink(entry_url, dir_url, conf.host, conf.port.front());
-		//page += getLink(std::string(dirEntry->d_name), dir_url, conf.host, conf.port.front());
-    }
+	}
 	page +="\
     </p>\n\
     </body>\n\
@@ -380,12 +379,10 @@ void	generate_listing(t_req &req, t_loc &loc, t_config &conf)
 	closedir(directory);
 
 	req.url.append(loc.index.front().c_str());
-	std::cout << "Req.url" << req.url << std::endl;
-	std::ofstream file(req.url.c_str());
+    std::ofstream file(req.url.c_str());
 	if (!file.is_open())
 	{
 		file.close();
-		std::cout << "Ifci on envoie l'eror" << std::endl;
 		throw error();
 	}
 	file << page;
@@ -443,7 +440,6 @@ void	get_req_location(t_req &req, t_config &conf)
 			req.error = 0;
 		else
 		{
-			std::cout << req.full_req << std::endl;
 			P("File not found");
 		}
 	}
