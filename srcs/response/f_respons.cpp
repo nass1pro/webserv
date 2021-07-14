@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f_respons.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stuntman <stuntman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 14:02:05 by nahaddac          #+#    #+#             */
-/*   Updated: 2021/07/14 11:19:39 by judecuyp         ###   ########.fr       */
+/*   Updated: 2021/07/14 12:23:24 by stuntman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,13 @@ void setAllow(t_req &req, int statusCode)
 {
 	if (statusCode == 405)
 	{
-		req.header.Allow = std::string("Allow: GET, HEAD, PUT, POST");
+		req.header.Allow = std::string("Allow: ");
+        for(std::list<std::string>::iterator i = req.location.http_methods.begin(); i != req.location.http_methods.end(); ++i)
+        {
+            // std::cout << "METHODS :" << *i << std::endl;    
+            req.header.Allow.append(*i);
+            req.header.Allow.append(" ");
+        }
 	}
 	else
 		req.header.Allow = std::string("\0");
